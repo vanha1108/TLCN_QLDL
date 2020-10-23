@@ -3,7 +3,7 @@ var router = express.Router();
 var multer  = require('multer');
 var fs = require('fs');
 var filereader = require('../filereader');
-var doc = require('../model/document');
+var docmodel = require('../model/document');
 var filecontentReader = require('../filecontentReader');
 const { Console } = require('console');
 const { resolveSoa } = require('dns');
@@ -29,35 +29,65 @@ router.get('/upload', function(req, res, next) {
   res.render('upload', { title: 'Upload Document'});
 });
 
-// /* POST upload file. */
-// router.post('/upload', upload.single('filedoc'), function(req, res, next) {
-//   filereader.extract(req.file.path).then(function (res, err) {
-//     if (err) { console.log(err); }
-//     filecontent = res;
-//     console.log("DL: " + filecontent);
-//     var temp = {
-//       "filename": req.file.originalname,
-//       "authorname": req.body.authorname,
-//       "note": req.body.note,
-//       "data": filecontent
-//     }
-//     var dulieu = new doc(temp);
-//     dulieu.save();
-//   })
-//   res.redirect('/upload');
-// });
 
-// router.post('/upload', async(req, res, next) => {
-//   // Đường dẫn: req.file.path
-//   var a = await filecontentReader.filecontentReader(req, res);
+/* POST upload file */
+router.post('/upload', upload.single('filedoc') , function(req, res, next) {
+  var content = ""; 
+  let ext = filereader.getFileExtension(req.file.path);
+    if ( ext == '.docx') {
+        filereader.extract(req.file.path).then(function(res, err){
+            if ( err ) handleError();
+              content = res;
+
+              // Tạo đối tượng để thêm vào csdl
+              var temp = {
+                "filename": req.file.originalname,
+                "authorname": req.body.authorname,
+                "note": req.body.note,
+                "data": content
+              }
+              // Thêm vào csdl
+              var data = new docmodel(temp);
+              data.save();
+            });
+    } else {
+        if ( ext == '.txt') {
+            fs.readFile(req.file.path, 'utf8', function(err, data){
+              if ( err ) handleError();
+              content = data;
   
-// });
+              // Tạo đối tượng để thêm vào csdl
+              var temp = {
+                "filename": req.file.originalname,
+                "authorname": req.body.authorname,
+                "note": req.body.note,
+                "data": content
+              }
+              // Thêm vào csdl
+              var data = new doc(temp);
+              data.save();
+            })
+        }
+    }
+    res.redirect('/upload');
+});
 
+/* GET list file. */
+router.get('/listall', function(req, res, next) {
+  docmodel.find(function(err, data){
+    if ( err ) handleError();
 
-router.post('/upload', function(req, res, next) {
-  filecontentReader(req, res);
+    res.render('listall', { title: 'List Document', data: data});
+  });
+});
 
-  res.redirect('/upload');
+/* GET delete file. */
+router.get('/delete/:iddelete', function(req, res, next) {
+  var iddelete = req.params.iddelete;
+  docmodel.findByIdAndRemove({_id: iddelete}, function(err, data){
+    if ( err ) handleError();
+    res.redirect('/listall');
+  })
 });
 
 
