@@ -45,6 +45,7 @@ passport.use(
             // lưu thông tin cho tài khoản local
             newUser.email = email;
             newUser.password = newUser.generateHash(password);
+            newUser.role = req.body.role;
             // lưu user
             newUser.save(function (err) {
               if (err) throw err;

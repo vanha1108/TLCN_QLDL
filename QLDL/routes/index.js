@@ -118,7 +118,7 @@ router.get("/signup", function (req, res, next) {
 router.post(
   "/signup",
   passport.authenticate("local-signup", {
-    successRedirect: "/signin", // chuyển hướng tới trang đăng nhập sau khi đăng ký
+    successRedirect: "/login", // chuyển hướng tới trang đăng nhập sau khi đăng ký
     failureRedirect: "/signup", // trở lại trang đăng ký nếu có lỗi
     failureFlash: true, // allow flash messages
   })
