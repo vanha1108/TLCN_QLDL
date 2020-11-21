@@ -6,19 +6,26 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
+    "express-session": "^1.17.1",
+    "express-validator": "^6.6.1",
     "file-system": "^2.2.2",
     "formidable": "^1.2.2",
     "http-errors": "~1.6.3",
     "mongodb": "^3.6.2",
-    "mongoose": "^5.10.9",
+    "mongoose": "^5.10.15",
     "morgan": "~1.9.1",
     "multer": "^1.4.2",
     "node-stream-zip": "^1.11.3",
     "nodemon": "^2.0.6",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "pdfreader": "^1.2.7",
     "xlsx": "^0.16.8"
   }

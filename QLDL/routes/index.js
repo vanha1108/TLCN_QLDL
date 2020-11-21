@@ -7,7 +7,8 @@ var docmodel = require("../model/document");
 var filecontentReader = require("../filecontentReader");
 const { Console } = require("console");
 const { resolveSoa } = require("dns");
-var te = require("../test");
+const passport = require("passport");
+var flash = require("connect-flash");
 var PdfReader = require("pdfreader").PdfReader;
 
 var storage = multer.diskStorage({
@@ -21,9 +22,11 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 var filecontent = "";
+
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
+  // res.render("index", { title: "Express" });
+  res.send("TRang chủ");
 });
 
 /* GET upload file. */
@@ -103,5 +106,31 @@ router.get("/delete/:iddelete", function (req, res, next) {
     res.redirect("/listall");
   });
 });
+
+router.get("/login", function (req, res, next) {
+  res.render("login", { title: "Login" });
+});
+
+router.get("/signup", function (req, res, next) {
+  res.render("signup", { title: "Sign Up" });
+});
+
+router.post(
+  "/signup",
+  passport.authenticate("local-signup", {
+    successRedirect: "/signin", // chuyển hướng tới trang đăng nhập sau khi đăng ký
+    failureRedirect: "/signup", // trở lại trang đăng ký nếu có lỗi
+    failureFlash: true, // allow flash messages
+  })
+);
+
+router.post(
+  "/login",
+  passport.authenticate("local-login", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true,
+  })
+);
 
 module.exports = router;
