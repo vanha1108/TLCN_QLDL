@@ -9,7 +9,10 @@ const { Console } = require("console");
 const { resolveSoa } = require("dns");
 const passport = require("passport");
 var flash = require("connect-flash");
+const { request } = require("http");
 var PdfReader = require("pdfreader").PdfReader;
+const User = require("../model/user");
+var bcrypt = require("bcrypt-nodejs");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -25,8 +28,7 @@ var filecontent = "";
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  // res.render("index", { title: "Express" });
-  res.send("TRang chủ");
+  res.render("index", { title: "Express" });
 });
 
 /* GET upload file. */
@@ -107,30 +109,49 @@ router.get("/delete/:iddelete", function (req, res, next) {
   });
 });
 
-router.get("/login", function (req, res, next) {
-  res.render("login", { title: "Login" });
-});
+// router.post(
+//   "/signup",
+//   passport.authenticate("local-signup", {
+//     successRedirect: "/login", // chuyển hướng tới trang đăng nhập sau khi đăng ký
+//     failureRedirect: "/signup", // trở lại trang đăng ký nếu có lỗi
+//     failureFlash: true, // allow flash messages
+//   })
+// );
 
-router.get("/signup", function (req, res, next) {
-  res.render("signup", { title: "Sign Up" });
-});
+// router.post(
+//   "/login",
+//   passport.authenticate("local-login", {
+//     successRedirect: "/",
+//     failureRedirect: "/login",
+//     failureFlash: true,
+//   })
+// );
 
-router.post(
-  "/signup",
-  passport.authenticate("local-signup", {
-    successRedirect: "/login", // chuyển hướng tới trang đăng nhập sau khi đăng ký
-    failureRedirect: "/signup", // trở lại trang đăng ký nếu có lỗi
-    failureFlash: true, // allow flash messages
-  })
-);
+// /* Handle Logout */
+// router.get("/signout", function (req, res) {
+//   req.logout();
+//   res.redirect("/");
+// });
 
-router.post(
-  "/login",
-  passport.authenticate("local-login", {
-    successRedirect: "/",
-    failureRedirect: "/login",
-    failureFlash: true,
-  })
-);
+// router.post("/register", async function (req, res, next) {
+//   const checkEmailExist = await User.findOne({ email: req.body.email });
+
+//   if (checkEmailExist) return res.status(422).send("Email is exist");
+
+//   const hashPassword = bcrypt.hashSync(
+//     req.body.password,
+//     bcrypt.genSaltSync(10),
+//     null
+//   );
+//   const newUser = new User();
+//   newUser.email = req.body.email;
+//   newUser.password = hashPassword;
+//   newUser.role = req.body.role;
+
+//   newUser.save(function (err) {
+//     if (err) throw err;
+//     return res.send(newUser);
+//   });
+// });
 
 module.exports = router;
