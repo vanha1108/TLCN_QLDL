@@ -4,49 +4,32 @@ var flash = require("connect-flash");
 const User = require("../model/user");
 var bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
-
-router.get("/login", function (req, res, next) {
-  res.render("login", { title: "Login" });
-});
+const passport = require("passport");
 
 router.get("/register", function (req, res, next) {
   res.render("register", { title: "Register" });
 });
 
-router.post("/register", async function (req, res, next) {
-  const checkEmailExist = await User.findOne({ email: req.body.email });
+router.post(
+  "/register",
+  passport.authenticate("local-register", {
+    successRedirect: "/api/auth/login",
+    failureRedirect: "/api/auth/register",
+    failureFlash: true,
+  })
+);
 
-  if (checkEmailExist) return res.status(422).send("Email is exist");
-
-  const hashPassword = bcrypt.hashSync(
-    req.body.password,
-    bcrypt.genSaltSync(10),
-    null
-  );
-  const newUser = new User();
-  newUser.email = req.body.email;
-  newUser.password = hashPassword;
-  newUser.role = req.body.role;
-
-  newUser.save(function (err) {
-    if (err) throw err;
-    return res.render("/api/auth/login", { title: "Login" });
-  });
+router.get("/login", function (req, res, next) {
+  res.render("login", { title: "Login" });
 });
 
-router.post("/login", async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) return res.status(422).send("Email or Password is not correct");
-
-  const checkPassword = bcrypt.compareSync(req.body.password, user.password);
-
-  if (!checkPassword)
-    return res.status(422).send("Email or Password is not correct");
-
-  const token = jwt.sign({ _id: user._id }, "secrettlcn", {
-    expiresIn: 60 * 60 * 24,
-  });
-  res.header("auth-token", token).send(token);
-});
+router.post(
+  "/login",
+  passport.authenticate("local-login", {
+    successRedirect: "/api/users/listuser",
+    failureRedirect: "/api/auth/login",
+    failureFlash: true,
+  })
+);
 
 module.exports = router;

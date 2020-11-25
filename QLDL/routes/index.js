@@ -26,10 +26,10 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 var filecontent = "";
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
-});
+// /* GET home page. */
+// router.get("/", function (req, res, next) {
+//   res.render("index", { title: "Express" });
+// });
 
 /* GET upload file. */
 router.get("/upload", function (req, res, next) {
@@ -118,21 +118,6 @@ router.get("/delete/:iddelete", function (req, res, next) {
 //   })
 // );
 
-// router.post(
-//   "/login",
-//   passport.authenticate("local-login", {
-//     successRedirect: "/",
-//     failureRedirect: "/login",
-//     failureFlash: true,
-//   })
-// );
-
-// /* Handle Logout */
-// router.get("/signout", function (req, res) {
-//   req.logout();
-//   res.redirect("/");
-// });
-
 // router.post("/register", async function (req, res, next) {
 //   const checkEmailExist = await User.findOne({ email: req.body.email });
 
@@ -152,6 +137,14 @@ router.get("/delete/:iddelete", function (req, res, next) {
 //     if (err) throw err;
 //     return res.send(newUser);
 //   });
+// });
+
+// router.get("/api/users/listuser", function (req, res, next) {
+//   // User.find({}).exec(function (err, users) {
+//   //   res.send(users + " \n" + "hhhhhh" + req.user.role);
+//   // });
+//   //res.send(req.user.email + "\r" + req.user.password + "\n" + req.user.role);
+//   res.send(req.sessionID);
 // });
 
 module.exports = router;
