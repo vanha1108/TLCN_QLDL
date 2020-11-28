@@ -13,6 +13,7 @@ const { request } = require("http");
 var PdfReader = require("pdfreader").PdfReader;
 const User = require("../model/user");
 var bcrypt = require("bcrypt-nodejs");
+const sw = require("./../handling_data/clear_stop_word");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -109,42 +110,10 @@ router.get("/delete/:iddelete", function (req, res, next) {
   });
 });
 
-// router.post(
-//   "/signup",
-//   passport.authenticate("local-signup", {
-//     successRedirect: "/login", // chuyển hướng tới trang đăng nhập sau khi đăng ký
-//     failureRedirect: "/signup", // trở lại trang đăng ký nếu có lỗi
-//     failureFlash: true, // allow flash messages
-//   })
-// );
-
-// router.post("/register", async function (req, res, next) {
-//   const checkEmailExist = await User.findOne({ email: req.body.email });
-
-//   if (checkEmailExist) return res.status(422).send("Email is exist");
-
-//   const hashPassword = bcrypt.hashSync(
-//     req.body.password,
-//     bcrypt.genSaltSync(10),
-//     null
-//   );
-//   const newUser = new User();
-//   newUser.email = req.body.email;
-//   newUser.password = hashPassword;
-//   newUser.role = req.body.role;
-
-//   newUser.save(function (err) {
-//     if (err) throw err;
-//     return res.send(newUser);
-//   });
-// });
-
-// router.get("/api/users/listuser", function (req, res, next) {
-//   // User.find({}).exec(function (err, users) {
-//   //   res.send(users + " \n" + "hhhhhh" + req.user.role);
-//   // });
-//   //res.send(req.user.email + "\r" + req.user.password + "\n" + req.user.role);
-//   res.send(req.sessionID);
-// });
+router.get("/t", function (req, res, next) {
+  var tx = "Nguyễn Văn Hà là một người vĩ đại!";
+  const ss = sw.stop_word_handling(tx);
+  res.send("KQ: " + ss);
+});
 
 module.exports = router;

@@ -29,6 +29,7 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "pdfreader": "^1.2.7",
+    "vntk": "^1.4.4",
     "xlsx": "^0.16.8"
   }
 }

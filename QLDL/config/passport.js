@@ -81,7 +81,7 @@ passport.use(
                 null
               );
 
-              req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
+              req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000;
               const findUser = await User.findOne({
                 email: req.body.email,
               });
