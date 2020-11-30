@@ -8,6 +8,7 @@ module.exports.TF_IDF = function (text, all_text) {
   let arrDoc = arr_doc(all_text);
   let dictContain = contain_word(text, arrDoc);
   let total_doc = all_text.length;
+
   let idfDict = idf(dictContain, total_doc);
 
   let tfidf = {};
@@ -20,7 +21,6 @@ module.exports.TF_IDF = function (text, all_text) {
 function tf(appearDict, wordCount) {
   let tfDict = {};
   for (let word in appearDict) {
-    //tfDict[word] = (1 + Math.log2(appearDict[word])) / Math.log2(wordCount);
     tfDict[word] = appearDict[word] / wordCount;
   }
   return tfDict;
@@ -28,15 +28,18 @@ function tf(appearDict, wordCount) {
 
 function idf(dict_contain, total_doc) {
   let idfDict = {};
+  let temp;
   for (let word in dict_contain) {
-    if (dict_contain[word] != 0) {
-      idfDict[word] = Math.log2(total_doc / dict_contain[word]);
-    } else {
-      idfDict[word] = Math.log2(total_doc / (1 + dict_contain[word]));
-    }
+    temp = total_doc / dict_contain[word];
+    idfDict[word] = Math.log2(1 + temp);
   }
 
   return idfDict;
+}
+
+function word_count(text) {
+  let bow = special_chars.clear_special_chars(text).split(" ");
+  return bow.length;
 }
 
 /*
@@ -87,7 +90,7 @@ function word_count(text) {
 
 /* 
     Trả ra một mảng chứa các list từ được phân tách từ text_list là tất cả dữ liệu text trong db
-      doc_list = [
+      arr_doc = [
         { 'tôi': 1, 'yêu': 1, em: 1, 'ấy': 1 },
         { 'tôi': 1, 'thương': 1, em: 1, 'ấy': 1 }
       ]
