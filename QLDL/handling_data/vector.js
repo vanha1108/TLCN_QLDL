@@ -1,13 +1,11 @@
 var tfidf = require("./compute_TFIDF");
 
-let text = "Tôi yêu em ấy";
-let all_text = ["Tôi yêu em ấy", "Tôi thương em ấy"];
-
 module.exports.create_vector = function (text, all_text) {
-  let tfidf_Dict = tfidf.TF_IDF(text, all_text);
+  let tfidf_Dict;
   let total = 0;
   let N = 0;
   let word_arr = [];
+  tfidf_Dict = tfidf.TF_IDF(text, all_text);
 
   for (let word in tfidf_Dict) {
     N += 1;
@@ -20,5 +18,6 @@ module.exports.create_vector = function (text, all_text) {
       word_arr[word] = tfidf_Dict[word];
     }
   }
+
   return word_arr;
 };

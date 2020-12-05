@@ -1,0 +1,118 @@
+    -   Nhà cung cấp là các bên liên quan bên ngoài tổ chức nhưng không tham gia vào dự án vì họ đang cung cấp một số loại sản phẩm hoặc dịch vụ. 
+    -   Các nhóm Agile nên cẩn thận trong việc lựa chọn nhà cung cấp và đảm bảo rằng họ được chuẩn bị để làm việc trong môi trường nhanh nhẹn. 
+    -   Nếu một nhà cung cấp cần sử dụng cách tiếp cận nhanh nhẹn để tham gia vào dự án, thì yêu cầu này nên được đặt trong yêu cầu đề xuất (RFP).
+    -   Tuy nhiên, tùy thuộc vào vai trò của họ trong dự án, một số nhà cung cấp có thể không cần sử dụng hoặc hiểu các thực hành nhanh.  
+ Giống như tất cả các quyết định, đào tạo các nhà cung cấp của chúng tôi, chúng tôi cần cân nhắc đánh đổi lợi ích chi phí.
+    -   Vì các đội nhanh nhẹn biết rằng các yêu cầu có thể thay đổi và phạm vi có thể thương lượng, nên các hợp đồng nhà cung cấp truyền thống dựa trên các thông số kỹ thuật chính thức là vấn đề. Thay vào đó, các dự án nhanh thường sử dụng hợp đồng
+
+các mô hình được thiết kế cho một môi trường nhanh nhẹn, chẳng hạn như các gói công việc có giá cố định và hợp đồng được phân cấp. Chúng ta sẽ tìm hiểu chúng trong các phần sau
+
+    *   Agile Constraints and Contracts ( Các ràng buộc và hợp đồng trong mô hình phát triển nhanh )
+    -   Mặc dù các phương pháp nhanh nhẹn cung cấp tính linh hoạt cao và cho phép chúng ta quản lý các yêu cầu và mức độ ưu tiên đang thay đổi, khả năng thích ứng và tính linh hoạt phạm vi này có thể tạo ra vấn đề khi xác định các tiêu chí cho hợp đồng hoặc công việc.
+    -    Những thách thức này đã tồn tại kể từ khi tạo ra các phương thức tập tin và rất nhiều người đã nỗ lực giải quyết chúng. Chúng ta hãy cùng xem mô hình tam giác ngược sau đây:
+
+     -   Không giống như tam giác ràng buộc truyền thống, các dự án nhanh nhẹn cố gắng cố định thời gian và chi phí và điều chỉnh phạm vi để đạt được sản phẩm có chất lượng tốt nhất, ưu tiên cao nhất có thể trong các hạn chế cố định. Nếu chức năng (phạm vi) của sản phẩm bị cố định, thì có nguy cơ là dự án sẽ hết tiền hoặc thời gian trước khi hoàn thành — hoặc thậm chí tệ hơn là tạo ra sản phẩm kém chất lượng.
+
+
+
+
+     -   Hợp đồng DSDM ban đầu được ủy quyền bởi DSDM Consortium và tiếp tục phát triển
+	( Agile Business Consortium là một tổ chức phi lợi nhuận, độc lập với nhà cung cấp, sở hữu và điều hành khuôn khổ DSDM)
+
+     -   Hợp đồng này tập trung vào công việc “phù hợp với mục đích kinh doanh” và vượt qua các bài kiểm tra, thay vì phù hợp với một đặc điểm kỹ thuật
+
+     -    Hợp đồng DSDM được sử dụng chủ yếu ở Vương quốc Anh và các khu vực khác của Châu Âu.
+
+
+
+     *   Change for Free
+     -    Cấu trúc của Sutherlands bắt đầu với một hợp đồng giá cố định tiêu chuẩn bao gồm thời gian và vật liệu cho công việc bổ sung, nhưng sau đó anh ta chèn một điều khoản tùy chọn “thay đổi miễn phí”.
+     -     Khách hàng chỉ có thể sử dụng điều khoản “thay đổi miễn phí” này nếu họ làm việc với nhóm trong mỗi lần lặp lại.
+
+     *  Money for Nothing
+     -  Giống như điều khoản “thay đổi miễn phí”, khái niệm “tiền không có gì” cũng chỉ hợp lệ nếu khách hàng đóng vai trò của họ trong dự án nhanh.
+     -   “Tiền không có gì” cho phép khách hàng kết thúc dự án sớm khi họ cảm thấy không còn đủ ROI trong công việc tồn đọng để đảm bảo các lần lặp lại tiếp theo.
+     -    ROI là viết tắt Return On Investment. ... ROI là kết quả hiệu suất lợi nhuận do đầu tư mang lại.
+      
+
+      *   Graduated Fixed-Price Contract 
+      -   Hợp đồng giá cố định đã tốt nghiệp được Thorup và Jensen quảng bá như một loại hợp đồng linh hoạt khác
+Với loại hợp đồng này, cả hai bên đều chia sẻ một số rủi ro và phần thưởng liên quan đến phương sai lịch trình
+	-- VD
+      - Theo thỏa thuận này, nếu nhà cung cấp giao hàng đúng giờ, họ sẽ được trả tiền cho số giờ làm việc theo tỷ lệ tiêu chuẩn của họ. Nếu giao hàng sớm, họ được trả tiền cho ít giờ hơn - nhưng với tỷ lệ cao hơn. Khách hàng rất vui vì công việc được hoàn thành sớm và tổng thể họ trả ít hơn. Nhà cung cấp rất vui vì họ kiếm được lợi nhuận cao hơn. Tuy nhiên, nếu nhà cung cấp giao hàng muộn, họ sẽ được thanh toán trong nhiều giờ hơn, nhưng với mức thấp hơn.
+Khi điều này xảy ra, cả hai bên đều không hài lòng vì cả hai đều không kiếm được tiền, nhưng với tốc độ dần dần, bền vững, hy vọng hoàn toàn sẽ không dẫn đến việc chấm dứt hợp đồng.
+
+       *  Fixed-Price Work Packages
+       -  Các gói công việc giá cố định giảm thiểu rủi ro đánh giá thấp hoặc đánh giá quá cao một phần công việc bằng cách giảm phạm vi và chi phí liên quan đến công việc được ước tính.
+Sử dụng các gói công việc có giá cố định cho phép khách hàng sắp xếp lại các công việc còn lại dựa trên chi phí phát triển.
+
+
+       *   Customized Contracts
+       -    Các loại hợp đồng nhanh khác nhau có thể được ghép lại với nhau để tạo ra một hợp đồng tùy chỉnh phù hợp nhất với nhu cầu của cả người mua và người bán 
+       -     Thành công của dự án cuối cùng được xác định bởi mức độ hợp tác liên tục giữa khách hàng và người bán.
+
+
+       *   Verifying and Validating Value
+	- Một điều cần nghĩ là chúng tôi đang xây dựng các sản phẩm và dịch vụ tuyệt vời và một điều khác là trực tiếp yêu cầu các nhà tài trợ, người dùng hoặc chủ sở hữu sản phẩm xác nhận điều này. Các phương pháp Agile thường được sử dụng trên các dự án
+vô hình (chẳng hạn như thiết kế, phần mềm, v.v.). Bản chất vô hình của các sản phẩm cuối cùng này có nghĩa là tất cả những gì quan trọng hơn nhiều để xác nhận rằng những gì chúng tôi đang xây dựng là, chính xác, đang đi đúng hướng và được coi là có giá trị cao đối với doanh nghiệp. Thử thách này có thể được minh họa trong hình thức hoạt hình, như hình dưới đây.
+
+
+        *   Frequent Verification and Validation
+        -    Agile sử dụng kiểm tra, điểm kiểm tra và đánh giá thường xuyên để giải quyết các vấn đề trước khi chúng trở nên lớn hơn. Thực hành này được gọi là xác minh và xác nhận thường xuyên.
+        -   Dự án XP bao gồm nhiều chu kỳ kiểm tra và xác minh chồng chéo có thể từ vài giây đến vài tháng
+  	1. Khi reviewer vs developer cùng làm việc chung --> Sửa lỗi một cách đơn giản
+	2. Các nhà phát triển XP chạy thử nghiệm đơn vị vài phút một lần để xác minh rằng mã đang đạt được kết quả mong muốn và xác nhận rằng chức năng hiện có đang hoạt động bình thường
+	3. sự cộng tác của khách hàng nên diễn ra thường xuyên
+	4. Nhóm sẽ xác nhận xem ai đang làm việc gì và khi nào mã nên được thực hiện và sẵn sàng tích hợp.
+	5. Vài tuần một lần, nhóm tổ chức một cuộc họp đánh giá lặp lại để trình diễn tác phẩm mới
+	6. Vài tháng một lần (thông thường), vào cuối mỗi bản phát hành, khách hàng sẽ xem xét sản phẩm có thể phân phối để xác minh rằng nó đã “xong” và sẵn sàng để phát hành.
+
+
+	* Exploratory and Usability Testing ( thử nghiệm và tính khả dụng )
+        -     Các loại kiểm thử này thường được sử dụng trong công việc phát triển phần mềm và dễ hiểu nhất trong bối cảnh đó, mặc dù chúng không nhất thiết giới hạn trong các dự án CNTT.
+        	* Exploratory testing
+	-     Như cái tên của nó đã chỉ ra rằng Exploratory testing là quá trình test phần mềm mà không có kế hoạch và lịch trình đặc biệt. Đây là quá trình kiểm thử thông thường mà không sử dụng bất kỳ bộ testcase nào cả hoặc là những tài liệu cho kế hoạch test ứng dụng của bạn. Xác định chức năng của ứng dụng bằng việc khám phá và học làm test design, testcase và sử dụng thiết bị giả lập để thực hiện test chúng một cách tốt nhất.
+
+	* Usability testing
+	- Mục tiêu của loại kiểm tra này là để chẩn đoán mức độ dễ dàng sử dụng hệ thống và giúp phát hiện ra những vấn đề có thể cần thiết kế lại hoặc thay đổi
+
+
+	* Continuous Integration ( tích hợp liên tục )
+	- Việc thực hiện tích hợp liên tục được các nhà phát triển phần mềm sử dụng để thường xuyên kết hợp mã mới và mã đã thay đổi vào kho mã dự án của họ. Điều này giúp giảm thiểu các vấn đề tích hợp do nhiều người thực hiện các thay đổi không tương thích đối với cùng một cơ sở mã. 
+	- Thông thường, chúng tôi thực hiện các cam kết mã này càng thường xuyên, thì lượng mã cần thay đổi càng nhỏ để cho phép phiên bản mới (hoặc phiên bản) của phần mềm biên dịch thành công. Vì vậy, tích hợp liên tục là một trong những
+các công cụ mà chúng tôi có thể sử dụng để tìm và giải quyết vấn đề càng sớm càng tốt.
+
+
+	* Chúng ta hãy xem xét kỹ hơn các thành phần của một hệ thống tích hợp liên tục.
+	
+	»Hệ thống kiểm soát mã nguồn: Đây là phần mềm thực hiện kiểm soát phiên bản trên tất cả các tệp đại diện cho sản phẩm đang được phát triển.
+Công cụ xây dựng: Mã nguồn cần được biên dịch trước khi chạy thử nghiệm. Hầu hết các môi trường phát triển tích hợp (IDE) đóng vai trò như một công cụ xây dựng để biên dịch mã.
+	
+	»Công cụ kiểm tra: Là một phần của quy trình xây dựng, các bài kiểm tra đơn vị được chạy để đảm bảo rằng chức năng cơ bản hoạt động theo kế hoạch. Các công cụ kiểm tra đơn vị thực hiện các bài kiểm tra nhỏ, nguyên tử được viết trong các công cụ này để kiểm tra mã cho những thay đổi không lường trước trong hành vi.
+
+	»Bộ lập lịch hoặc trình kích hoạt: Các bản dựng có thể được khởi chạy theo lịch trình thường xuyên (chẳng hạn như mỗi giờ) hoặc mỗi khi hệ thống phát hiện ra thay đổi đối với mã nguồn.
+
+	»Thông báo: Nếu một bản dựng không thành công, nhóm cần được thông báo để họ có thể sửa bản dựng càng sớm càng tốt. Những thông báo này có thể được gửi qua e-mail hoặc tin nhắn tức thì.
+
+
+	* Test-Driven Development (TDD)
+   	- Lợi ích: 
+	Trước tiên, bằng cách tập trung vào các bài kiểm tra, chúng tôi phải nghĩ về cách chức năng sẽ được khách hàng sử dụng
+	Viết các bài kiểm tra trước khi mã đảm bảo rằng chúng tôi có ít nhất một số bài kiểm tra tại chỗ
+	Kiểm tra sớm và thường xuyên giúp chúng tôi phát hiện sớm các khiếm khuyết trong chu kỳ phát triển.
+	Cách tiếp cận của hệ thống viết trong các đơn vị nhỏ, được thử nghiệm dẫn đến một hệ thống mô-đun, linh hoạt và có thể mở rộng hơn
+
+	- Khó khăn:
+	Các bài kiểm tra đơn vị thường được viết bởi cùng một nhà phát triển, người sẽ triển khai mã
+	Một số loại chức năng, chẳng hạn như giao diện người dùng, rất khó hoặc tốn thời gian để kiểm tra một cách đáng tin cậy thông qua các bài kiểm tra đơn vị
+	Bản thân các bài kiểm tra cũng cần được duy trì, và khi dự án phát triển và thay đổi, tải duy trì cho các tập lệnh kiểm tra sẽ tăng lên.
+	Khi mọi người thấy số lượng bài kiểm tra vượt qua cao hơn, họ có thể có cảm giác an toàn sai về chất lượng mã
+
+
+	Acceptance Test-Driven Development (ATDD)
+	Kỹ thuật phát triển theo hướng kiểm tra chấp nhận (ATDD) chuyển trọng tâm kiểm tra từ mã sang yêu cầu kinh doanh
+	Hãy xem xét bốn giai đoạn này chi tiết hơn:
+	- Thảo luận về các yêu cầu
+	- Chưng cất ở định dạng thân thiện với khuôn khổ
+	- Phát triển mã và kết nối các bài kiểm tra
+	- Bản giới thiệu

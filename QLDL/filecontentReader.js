@@ -6,7 +6,7 @@ var XLSX = require("xlsx");
 const path = require("path");
 
 //module.exports =
-exports.readFilesHandler = function (filepath) {
+module.exports.readFilesHandler = function (filepath) {
   let ext = filereader.getFileExtension(filepath);
   if (ext == ".docx") {
     filereader.extract(filepath).then(function (res, err) {

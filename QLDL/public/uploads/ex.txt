@@ -1,31 +1,32 @@
+elasticsearch
+
+vector hoá văn bản
+
+đo góc cosin
+
+khoảng cách Euclid
+
+- Loại bỏ những từ không cần thiết và thêm các từ quan trọng vào index
+
+
 const special_chars = require("./special_chars");
 
 module.exports.TF_IDF = function (text, all_text) {
-  let appearDict = {};
-  text = special_chars.clear_special_chars(text);
-
-  let bow = ("" + text).split(" ");
-
-  for (let word in bow) {
-    appearDict[bow[word]] = 0;
-  }
-
-  for (let word in bow) {
-    appearDict[bow[word]] += 1;
-  }
-
+  let appearDict = compute_appear(text);
   let wordCount = word_count(text);
   let tfDict = tf(appearDict, wordCount);
+
   let arrDoc = arr_doc(all_text);
   let dictContain = contain_word(text, arrDoc);
-
   let total_doc = all_text.length;
+
   let idfDict = idf(dictContain, total_doc);
-  let tfidf_Dict = {};
+
+  let tfidf = {};
   for (let word in tfDict) {
-    tfidf_Dict[word] = tfDict[word] * idfDict[word];
+    tfidf[word] = tfDict[word] * idfDict[word];
   }
-  return tfidf_Dict;
+  return tfidf;
 };
 
 function tf(appearDict, wordCount) {
@@ -48,8 +49,7 @@ function idf(dict_contain, total_doc) {
 }
 
 function word_count(text) {
-  special_chars.clear_special_chars(text);
-  bow = bow.split(" ");
+  let bow = special_chars.clear_special_chars(text).split(" ");
   return bow.length;
 }
 
@@ -59,7 +59,7 @@ function word_count(text) {
 function compute_appear(text) {
   let appearDict = {};
   text = special_chars.clear_special_chars(text);
-  let bow = ("" + text).split(" ");
+  let bow = text.split(" ");
 
   for (let word in bow) {
     appearDict[bow[word]] = 0;
@@ -77,8 +77,7 @@ function compute_appear(text) {
 */
 function contain_word(text, arr_doc) {
   text = special_chars.clear_special_chars(text);
-
-  let bow = ("" + text).split(" ");
+  let bow = text.split(" ");
   let dict_contain = {};
   for (let word in bow) {
     dict_contain[bow[word]] = 0;
@@ -96,8 +95,7 @@ function contain_word(text, arr_doc) {
 }
 
 function word_count(text) {
-  let bow = special_chars.clear_special_chars(text);
-  bow = ("" + bow).split(" ");
+  let bow = special_chars.clear_special_chars(text).split(" ");
   return bow.length;
 }
 
@@ -109,13 +107,11 @@ function word_count(text) {
       ]
 */
 function arr_doc(text_list) {
-  var arr_doc = [];
-  var doc_list = {};
-  var temp;
+  let arr_doc = [];
+  let doc_list = {};
+  let temp = {};
   for (let doc in text_list) {
-    temp = special_chars.clear_special_chars(text_list[doc]);
-    temp = ("" + temp).split(" ");
-
+    temp = special_chars.clear_special_chars(text_list[doc]).split(" ");
     for (let word in temp) {
       doc_list[temp[word]] = 1;
     }

@@ -2,18 +2,9 @@ var express = require("express");
 var router = express.Router();
 var multer = require("multer");
 var fs = require("fs");
-var filereader = require("../filereader");
+var filereader = require("./../document/filereader");
 var docmodel = require("../model/document");
-var filecontentReader = require("../filecontentReader");
-const { Console } = require("console");
-const { resolveSoa } = require("dns");
-const passport = require("passport");
-var flash = require("connect-flash");
-const { request } = require("http");
 var PdfReader = require("pdfreader").PdfReader;
-const User = require("../model/user");
-var bcrypt = require("bcrypt-nodejs");
-const sw = require("./../handling_data/clear_stop_word");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -108,12 +99,6 @@ router.get("/delete/:iddelete", function (req, res, next) {
     if (err) handleError();
     res.redirect("/listall");
   });
-});
-
-router.get("/t", function (req, res, next) {
-  var tx = "Nguyễn Văn Hà là một người vĩ đại!";
-  const ss = sw.stop_word_handling(tx);
-  res.send("KQ: " + ss);
 });
 
 module.exports = router;
