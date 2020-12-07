@@ -19,6 +19,7 @@ require("./config/passport");
 mongoose.connect("mongodb://localhost:27017/QLDL_V1", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 
 require("./config/passport");

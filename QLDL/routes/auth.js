@@ -32,4 +32,31 @@ router.post(
   })
 );
 
+router.get("/changepass", function (req, res, next) {
+  res.render("changepass", { title: "Change Password" });
+});
+
+router.post("/changepass", function (req, res, next) {
+  User.findOne({ email: req.body.current }, function (err, user) {
+    if (err) console.log(err);
+    if (!user) {
+      console.log("NULL");
+      res.render("changepass", { title: "Change Password" });
+      return;
+    }
+    var checkPass = bcrypt.compareSync(req.body.currentPassword, user.password);
+    if (!checkPass) res.redirect("/api/auth/changepass");
+    else {
+      var passwordHash = bcrypt.hashSync(
+        req.body.newPassword,
+        bcrypt.genSaltSync(10),
+        null
+      );
+      user.password = passwordHash;
+      user.save();
+      res.redirect("/api/auth/login");
+    }
+  });
+});
+
 module.exports = router;

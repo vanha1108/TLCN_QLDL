@@ -10,6 +10,7 @@ var check = require("./../handling_data/checkduplicate");
 var special = require("./../handling_data/special_chars");
 var tfidf = require("./../handling_data/compute_TFIDF");
 const { text } = require("express");
+const { route } = require("./auth");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -21,6 +22,7 @@ var storage = multer.diskStorage({
 });
 
 var upload = multer({ storage: storage });
+const LIMIT = 0.2;
 
 /* GET upload file. */
 router.get("/upload", function (req, res, next) {
@@ -58,39 +60,43 @@ router.post(
         );
         break;
     }
-
-    var kq;
+    var score;
+    var duplicate;
     docmodel.find({}).exec(async function (err, docs) {
       if (err) console.log(err);
+      if (docs.length == 0) {
+        var temp = {
+          filename: req.file.originalname,
+          authorname: req.body.authorname,
+          note: req.body.note,
+          data: content,
+        };
+        // Thêm vào csdl
+        var data = new docmodel(temp);
+        data.save();
+        return;
+      }
+
       for (let doc in docs) {
         await check
           .check_duplicate(content, docs[doc].data)
           .then(function (k, err) {
             if (err) console.log(err);
-            kq = k;
+            score = k;
           });
-        if (kq == true) {
-          //req.flash("duplicate", "File duplicate!");
-          // res.render("upload", {
-          //   title: "Upload",
-          //   message: req.flash("duplicate"),
-          //});
-          console.log("Duplicate");
-        } else {
-          console.log("No Duplicate");
-          // File không bị trùng lắp ==> Lưu vào db
-          var temp = {
-            filename: req.file.originalname,
-            authorname: req.body.authorname,
-            note: req.body.note,
-            data: content,
-          };
-          // Thêm vào csdl
-          var data = new docmodel(temp);
-          data.save();
+        if (score < LIMIT) {
         }
       }
     });
+    var temp = {
+      filename: req.file.originalname,
+      authorname: req.body.authorname,
+      note: req.body.note,
+      data: content,
+    };
+    // Thêm vào csdl
+    var data = new docmodel(temp);
+    data.save();
     res.redirect("/api/doc/upload");
   }
 );
@@ -110,6 +116,16 @@ router.get("/delete/:iddelete", function (req, res, next) {
   docmodel.findByIdAndRemove({ _id: iddelete }, function (err, data) {
     if (err) handleError();
     res.redirect("/listall");
+  });
+});
+
+router.get("/search", function (req, res, next) {
+  res.render("search", { title: "Search", data: "" });
+});
+
+router.post("/search", function (req, res, next) {
+  docmodel.search(req.body.key, function (err, dt) {
+    res.render("search", { title: "Search", data: dt });
   });
 });
 
