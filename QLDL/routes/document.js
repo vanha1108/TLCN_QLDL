@@ -15,13 +15,14 @@ var sw = require("./../handling_data/stopword");
 var euclid = require("./../handling_data/euclid");
 const { route } = require("./auth");
 const { type } = require("os");
+const { el } = require("stopword");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./public/uploads");
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
@@ -32,7 +33,6 @@ const LIMIT = 0.2;
 router.get("/upload", function (req, res, next) {
   res.render("upload", {
     title: "Upload Document",
-    message: req.flash("duplicate"),
   });
 });
 
@@ -67,11 +67,14 @@ router.post(
     }
 
     // Create vector
+    var comment = [];
     var all_text = [];
     warehouse.findOne({}).exec(async function (err, t) {
       if (err) console.log(err);
-      for (let doc in t.allText) {
-        all_text.push(t.allText[doc]);
+      if (t) {
+        for (let doc in t.allText) {
+          all_text.push(t.allText[doc]);
+        }
       }
       var text = special.clear_special_chars(content);
       text = ("" + text).split(" ");
@@ -89,7 +92,18 @@ router.post(
           // Không có document trong db --> lưu vào db mà k cần check duplicate
 
           var dt = new docmodel();
+          var id = parseInt(req.body.idDoc);
+          // Kiểm tra xem idDoc đã có chưa
+          var arrID = [];
+          for (doc in docs) {
+            arrID.push(docs[doc].idDoc);
+          }
+          while (arrID.indexOf(id) != -1) {
+            id += 1;
+          }
+          dt.idDoc = id;
           dt.filename = req.file.originalname;
+          dt.path = req.file.path;
           dt.authorname = req.body.authorname;
           dt.note = req.body.note;
           dt.data = content;
@@ -99,8 +113,13 @@ router.post(
             dt.vector.value.push(vecA[word]);
           }
           dt.save();
+          res.render("upload", {
+            title: "Upload Document",
+            comment: comment,
+          });
         } else {
           // Nếu có document trong db thì lấy ra vector của document để so sánh với vector vừa upload
+          var result = [];
           for (let doc in docs) {
             var vecB = [];
             var direc = docs[doc].vector.direction;
@@ -110,17 +129,34 @@ router.post(
               vecB[direc[i]] = value[i];
             }
 
-            var result = [];
-
             var distance = euclid.compute_distance(vecA, vecB);
-            if (distance < 0.1) {
+            console.log(distance);
+            if (distance < 0.04) {
               result[docs[doc]._id] = distance;
             }
           }
+          var count = 0;
+          for (let r in result) {
+            count += 1;
+          }
 
-          if (result[0] == null) {
+          // Nếu không có tài liệu nào gần giống
+          if (count <= 0) {
             var dt = new docmodel();
+            var id = parseInt(req.body.idDoc);
+
+            // Kiểm tra xem idDoc đã có chưa
+            var arrID = [];
+            for (doc in docs) {
+              arrID.push(docs[doc].idDoc);
+            }
+
+            while (arrID.indexOf(id) != -1) {
+              id += 1;
+            }
+            dt.idDoc = id;
             dt.filename = req.file.originalname;
+            dt.path = req.file.path;
             dt.authorname = req.body.authorname;
             dt.note = req.body.note;
             dt.data = content;
@@ -129,10 +165,55 @@ router.post(
               dt.vector.value.push(vecA[word]);
             }
             dt.save();
+            result = [];
+            res.render("upload", {
+              title: "Upload Document",
+              comment: comment,
+            });
+          } else {
+            // Nếu có tài liệu gần giống ( _id tài liệu gần giống chứa trong result)
+            for (let doc in result) {
+              docmodel.findById(result[doc]._id).exec(function (err, re) {
+                if (result[doc] <= 0) {
+                  var d = {
+                    document: re,
+                    massage: "Gần như giống hoàn toàn",
+                  };
+                  comment.push(d);
+                } else {
+                  if (result[doc] < 0.01) {
+                    var d = {
+                      document: re,
+                      massage: "Rất giống nhau",
+                    };
+                    comment.push(d);
+                  } else {
+                    if (result[doc] < 0.03) {
+                      var d = {
+                        document: re,
+                        massage: "Giống nhau",
+                      };
+                      comment.push(d);
+                    } else {
+                      var d = {
+                        document: re,
+                        massage: "Gần Giống nhau",
+                      };
+                      comment.push(d);
+                    }
+                  }
+                }
+              });
+            }
+            // Truyền ra danh sách giống nhau
+            res.render("upload", {
+              title: "Upload Document",
+              comment: comment,
+            });
           }
         }
       });
-      res.redirect("/api/doc/upload");
+      //res.redirect("/api/doc/upload");
     });
   }
 );
@@ -154,6 +235,10 @@ router.post("/search", function (req, res, next) {
   docmodel.search(req.body.key, function (err, dt) {
     res.render("search", { title: "Search", data: dt });
   });
+});
+
+router.get("/edit", function (req, res, next) {
+  res.render("edit", { title: "Edit Document" });
 });
 
 module.exports = router;

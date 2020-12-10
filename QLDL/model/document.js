@@ -1,8 +1,15 @@
-const { Double } = require("mongodb");
+const { Double, Int32, Long } = require("mongodb");
 const mongoose = require("mongoose");
 const doc = new mongoose.Schema(
   {
+    idDoc: {
+      type: Number,
+      default: 1,
+    },
     filename: {
+      type: String,
+    },
+    path: {
       type: String,
     },
     authorname: {
@@ -13,7 +20,6 @@ const doc = new mongoose.Schema(
     },
     data: {
       type: String,
-      default: {},
     },
     vector: { direction: Array, value: Array },
   },

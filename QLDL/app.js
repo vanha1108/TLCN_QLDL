@@ -74,7 +74,7 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-cron.schedule("45 23 * * *", function () {
+cron.schedule("50 17 * * *", function () {
   console.log("---------------------");
   console.log("Running Cron Job");
   sythentic.update_warehouse();
