@@ -59,4 +59,10 @@ router.post("/changepass", function (req, res, next) {
   });
 });
 
+router.get("/logout", function (req, res, next) {
+  req.logOut();
+  req.session.destroy();
+  res.redirect("/login");
+});
+
 module.exports = router;

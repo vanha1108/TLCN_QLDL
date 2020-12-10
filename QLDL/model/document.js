@@ -1,3 +1,4 @@
+const { Double } = require("mongodb");
 const mongoose = require("mongoose");
 const doc = new mongoose.Schema(
   {
@@ -14,6 +15,7 @@ const doc = new mongoose.Schema(
       type: String,
       default: {},
     },
+    vector: { direction: Array, value: Array },
   },
   { collection: "document" }
 );

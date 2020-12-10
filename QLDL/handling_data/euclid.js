@@ -1,12 +1,12 @@
 module.exports.compute_distance = function (vecA, vecB) {
   // Đưa vecA và vecB về cùng số chiều
   for (let word in vecA) {
-    if (vecB[word] == null) {
+    if (vecB[word] != Number) {
       vecB[word] = 0;
     }
   }
   for (let word in vecB) {
-    if (vecA[word] == null) {
+    if (vecA[word] != Number) {
       vecA[word] = 0;
     }
   }

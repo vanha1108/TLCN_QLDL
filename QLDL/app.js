@@ -8,6 +8,10 @@ const mongoose = require("mongoose");
 var passport = require("passport");
 var flash = require("connect-flash");
 var bodyParser = require("body-parser");
+var cron = require("node-cron");
+var docmodel = require("./model/document");
+var warehouse = require("./model/warehouse");
+var sythentic = require("./handling_data/warehouse");
 
 const authRouter = require("./routes/auth");
 const docRouter = require("./routes/document");
@@ -68,6 +72,12 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render("error");
+});
+
+cron.schedule("45 23 * * *", function () {
+  console.log("---------------------");
+  console.log("Running Cron Job");
+  sythentic.update_warehouse();
 });
 
 module.exports = app;

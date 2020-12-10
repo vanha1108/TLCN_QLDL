@@ -6,11 +6,15 @@ var multer = require("multer");
 var fs = require("fs");
 var PdfReader = require("pdfreader").PdfReader;
 var filereader = require("./../document/filereader");
-var check = require("./../handling_data/checkduplicate");
+var checkDup = require("./../handling_data/checkduplicate");
 var special = require("./../handling_data/special_chars");
 var tfidf = require("./../handling_data/compute_TFIDF");
-const { text } = require("express");
+var vector = require("./../handling_data/vector");
+var warehouse = require("./../model/warehouse");
+var sw = require("./../handling_data/stopword");
+var euclid = require("./../handling_data/euclid");
 const { route } = require("./auth");
+const { type } = require("os");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -37,6 +41,7 @@ router.post(
   "/upload",
   upload.single("filedoc"),
   async function (req, res, next) {
+    // read file
     var content = "";
     let ext = filereader.getFileExtension(req.file.path);
     switch (ext) {
@@ -60,62 +65,84 @@ router.post(
         );
         break;
     }
-    var score;
-    var duplicate;
-    docmodel.find({}).exec(async function (err, docs) {
-      if (err) console.log(err);
-      if (docs.length == 0) {
-        var temp = {
-          filename: req.file.originalname,
-          authorname: req.body.authorname,
-          note: req.body.note,
-          data: content,
-        };
-        // Thêm vào csdl
-        var data = new docmodel(temp);
-        data.save();
-        return;
-      }
 
-      for (let doc in docs) {
-        await check
-          .check_duplicate(content, docs[doc].data)
-          .then(function (k, err) {
-            if (err) console.log(err);
-            score = k;
-          });
-        if (score < LIMIT) {
-        }
+    // Create vector
+    var all_text = [];
+    warehouse.findOne({}).exec(async function (err, t) {
+      if (err) console.log(err);
+      for (let doc in t.allText) {
+        all_text.push(t.allText[doc]);
       }
+      var text = special.clear_special_chars(content);
+      text = ("" + text).split(" ");
+      text = sw.filter_stopword(text);
+      all_text.push(text);
+
+      var vecA = await vector.create_vector(text, all_text);
+
+      // Lấy ra từng document trong db và so sánh với document vừa được upload
+
+      docmodel.find({}).exec(async function (err, docs) {
+        if (err) console.log(err);
+        //console.log(docs);
+        if (docs.length == 0) {
+          // Không có document trong db --> lưu vào db mà k cần check duplicate
+
+          var dt = new docmodel();
+          dt.filename = req.file.originalname;
+          dt.authorname = req.body.authorname;
+          dt.note = req.body.note;
+          dt.data = content;
+
+          for (let word in vecA) {
+            dt.vector.direction.push(word);
+            dt.vector.value.push(vecA[word]);
+          }
+          dt.save();
+        } else {
+          // Nếu có document trong db thì lấy ra vector của document để so sánh với vector vừa upload
+          for (let doc in docs) {
+            var vecB = [];
+            var direc = docs[doc].vector.direction;
+            var value = docs[doc].vector.value;
+
+            for (let i = 0; i < direc.length; i++) {
+              vecB[direc[i]] = value[i];
+            }
+
+            var result = [];
+
+            var distance = euclid.compute_distance(vecA, vecB);
+            if (distance < 0.1) {
+              result[docs[doc]._id] = distance;
+            }
+          }
+
+          if (result[0] == null) {
+            var dt = new docmodel();
+            dt.filename = req.file.originalname;
+            dt.authorname = req.body.authorname;
+            dt.note = req.body.note;
+            dt.data = content;
+            for (let word in vecA) {
+              dt.vector.direction.push(word);
+              dt.vector.value.push(vecA[word]);
+            }
+            dt.save();
+          }
+        }
+      });
+      res.redirect("/api/doc/upload");
     });
-    var temp = {
-      filename: req.file.originalname,
-      authorname: req.body.authorname,
-      note: req.body.note,
-      data: content,
-    };
-    // Thêm vào csdl
-    var data = new docmodel(temp);
-    data.save();
-    res.redirect("/api/doc/upload");
   }
 );
 
 /* GET list file. */
 router.get("/listall", function (req, res, next) {
-  docmodel.find(function (err, data) {
+  docmodel.find(function (err, listdoc) {
     if (err) handleError();
 
-    res.render("listall", { title: "List Document", data: data });
-  });
-});
-
-/* GET delete file. */
-router.get("/delete/:iddelete", function (req, res, next) {
-  var iddelete = req.params.iddelete;
-  docmodel.findByIdAndRemove({ _id: iddelete }, function (err, data) {
-    if (err) handleError();
-    res.redirect("/listall");
+    res.render("listall", { title: "List Document", listdoc: listdoc });
   });
 });
 
