@@ -14,6 +14,7 @@ var warehouse = require("./../model/warehouse");
 var sw = require("./../handling_data/stopword");
 var euclid = require("./../handling_data/euclid");
 const { route } = require("./auth");
+const pdfParse = require("pdf-parse");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -26,14 +27,11 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 const LIMIT = 0.2;
-var comment = [];
 
 /* GET upload file. */
 router.get("/upload", function (req, res, next) {
-  console.log("GET UPLOAD");
   res.render("upload", {
     title: "Upload Document",
-    comment: comment,
   });
 });
 
@@ -56,17 +54,12 @@ router.post(
         });
         break;
       case ".pdf":
-        await new PdfReader().parseFileItems(
-          req.file.path,
-          function (err, item) {
-            if (item && item.text) {
-              content += item.text;
-            }
-          }
-        );
+        var buff = fs.readFileSync(req.file.path);
+        var data = await pdfParse(buff);
+        content = data.text;
         break;
     }
-
+    console.log(content);
     // Create vector
     var all_text = [];
     warehouse.findOne({}).exec(async function (err, t) {
@@ -142,7 +135,7 @@ router.post(
 
             var distance = euclid.compute_distance(vecA, vecB);
 
-            if (distance < 0.04) {
+            if (distance < 0.03) {
               result[docs[doc]._id] = distance;
             }
           }
@@ -153,6 +146,7 @@ router.post(
 
           // Nếu không có tài liệu nào gần giống
           if (count <= 0) {
+            console.log("Không có tài liệu gần giống");
             var dt = new docmodel();
             var id = parseInt(req.body.idDoc);
 
@@ -170,7 +164,7 @@ router.post(
             var index = name.lastIndexOf(".");
             var preName = name.slice(0, index);
             var extension = filereader.getFileExtension(req.file.originalname);
-            console.log(preName);
+
             // Kiểm tra tên file đã có chưa
             var arrFilename = [];
             for (let doc in docs) {
@@ -213,7 +207,7 @@ router.post(
                     };
                     arrcomment.push(d);
                   } else {
-                    if (("" + r).indexOf(s) != -1 && result[r] < 0.03) {
+                    if (("" + r).indexOf(s) != -1 && result[r] < 0.02) {
                       d = {
                         document: docs[doc].filename,
                         message: "Giống nhau",
@@ -232,6 +226,8 @@ router.post(
                 }
               }
             }
+            //console.log(result);
+            //console.log(arrcomment);
             // Danh sách giống nhau:      arrcomment
           }
         }
@@ -260,15 +256,12 @@ router.post("/search", function (req, res, next) {
   });
 });
 
-router.get("/edit", function (req, res, next) {
-  res.render("edit", { title: "Edit Document" });
-});
-
 router.get("/dowload:idDowload", function (req, res, next) {
   var id = req.params.idDowload;
   docmodel.findOne({ idDoc: id }).exec(function (err, doc) {
     if (err) console.log(err);
     if (!doc) console.log("Not Find");
+    res.download(doc.path);
   });
 });
 

@@ -30,6 +30,7 @@
     "nodemon": "^2.0.6",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
+    "pdf-parse": "^1.1.1",
     "pdfreader": "^1.2.7",
     "stopword": "^1.0.4",
     "vntk": "^1.4.4",

@@ -52,19 +52,3 @@ exports.getFileExtension = function (filename) {
   var extension = filename.substr(dot, filename.length);
   return extension;
 };
-
-exports.readPDFFile = function (pdfFilePath, pdfBuffer) {
-  return new Promise(function (resolve, reject) {
-    var content = "";
-    new PdfReader().parseBuffer(pdfBuffer, function (err, item) {
-      if (err) {
-        reject(err);
-      } else if (!item) {
-        reject(err);
-      } else if (item.text) {
-        content = item.text;
-        resolve(content.toString());
-      }
-    });
-  });
-};

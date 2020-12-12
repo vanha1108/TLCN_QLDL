@@ -1,6 +1,7 @@
 var filereader = require("./filereader");
 var fs = require("fs");
 var PdfReader = require("pdfreader").PdfReader;
+const pdfParse = require("pdf-parse");
 
 module.exports.readFiletxt = async function (filepath) {
   const data = fs.readFileSync(filepath, { encoding: "utf8", flag: "r" });
@@ -21,22 +22,6 @@ module.exports.readFiledocx = async function (filepath) {
         body += content + " ";
       }
       resolve(body);
-    });
-  });
-};
-
-module.exports.readFilepdf = async function (filepath) {
-  return new Promise(async function (resolve, reject) {
-    var content = "";
-    await fs.readFile(filepath, "utf-8", async function (err, data) {
-      await new PdfReader().parseBuffer(data, function (err, item) {
-        if (err) console.log("1" + err);
-        else if (!item) console.log(item);
-        else if (item.text) {
-          content = content + " " + item.text;
-        }
-        resolve(content);
-      });
     });
   });
 };
