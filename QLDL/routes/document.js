@@ -14,8 +14,6 @@ var warehouse = require("./../model/warehouse");
 var sw = require("./../handling_data/stopword");
 var euclid = require("./../handling_data/euclid");
 const { route } = require("./auth");
-const { type } = require("os");
-const { el } = require("stopword");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -28,11 +26,14 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 const LIMIT = 0.2;
+var comment = [];
 
 /* GET upload file. */
 router.get("/upload", function (req, res, next) {
+  console.log("GET UPLOAD");
   res.render("upload", {
     title: "Upload Document",
+    comment: comment,
   });
 });
 
@@ -67,7 +68,6 @@ router.post(
     }
 
     // Create vector
-    var comment = [];
     var all_text = [];
     warehouse.findOne({}).exec(async function (err, t) {
       if (err) console.log(err);
@@ -84,10 +84,9 @@ router.post(
       var vecA = await vector.create_vector(text, all_text);
 
       // Lấy ra từng document trong db và so sánh với document vừa được upload
-
       docmodel.find({}).exec(async function (err, docs) {
         if (err) console.log(err);
-        //console.log(docs);
+
         if (docs.length == 0) {
           // Không có document trong db --> lưu vào db mà k cần check duplicate
 
@@ -102,7 +101,23 @@ router.post(
             id += 1;
           }
           dt.idDoc = id;
-          dt.filename = req.file.originalname;
+          var name = req.file.originalname;
+          var index = name.lastIndexOf(".");
+          var preName = name.slice(0, index);
+          var extension = filereader.getFileExtension(req.file.originalname);
+
+          // Kiểm tra tên file đã có chưa
+          var arrFilename = [];
+          for (let doc in docs) {
+            arrFilename.push(docs[doc].filename);
+          }
+          let j = 1;
+          while (arrFilename.indexOf(name) != -1) {
+            name = preName + "(" + j + ")" + extension;
+            j += 1;
+          }
+          dt.filename = name;
+
           dt.path = req.file.path;
           dt.authorname = req.body.authorname;
           dt.note = req.body.note;
@@ -113,10 +128,6 @@ router.post(
             dt.vector.value.push(vecA[word]);
           }
           dt.save();
-          res.render("upload", {
-            title: "Upload Document",
-            comment: comment,
-          });
         } else {
           // Nếu có document trong db thì lấy ra vector của document để so sánh với vector vừa upload
           var result = [];
@@ -130,7 +141,7 @@ router.post(
             }
 
             var distance = euclid.compute_distance(vecA, vecB);
-            console.log(distance);
+
             if (distance < 0.04) {
               result[docs[doc]._id] = distance;
             }
@@ -147,7 +158,7 @@ router.post(
 
             // Kiểm tra xem idDoc đã có chưa
             var arrID = [];
-            for (doc in docs) {
+            for (let doc in docs) {
               arrID.push(docs[doc].idDoc);
             }
 
@@ -155,7 +166,22 @@ router.post(
               id += 1;
             }
             dt.idDoc = id;
-            dt.filename = req.file.originalname;
+            var name = req.file.originalname;
+            var index = name.lastIndexOf(".");
+            var preName = name.slice(0, index);
+            var extension = filereader.getFileExtension(req.file.originalname);
+            console.log(preName);
+            // Kiểm tra tên file đã có chưa
+            var arrFilename = [];
+            for (let doc in docs) {
+              arrFilename.push(docs[doc].filename);
+            }
+            let j = 1;
+            while (arrFilename.indexOf(name) != -1) {
+              name = preName + "(" + j + ")" + extension;
+              j += 1;
+            }
+            dt.filename = name;
             dt.path = req.file.path;
             dt.authorname = req.body.authorname;
             dt.note = req.body.note;
@@ -166,55 +192,52 @@ router.post(
             }
             dt.save();
             result = [];
-            res.render("upload", {
-              title: "Upload Document",
-              comment: comment,
-            });
           } else {
             // Nếu có tài liệu gần giống ( _id tài liệu gần giống chứa trong result)
-            for (let doc in result) {
-              docmodel.findById(result[doc]._id).exec(function (err, re) {
-                if (result[doc] <= 0) {
-                  var d = {
-                    document: re,
-                    massage: "Gần như giống hoàn toàn",
+            var arrcomment = [];
+            var d;
+            for (let r in result) {
+              for (let doc in docs) {
+                var s = String(docs[doc]._id);
+                if (("" + r).indexOf(s) != -1 && result[r] <= 0) {
+                  d = {
+                    document: docs[doc].filename,
+                    message: "Gần như hoàn toàn giống nhau",
                   };
-                  comment.push(d);
+                  arrcomment.push(d);
                 } else {
-                  if (result[doc] < 0.01) {
-                    var d = {
-                      document: re,
-                      massage: "Rất giống nhau",
+                  if (("" + r).indexOf(s) != -1 && result[r] < 0.01) {
+                    d = {
+                      document: docs[doc].filename,
+                      message: "Rất giống nhau",
                     };
-                    comment.push(d);
+                    arrcomment.push(d);
                   } else {
-                    if (result[doc] < 0.03) {
-                      var d = {
-                        document: re,
-                        massage: "Giống nhau",
+                    if (("" + r).indexOf(s) != -1 && result[r] < 0.03) {
+                      d = {
+                        document: docs[doc].filename,
+                        message: "Giống nhau",
                       };
-                      comment.push(d);
+                      arrcomment.push(d);
                     } else {
-                      var d = {
-                        document: re,
-                        massage: "Gần Giống nhau",
-                      };
-                      comment.push(d);
+                      if (("" + r).indexOf(s) != -1) {
+                        d = {
+                          document: docs[doc].filename,
+                          message: "Gần Giống nhau",
+                        };
+                        arrcomment.push(d);
+                      }
                     }
                   }
                 }
-              });
+              }
             }
-            // Truyền ra danh sách giống nhau
-            res.render("upload", {
-              title: "Upload Document",
-              comment: comment,
-            });
+            // Danh sách giống nhau:      arrcomment
           }
         }
       });
-      //res.redirect("/api/doc/upload");
     });
+    res.redirect("/api/doc/upload");
   }
 );
 
@@ -239,6 +262,14 @@ router.post("/search", function (req, res, next) {
 
 router.get("/edit", function (req, res, next) {
   res.render("edit", { title: "Edit Document" });
+});
+
+router.get("/dowload:idDowload", function (req, res, next) {
+  var id = req.params.idDowload;
+  docmodel.findOne({ idDoc: id }).exec(function (err, doc) {
+    if (err) console.log(err);
+    if (!doc) console.log("Not Find");
+  });
 });
 
 module.exports = router;
