@@ -265,4 +265,12 @@ router.get("/dowload:idDowload", function (req, res, next) {
   });
 });
 
+router.get("/delete/:idDelete", function (req, res, next) {
+  var iddelete = req.params.iddelete;
+  docmodel.findByIdAndRemove({ idDoc: iddelete }, function (err, data) {
+    if (err) handleError();
+    res.redirect("/listall");
+  });
+});
+
 module.exports = router;
