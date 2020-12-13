@@ -9,7 +9,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(function (email, done) {
-  User.findById(email)
+  User.findOne({ email: email })
     .then(function (user) {
       done(null, user);
     })
@@ -28,7 +28,7 @@ passport.use(
     },
     function (req, email, password, done) {
       process.nextTick(function () {
-        User.findOne({ email: email }, function (err, user) {
+        User.findOne({ email: email }).exec(function (err, user) {
           if (err) return done(err);
           if (user) {
             return done(
@@ -38,7 +38,7 @@ passport.use(
             );
           } else {
             var newUser = new User();
-            newUser.email = email;
+            newUser.email = req.body.email;
             newUser.password = bcrypt.hashSync(
               password,
               bcrypt.genSaltSync(10),
@@ -47,6 +47,7 @@ passport.use(
             newUser.role = req.body.role;
             newUser.save(function (err) {
               if (err) throw err;
+              console.log("Successful");
               return done(null, newUser);
             });
           }
