@@ -15,6 +15,7 @@ var sythentic = require("./handling_data/warehouse");
 
 const authRouter = require("./routes/auth");
 const docRouter = require("./routes/document");
+const themeRouter = require("./routes/theme");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -57,6 +58,7 @@ app.use("/", indexRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/doc", docRouter);
+app.use("/api/theme", themeRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

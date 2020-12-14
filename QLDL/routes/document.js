@@ -4,17 +4,14 @@ var docmodel = require("./../model/document");
 var file = require("./../document/readfile");
 var multer = require("multer");
 var fs = require("fs");
-var PdfReader = require("pdfreader").PdfReader;
 var filereader = require("./../document/filereader");
-var checkDup = require("./../handling_data/checkduplicate");
 var special = require("./../handling_data/special_chars");
-var tfidf = require("./../handling_data/compute_TFIDF");
 var vector = require("./../handling_data/vector");
 var warehouse = require("./../model/warehouse");
 var sw = require("./../handling_data/stopword");
 var euclid = require("./../handling_data/euclid");
-const { route } = require("./auth");
 const pdfParse = require("pdf-parse");
+const thememodel = require("./../model/theme");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -59,7 +56,6 @@ router.post(
         content = data.text;
         break;
     }
-    console.log(content);
     // Create vector
     var all_text = [];
     warehouse.findOne({}).exec(async function (err, t) {
@@ -94,6 +90,8 @@ router.post(
             id += 1;
           }
           dt.idDoc = id;
+          var themename = req.body.themename;
+          dt.subject = themename;
           var name = req.file.originalname;
           var index = name.lastIndexOf(".");
           var preName = name.slice(0, index);
@@ -121,6 +119,16 @@ router.post(
             dt.vector.value.push(vecA[word]);
           }
           dt.save();
+
+          // Thêm document vào chủ đề
+          thememodel.findOne({ name: themename }).exec(function (err, theme) {
+            if (err) console.log(err);
+            if (!theme) console.log("Not find theme");
+            else {
+              theme.listidDoc.push(id);
+              theme.save();
+            }
+          });
         } else {
           // Nếu có document trong db thì lấy ra vector của document để so sánh với vector vừa upload
           var result = [];
@@ -160,6 +168,7 @@ router.post(
               id += 1;
             }
             dt.idDoc = id;
+            dt.subject = req.body.themename;
             var name = req.file.originalname;
             var index = name.lastIndexOf(".");
             var preName = name.slice(0, index);
@@ -185,6 +194,17 @@ router.post(
               dt.vector.value.push(vecA[word]);
             }
             dt.save();
+
+            // Thêm document vào chủ đề
+            thememodel.findOne({ name: themename }).exec(function (err, theme) {
+              if (err) console.log(err);
+              if (!theme) console.log("Not find theme");
+              else {
+                theme.listidDoc.push(id);
+                theme.save();
+              }
+            });
+
             result = [];
           } else {
             // Nếu có tài liệu gần giống ( _id tài liệu gần giống chứa trong result)

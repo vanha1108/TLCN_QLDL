@@ -27,7 +27,7 @@ router.post("/createtheme", function (req, res, next) {
   res.redirect("/api/theme/listtheme");
 });
 
-router.get("listall", function (req, res, next) {
+router.get("/listall", function (req, res, next) {
   thememodel.find(function (err, listtheme) {
     if (err) handleError();
 
@@ -35,7 +35,7 @@ router.get("listall", function (req, res, next) {
   });
 });
 
-router.get("deletetheme/:idDelete", function (req, res, next) {
+router.get("/deletetheme/:idDelete", function (req, res, next) {
   var idDelete = req.params.idDelete;
   message = "";
   thememodel.findOne({ _id: idDelete }).exec(function (err, data) {
@@ -53,7 +53,7 @@ router.get("deletetheme/:idDelete", function (req, res, next) {
   res.redirect("/api/theme/listtheme");
 });
 
-router.get("edit/:idEdit", function (req, res, next) {
+router.get("/edit/:idEdit", function (req, res, next) {
   var idEdit = req.params.idEdit;
   thememodel.findOne({ _id: idEdit }).exec(function (err, data) {
     var newName = req.body.newName;
