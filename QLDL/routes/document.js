@@ -32,6 +32,51 @@ router.get("/upload", function (req, res, next) {
   });
 });
 
+router.post("/save", upload.single("filedoc"), function (req, res, next) {
+  var data = new docmodel();
+
+  data.idDoc = id;
+  var subject = req.body.subject;
+  data.subject = subject;
+  var name = req.file.originalname;
+  var index = name.lastIndexOf(".");
+  var preName = name.slice(0, index);
+  var extension = filereader.getFileExtension(req.file.originalname);
+
+  // Kiểm tra tên file đã có chưa
+  var arrFilename = [];
+  for (let doc in docs) {
+    arrFilename.push(docs[doc].filename);
+  }
+  let j = 1;
+  while (arrFilename.indexOf(name) != -1) {
+    name = preName + "(" + j + ")" + extension;
+    j += 1;
+  }
+  dt.filename = name;
+
+  data.path = req.file.path;
+  data.authorname = req.body.authorname;
+  data.note = req.body.note;
+  data.data = content;
+
+  for (let word in vecA) {
+    data.vector.direction.push(word);
+    data.vector.value.push(vecA[word]);
+  }
+  data.save();
+
+  // Thêm document vào chủ đề
+  thememodel.findOne({ name: subject }).exec(function (err, theme) {
+    if (err) console.log(err);
+    if (!theme) console.log("Not find theme");
+    else {
+      theme.listidDoc.push(id);
+      theme.save();
+    }
+  });
+});
+
 /* POST upload file */
 router.post(
   "/upload",
