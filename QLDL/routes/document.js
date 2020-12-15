@@ -76,19 +76,21 @@ router.post(
       docmodel.find({}).exec(async function (err, docs) {
         if (err) console.log(err);
 
+        var id = parseInt(req.body.idDoc);
+        // Kiểm tra xem idDoc đã có chưa
+        var arrID = [];
+        for (doc in docs) {
+          arrID.push(docs[doc].idDoc);
+        }
+        while (arrID.indexOf(id) != -1) {
+          id += 1;
+        }
+
         if (docs.length == 0) {
           // Không có document trong db --> lưu vào db mà k cần check duplicate
 
           var dt = new docmodel();
-          var id = parseInt(req.body.idDoc);
-          // Kiểm tra xem idDoc đã có chưa
-          var arrID = [];
-          for (doc in docs) {
-            arrID.push(docs[doc].idDoc);
-          }
-          while (arrID.indexOf(id) != -1) {
-            id += 1;
-          }
+
           dt.idDoc = id;
           var subject = req.body.subject;
           dt.subject = subject;
@@ -156,17 +158,7 @@ router.post(
           if (count <= 0) {
             console.log("Không có tài liệu gần giống");
             var dt = new docmodel();
-            var id = parseInt(req.body.idDoc);
 
-            // Kiểm tra xem idDoc đã có chưa
-            var arrID = [];
-            for (let doc in docs) {
-              arrID.push(docs[doc].idDoc);
-            }
-
-            while (arrID.indexOf(id) != -1) {
-              id += 1;
-            }
             dt.idDoc = id;
             var subject = req.body.subject;
             dt.subject = subject;
