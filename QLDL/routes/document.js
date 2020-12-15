@@ -90,8 +90,8 @@ router.post(
             id += 1;
           }
           dt.idDoc = id;
-          var themename = req.body.themename;
-          dt.subject = themename;
+          var subject = req.body.subject;
+          dt.subject = subject;
           var name = req.file.originalname;
           var index = name.lastIndexOf(".");
           var preName = name.slice(0, index);
@@ -121,7 +121,7 @@ router.post(
           dt.save();
 
           // Thêm document vào chủ đề
-          thememodel.findOne({ name: themename }).exec(function (err, theme) {
+          thememodel.findOne({ name: subject }).exec(function (err, theme) {
             if (err) console.log(err);
             if (!theme) console.log("Not find theme");
             else {
@@ -168,7 +168,8 @@ router.post(
               id += 1;
             }
             dt.idDoc = id;
-            dt.subject = req.body.themename;
+            var subject = req.body.subject;
+            dt.subject = subject;
             var name = req.file.originalname;
             var index = name.lastIndexOf(".");
             var preName = name.slice(0, index);
@@ -196,7 +197,7 @@ router.post(
             dt.save();
 
             // Thêm document vào chủ đề
-            thememodel.findOne({ name: themename }).exec(function (err, theme) {
+            thememodel.findOne({ name: subject }).exec(function (err, theme) {
               if (err) console.log(err);
               if (!theme) console.log("Not find theme");
               else {
@@ -246,6 +247,8 @@ router.post(
                 }
               }
             }
+
+            //???
             //console.log(result);
             //console.log(arrcomment);
             // Danh sách giống nhau:      arrcomment

@@ -9,6 +9,9 @@ const doc = new mongoose.Schema(
     filename: {
       type: String,
     },
+    subject: {
+      type: String,
+    },
     path: {
       type: String,
     },
