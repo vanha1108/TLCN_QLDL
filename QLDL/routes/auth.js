@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-var flash = require("connect-flash");
 const User = require("../model/user");
 var bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");

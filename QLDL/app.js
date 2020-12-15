@@ -8,9 +8,8 @@ const mongoose = require("mongoose");
 var passport = require("passport");
 var flash = require("connect-flash");
 var bodyParser = require("body-parser");
+require("dotenv").config();
 var cron = require("node-cron");
-var docmodel = require("./model/document");
-var warehouse = require("./model/warehouse");
 var sythentic = require("./handling_data/warehouse");
 
 const authRouter = require("./routes/auth");
@@ -19,15 +18,16 @@ const themeRouter = require("./routes/theme");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-require("./config/passport");
+require("./middlewares/passport");
 
-mongoose.connect("mongodb://localhost:27017/QLDL_V1", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
-
-require("./config/passport");
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost:27017/QLDL_V1",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  }
+);
 
 var app = express();
 
