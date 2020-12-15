@@ -240,7 +240,7 @@ router.post(
               }
             }
 
-            //???
+            res.send(arrcomment);
             //console.log(result);
             //console.log(arrcomment);
             // Danh sách giống nhau:      arrcomment
@@ -248,7 +248,7 @@ router.post(
         }
       });
     });
-    res.redirect("/api/doc/upload");
+    //res.redirect("/api/doc/upload");
   }
 );
 
@@ -257,7 +257,7 @@ router.get("/listall", function (req, res, next) {
   docmodel.find(function (err, listdoc) {
     if (err) handleError();
 
-    res.render("listall", { title: "List Document", listdoc: listdoc });
+    res.send(listdoc);
   });
 });
 
@@ -271,7 +271,7 @@ router.post("/search", function (req, res, next) {
   });
 });
 
-router.get("/dowload:idDowload", function (req, res, next) {
+router.get("/dowload/:idDowload", function (req, res, next) {
   var id = req.params.idDowload;
   docmodel.findOne({ idDoc: id }).exec(function (err, doc) {
     if (err) console.log(err);

@@ -11,7 +11,7 @@ router.get("/createtheme", function (req, res, next) {
 });
 
 router.post("/createtheme", function (req, res, next) {
-  var subjectName = req.body.nametheme;
+  var subjectName = req.body.name;
   message = "";
   thememodel.findOne({ name: subjectName }).exec(function (err, data) {
     if (err) console.log(err);
@@ -19,19 +19,19 @@ router.post("/createtheme", function (req, res, next) {
       message = "Theme name already exists!";
     } else {
       var data = new thememodel();
-      data.name = req.body.nametheme;
+      data.name = req.body.name;
       data.listidDoc = [];
       data.save();
     }
   });
-  res.redirect("/api/theme/listtheme");
+  //res.redirect("/api/theme/listtheme");
 });
 
 router.get("/listall", function (req, res, next) {
   thememodel.find(function (err, listtheme) {
     if (err) handleError();
 
-    res.send("listtheme", { title: "List Theme", listtheme: listtheme });
+    res.send(listtheme);
   });
 });
 
@@ -50,7 +50,7 @@ router.get("/deletetheme/:idDelete", function (req, res, next) {
       }
     }
   });
-  res.redirect("/api/theme/listtheme");
+  //res.redirect("/api/theme/listtheme");
 });
 
 router.get("/edit/:idEdit", function (req, res, next) {
@@ -67,7 +67,7 @@ router.get("/edit/:idEdit", function (req, res, next) {
       }
     });
   });
-  res.redirect("/api/theme/listtheme");
+  //res.redirect("/api/theme/listtheme");
 });
 
 module.exports = router;

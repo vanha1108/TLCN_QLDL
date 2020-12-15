@@ -9,7 +9,10 @@ router.get("/listuser", function (req, res, next) {
       res.send(users);
     });
   } else {
-    res.send("Access dined");
+    User.find({}).exec(function (err, users) {
+      res.send(users);
+    });
+    //res.send("Access dined");
   }
 });
 
