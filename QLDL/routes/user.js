@@ -10,6 +10,6 @@ router.route("/login").post(passport.authenticate("local-login"));
 
 router.route("/changepass").post(userController.changePassword);
 
-router.route.get(userController.logOut);
+router.route("/logout").get(userController.logOut);
 
 module.exports = router;
