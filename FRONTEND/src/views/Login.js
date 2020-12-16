@@ -114,7 +114,7 @@ class Login extends Component {
                               <img
                                 alt="..."
                                 className="avatar"
-                                src={require("assets/img/emilyz.jpg")}
+                                src={require("assets/img/james.jpg")}
                               />
                               <h5 className="title">Nguyễn Văn Thắng</h5>
                             </a>

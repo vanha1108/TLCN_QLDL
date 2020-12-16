@@ -9,19 +9,17 @@ import TableRow from "components/TableRow/TableRowDoc.js";
 // reactstrap components
 import {
   
-  Button,
+ 
   Card,
-  CardHeader,
+  
   CardBody,
   CardTitle,
   Row,
   Label,
   Input,
   FormGroup,
-  FormText,
-  CustomInput,
+  
   Table,
-  Alert,
   Col
 } from "reactstrap";
 
@@ -29,24 +27,13 @@ class Notifications extends React.Component {
 
 
   constructor(props) {
-    super(props);
-    this.onchangeFile = this.onchangeFile.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onchangValue = this.onchangValue.bind(this);
-    this.onCancelField = this.onCancelField.bind(this);
-    
+    super(props); 
     this.state = {
-      data:[],
-      filedoc:'',
-      authorname:'',
-      note:'',
-      subject:'',
-      idDoc:'',
-      trangthai:false
+      data:[]  
     }
   }
   componentDidMount() {
-    axios.get('/api/doc/listall')
+    axios.get('/api/doc/all')
         .then(response => {
             console.log(response.data);
             this.setState({data: response.data});
@@ -60,103 +47,7 @@ class Notifications extends React.Component {
     return this.state.data.map(function (object, i) {
         return <TableRow obj={object} key={i}/>;
     });
-  }
-  onCancelField(event){
-    this.setState({
-      authorname:event.target.reset,
-      note:event.target.reset,
-      idDoc:event.target.reset
-    })
-  }
-  onchangeFile(event){
-    this.setState({
-      filedoc:event.target.files[0]
-    })
-  }
-  onchangValue(event){
-    var name = event.target.name;
-    var value = event.target.value;
-    this.setState({
-      [name]: value
-    })
-  }
-  onSubmit(event){
-    event.preventDefault()
-        const formData = new FormData()
-        formData.append('filedoc', this.state.filedoc)
-        formData.append('authorname',this.state.authorname)
-        formData.append('note',this.state.note)
-        formData.append('idDoc',this.state.idDoc)
-        formData.append('subject',this.state.subject)
-        formData.getAll('filedoc','authorname','subject','note','idDoc')
-        console.log(formData);
-        axios.post("/api/doc/save", formData,{})
-        .then((res) => {
-          
-            console.log(res.data);
-            toast.success('Upload Successful');
-           
-        })
-        .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
-        
-  }
-  hienThiNut(){
-    if(this.state.trangthai===true){
-      return <Button md="1" onClick={()=>this.thayDoiTrangThai()} size="sm">-</Button>
-    }
-    else{
-      return <Button md="1" onClick={()=>this.thayDoiTrangThai()} size="sm">+</Button>
-    }
-  }
-  thayDoiTrangThai=()=>{
-    this.setState({
-      trangthai:!this.state.trangthai
-    })
-  }
-  hienThiForm(){
-    if(this.state.trangthai===true){
-      return(
-        <Card>
-              <CardHeader>
-                <CardTitle tag="h3">UPLOAD FILE</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <FormGroup>
-                  <Label tag="h5">ID Document</Label>
-                  <Input onChange={this.onchangValue} type="text" name="idDoc" id="" placeholder="Điền Id Doc" />
-              
-                </FormGroup>
-                <FormGroup>
-                  <Label tag="h5">Người đăng</Label>
-                  <Input onChange={this.onchangValue} type="text" name="authorname" id="" placeholder="Điền tên người đăng file này lên" />
-              
-                </FormGroup>
-                <FormGroup>
-                  <Label tag="h5">Ghi chú</Label>
-                  <Input onChange={this.onchangValue} type="text" name="note" id="" placeholder="ghi chú về file muốn upload" />
-                </FormGroup>
-                <FormGroup>
-                  <Label tag="h5">Chủ đề</Label>
-                  <Input onChange={this.onchangValue} type="text" name="subject" id="" placeholder="ghi chú về file muốn upload" />
-                </FormGroup>
-                <FormGroup>
-                  <Label tag="h5">File upload</Label>
-                </FormGroup>
-                <FormGroup></FormGroup>
-                <CustomInput onChange={this.onchangeFile} type="file" accept=".pdf,.doc,.docx,.txt" id="" name="filedoc" />
-                <FormText color="muted">
-                    Chọn file mà bạn muốn upload
-                </FormText>
-                <Button onClick={this.onSubmit}>Upload</Button>
-                <Button onClick={this.onCancelField} type="reset">Clear</Button>
-              
-            </CardBody>
-              
-            </Card>
-      );
-    }
-
-  }
+  } 
   render() {
     return (
       <>
@@ -165,7 +56,20 @@ class Notifications extends React.Component {
             <NotificationAlert ref="notificationAlert" />
           </div>
           <Row>
+            <Col>
+            <Card>
+              <CardBody>
+              <FormGroup>
+                <Label tag="h6">Tìm kiếm</Label>
+                <Input type="text" name="search" id="" placeholder="tài liệu muốn tìm kiếm"/>
+              </FormGroup>
+              </CardBody>
+            </Card> 
+            </Col>
+          </Row>
+          <Row>
             <ToastContainer />
+            
             <Col md="8">
               <Card>
                 <CardBody>
@@ -175,7 +79,6 @@ class Notifications extends React.Component {
                         <CardTitle>
                           <FormGroup row>
                             <Label  md="11" tag="h6">Danh sách tài liệu</Label>
-                            {this.hienThiNut()}
                           </FormGroup>
                         </CardTitle>
                       </Col>
@@ -198,9 +101,7 @@ class Notifications extends React.Component {
                 </CardBody>
               </Card>
             </Col>
-            <Col md="4">
-              {this.hienThiForm()}
-            </Col>
+            
           </Row>
         </div>
       </>

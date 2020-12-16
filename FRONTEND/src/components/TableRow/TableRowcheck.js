@@ -1,24 +1,17 @@
 import React, { Component } from 'react';
+import {Button} from "reactstrap";
 //import axios from 'axios';
-import{Button} from "reactstrap";
-//import axios from 'axios';
-class TableRowUser extends Component {
-    
-    hienThiRole =()=>{
-        if(this.props.obj.role ==="1") {return "admin";}
-        else {return "Staff";}
-    }
-    
+class TableRowcheck extends Component {
     render() {
         return (
             <tr>
                 
                 <td>
-                    {this.props.obj.email}
+                    {this.props.obj.document}
                 </td>
                 
                 <td>
-                    {this.hienThiRole()}    
+                    {this.props.obj.message}                   
                 </td>
                 <td>
                     <Button size="sm" color="info">Edit</Button>
@@ -30,4 +23,4 @@ class TableRowUser extends Component {
     }
 }
 
-export default TableRowUser;
+export default TableRowcheck;

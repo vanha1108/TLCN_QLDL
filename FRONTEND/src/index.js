@@ -16,7 +16,7 @@ ReactDOM.render(
   <Router history={hist}>
     <Switch>
       <Route path="/admin" render={props => <AdminLayout {...props} />} />
-      <Route path="/rtl" render={props => <RTLLayout {...props} />} />
+      <Route path="/user" render={props => <RTLLayout {...props} />} />
       <Route path="/login" component={Login}/>
       <Redirect from="/" to="/login"/>
     </Switch>
