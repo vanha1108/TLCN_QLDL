@@ -24,7 +24,7 @@ router.post("/createtheme", function (req, res, next) {
       data.save();
     }
   });
-  //res.redirect("/api/theme/listtheme");
+  res.send('success')
 });
 
 router.get("/listall", function (req, res, next) {
