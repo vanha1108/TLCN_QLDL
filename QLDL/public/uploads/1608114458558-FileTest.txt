@@ -1,0 +1,35 @@
+#import thu vien
+import pandas as pd
+import matplotib.pyplot as plt
+
+#import dataset
+dataset = pd.read_csv('Desktop:/salary.csv')
+dataset
+
+X = dataset.iloc[:,:-1].values
+y = dataset.iloc[:,1].values
+X
+y
+
+#chia du lieu thanh 2 phan: train va test
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=1/3,random_state=0)
+
+train_test_split?
+
+#Dinh mo hinh
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+regressor.fit(X_train,y_train)
+
+#Du doan ket qua cho test data
+y_pred = regressor.predit(X_test)
+
+#Ve do thi ket qua tren train data
+plt.scatter(X_train,y_train,color='red')
+plt.plot(X_train,regressor.predict(X_train,color='blue)
+plt.xlabel('So nam cong tac')
+plt.ylabel('Luong')
+plt.title('Ket qua hoi qui tren tap du lieu huan luyen')
+plt.show()
+

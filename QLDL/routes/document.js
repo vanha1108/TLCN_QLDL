@@ -12,6 +12,7 @@ var sw = require("./../handling_data/stopword");
 var euclid = require("./../handling_data/euclid");
 const pdfParse = require("pdf-parse");
 const thememodel = require("./../model/theme");
+const { id } = require("stopword");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -27,53 +28,84 @@ const LIMIT = 0.2;
 
 /* GET upload file. */
 //router.get("/upload", function (req, res, next) {
- // res.render("upload", {
-  //  title: "Upload Document",
- // });
+// res.render("upload", {
+//  title: "Upload Document",
+// });
 //});
 
 router.post("/save", upload.single("filedoc"), function (req, res, next) {
-  var data = new docmodel();
-
-  data.idDoc = id;
-  var subject = req.body.subject;
-  data.subject = subject;
-  var name = req.file.originalname;
-  var index = name.lastIndexOf(".");
-  var preName = name.slice(0, index);
-  var extension = filereader.getFileExtension(req.file.originalname);
-
-  // Kiểm tra tên file đã có chưa
-  var arrFilename = [];
-  for (let doc in docs) {
-    arrFilename.push(docs[doc].filename);
-  }
-  let j = 1;
-  while (arrFilename.indexOf(name) != -1) {
-    name = preName + "(" + j + ")" + extension;
-    j += 1;
-  }
-  dt.filename = name;
-
-  data.path = req.file.path;
-  data.authorname = req.body.authorname;
-  data.note = req.body.note;
-  data.data = content;
-
-  for (let word in vecA) {
-    data.vector.direction.push(word);
-    data.vector.value.push(vecA[word]);
-  }
-  data.save();
-
-  // Thêm document vào chủ đề
-  thememodel.findOne({ name: subject }).exec(function (err, theme) {
+  docmodel.find({}).exec(async function (err, docs) {
     if (err) console.log(err);
-    if (!theme) console.log("Not find theme");
-    else {
-      theme.listidDoc.push(id);
-      theme.save();
+    content =
+      "File để test thử xem việc dùng router save riêng biệt cho việc upload dữ liệu có thành công hay không";
+
+    var all_text = [];
+    warehouse.findOne({}).exec(async function (err, t) {
+      if (err) console.log(err);
+      if (t) {
+        for (let doc in t.allText) {
+          all_text.push(t.allText[doc]);
+        }
+      }
+    });
+    var text = special.clear_special_chars(content);
+    text = ("" + text).split(" ");
+    text = sw.filter_stopword(text);
+    all_text.push(text);
+
+    var vecA = await vector.create_vector(text, all_text);
+
+    var data = new docmodel();
+    var id = parseInt(req.body.idDoc);
+    // Kiểm tra xem idDoc đã có chưa
+    var arrID = [];
+    for (doc in docs) {
+      arrID.push(docs[doc].idDoc);
     }
+    while (arrID.indexOf(id) != -1) {
+      id += 1;
+    }
+    data.idDoc = id;
+    var subject = req.body.subject;
+    data.subject = subject;
+    var name = req.file.originalname;
+    var index = name.lastIndexOf(".");
+    var preName = name.slice(0, index);
+    var extension = filereader.getFileExtension(req.file.originalname);
+
+    // Kiểm tra tên file đã có chưa
+    var arrFilename = [];
+    for (let doc in docs) {
+      arrFilename.push(docs[doc].filename);
+    }
+    let j = 1;
+    while (arrFilename.indexOf(name) != -1) {
+      name = preName + "(" + j + ")" + extension;
+      j += 1;
+    }
+    data.filename = name;
+
+    data.path = req.file.path;
+    data.authorname = req.body.authorname;
+    data.note = req.body.note;
+    data.data = content;
+
+    for (let word in vecA) {
+      data.vector.direction.push(word);
+      data.vector.value.push(vecA[word]);
+    }
+
+    data.save();
+
+    // Thêm document vào chủ đề
+    thememodel.findOne({ name: subject }).exec(function (err, theme) {
+      if (err) console.log(err);
+      if (!theme) console.log("Not find theme");
+      else {
+        theme.listidDoc.push(id);
+        theme.save();
+      }
+    });
   });
 });
 
@@ -232,7 +264,7 @@ router.post(
               dt.vector.value.push(vecA[word]);
             }
             dt.save();
-            res.send('success');
+            res.send("success");
             // Thêm document vào chủ đề
             thememodel.findOne({ name: subject }).exec(function (err, theme) {
               if (err) console.log(err);
@@ -286,7 +318,7 @@ router.post(
             }
 
             res.send(arrcomment);
-            res.send('success');
+            res.send("success");
             //console.log(result);
             //console.log(arrcomment);
             // Danh sách giống nhau:      arrcomment
