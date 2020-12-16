@@ -7,8 +7,9 @@ var warehouse = require("./../model/warehouse");
 var thememodel = require("./../model/theme");
 var euclid = require("./../handling_data/euclid");
 var special = require("./../handling_data/special_chars");
+var fs = require("fs");
 
-const readDocument = async function (filePath) {
+const readDocument = async (filePath) => {
   var content = "";
   let ext = filereader.getFileExtension(filePath);
   switch (ext) {
@@ -29,7 +30,7 @@ const readDocument = async function (filePath) {
   return content;
 };
 
-const saveDocument = async function (req, res, next) {
+const saveDocument = async (req, res, next) => {
   var content = await readDocument(req.file.path);
   var id = parseInt(req.body.idDoc);
   var filename = req.file.originalname;
@@ -86,7 +87,7 @@ const saveDocument = async function (req, res, next) {
   });
 };
 
-const createVec = async function (content) {
+const createVec = async (content) => {
   var all_text = [];
   var text = special.clear_special_chars(content);
   text = ("" + text).split(" ");
@@ -104,7 +105,7 @@ const createVec = async function (content) {
   return vec;
 };
 
-const checkDuplicate = function (content) {
+const checkDuplicate = async (content) => {
   var arrDuplicate = [];
   var result = [];
   var vecA = createVec(content);
@@ -176,7 +177,7 @@ const checkDuplicate = function (content) {
   return arrDuplicate;
 };
 
-const uploadDocument = async function (req, res, next) {
+const uploadDocument = async (req, res, next) => {
   var content = await readDocument(req.file.path);
   var arrDuplicate = checkDuplicate(content);
   docmodel.find({}).exec(async function (err, result) {
@@ -198,7 +199,47 @@ const uploadDocument = async function (req, res, next) {
   });
 };
 
+const getAllDocument = async (req, res, next) => {
+  docmodel.find(function (err, listdoc) {
+    if (err) handleError();
+    res.send(listdoc);
+  });
+};
+
+const dowloadDocument = async (req, res, next) => {
+  var id = req.params.idDowload;
+  docmodel.findOne({ idDoc: id }).exec(function (err, doc) {
+    if (err) console.log(err);
+    if (doc) res.download(doc.path);
+  });
+};
+
+const deleteDocument = async (req, res, next) => {
+  var iddelete = req.params.iddelete;
+  docmodel.findByIdAndRemove({ idDoc: iddelete }, function (err, doc) {
+    if (data) {
+      try {
+        fs.unlink(doc.path, (err) => {
+          if (err) throw err;
+        });
+      } catch (error) {}
+      res.send({ message: "Delete success!" });
+    }
+  });
+};
+
+const searchDocument = async (req, res, next) => {
+  var key = req.body.key;
+  docmodel.search(key, function (err, doc) {
+    res.send({ document: doc });
+  });
+};
+
 module.exports = {
   saveDocument,
   uploadDocument,
+  getAllDocument,
+  dowloadDocument,
+  deleteDocument,
+  searchDocument,
 };

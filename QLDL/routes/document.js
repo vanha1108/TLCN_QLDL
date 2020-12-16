@@ -23,4 +23,12 @@ router
   .route("/save")
   .post(upload.single("filedoc"), doccumentController.saveDocument);
 
+router.route("/all").get(doccumentController.getAllDocument);
+
+router.route("/search").post(doccumentController.searchDocument);
+
+router.route("/dowload/:idDowload").get(doccumentController.dowloadDocument);
+
+router.route("/delete/:idDelete").get(doccumentController.deleteDocument);
+
 module.exports = router;
