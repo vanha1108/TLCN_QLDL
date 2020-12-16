@@ -9,6 +9,5 @@ module.exports.create_vector = function (text, all_text) {
       word_arr[word] = tfidf_Dict[word];
     }
   }
-
   return word_arr;
 };
