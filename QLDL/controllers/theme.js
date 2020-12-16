@@ -51,7 +51,6 @@ const editTheme = async (req, res, next) => {
       if (re) {
         res.send({ message: "Theme name already exists" });
       } else {
-        var oldSubject = re.subject;
         var dt = new thememodel();
         dt.name = newName;
         dt.save();

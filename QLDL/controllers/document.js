@@ -178,14 +178,16 @@ const checkDuplicate = async (content) => {
 };
 
 const uploadDocument = async (req, res, next) => {
+  arrDuplicate = [];
   var content = await readDocument(req.file.path);
-  var arrDuplicate = checkDuplicate(content);
+  var arrDuplicate = await checkDuplicate(content);
   docmodel.find({}).exec(async function (err, result) {
     if (!result) {
       // Nếu trong db chưa có document nào được up load
       console.log("Không có tài liệu trong db");
       await saveDocument();
     } else {
+      console.log(arrDuplicate);
       if (arrDuplicate.length <= 0) {
         // Không có tài liệu tương tự
         console.log("No Duplicate");
