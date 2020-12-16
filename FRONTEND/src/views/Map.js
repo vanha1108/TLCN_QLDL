@@ -63,9 +63,16 @@ class Map extends React.Component {
         formData.getAll('filedoc','authorname','subject','note','idDoc')
         axios.post("/api/doc/upload", formData,{})
         .then((res) => {
+          if(res.data.message)
+          {
             //this.setState({datacheck: res.data});
             toast.success('Upload Successful');
-           
+          }
+          else
+          {
+
+          }
+             
         })
         .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
         

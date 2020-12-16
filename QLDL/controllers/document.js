@@ -184,58 +184,65 @@ const checkDuplicate = async (content) => {
           result[docs[doc]._id] = distance;
         }
       } // end for docs 1
-      var count = 0;
-      for (let r in result) {
-        count += 1;
-      }
 
-      if (count > 0) {
-        var d;
-        for (let r in result) {
-          for (let doc in docs) {
-            var s = String(docs[doc]._id);
-            if (("" + r).indexOf(s) != -1 && result[r] <= 0) {
+      
+    } // end if first
+  });
+  
+  var count = 0;
+  for (let r in result) {
+    count += 1;
+  }
+  console.log("RS " + result.length);
+  
+  if (count > 0) {
+    var d;
+    for (let r in result) {
+      docmodel.find({}).exec(async function (err, docs) {
+      for (let doc in docs) {
+        var s = String(docs[doc]._id);
+        if (("" + r).indexOf(s) != -1 && result[r] <= 0) {
+          d = {
+            document: docs[doc].filename,
+            message: "Gần như hoàn toàn giống nhau",
+          };
+          arrDuplicate.push(d);
+        } else {
+          if (("" + r).indexOf(s) != -1 && result[r] < 0.01) {
+            d = {
+              document: docs[doc].filename,
+              message: "Rất giống nhau",
+            };
+            arrDuplicate.push(d);
+          } else {
+            if (("" + r).indexOf(s) != -1 && result[r] < 0.02) {
               d = {
                 document: docs[doc].filename,
-                message: "Gần như hoàn toàn giống nhau",
+                message: "Giống nhau",
               };
               arrDuplicate.push(d);
             } else {
-              if (("" + r).indexOf(s) != -1 && result[r] < 0.01) {
+              if (("" + r).indexOf(s) != -1) {
                 d = {
                   document: docs[doc].filename,
-                  message: "Rất giống nhau",
+                  message: "Gần Giống nhau",
                 };
                 arrDuplicate.push(d);
-              } else {
-                if (("" + r).indexOf(s) != -1 && result[r] < 0.02) {
-                  d = {
-                    document: docs[doc].filename,
-                    message: "Giống nhau",
-                  };
-                  arrDuplicate.push(d);
-                } else {
-                  if (("" + r).indexOf(s) != -1) {
-                    d = {
-                      document: docs[doc].filename,
-                      message: "Gần Giống nhau",
-                    };
-                    arrDuplicate.push(d);
-                  }
-                }
               }
             }
-          } // end for docs 2
-        } //end for result
-      } //end if
-    } // end if first
-  });
+          }
+        }
+      } // end for docs 2
+    });
+    } //end for result
+    
+  }
+
   result = [];
   return arrDuplicate;
 };
 
 const uploadDocument = async (req, res, next) => {
-  arrDuplicate = [];
   var id = parseInt(req.body.idDoc);
   var filename = req.file.originalname;
   var subject = req.body.subject;
@@ -244,14 +251,15 @@ const uploadDocument = async (req, res, next) => {
   var note = req.body.note;
   var content = await readDocument(req.file.path);
   var vecA = await createVec(content);
-  var arrDuplicate = await checkDuplicate(content);
+  var arrDuplicate = [];
+  arrDuplicate = await checkDuplicate(content);
   docmodel.find({}).exec(async function (err, result) {
     if (!result) {
       // Nếu trong db chưa có document nào được up load
       console.log("Không có tài liệu trong db");
       await saveDocument(
         id,
-        filereader,
+        filename,
         subject,
         path,
         author,
@@ -260,13 +268,25 @@ const uploadDocument = async (req, res, next) => {
         vecA
       );
     } else {
+      console.log(arrDuplicate.length);
+      console.log(arrDuplicate);
       if (arrDuplicate.length <= 0) {
         // Không có tài liệu tương tự
         console.log("No Duplicate");
-        saveDocument();
-      } else {
+        await saveDocument(
+          id,
+          filename,
+          subject,
+          path,
+          author,
+          note,
+          content,
+          vecA
+        );
+        res.send({ message:'success' });
+      }
+       else {
         console.log("Yes Duplicate");
-        arrDuplicate = [];
         res.send({ arrDuplicate: arrDuplicate });
       }
     }
