@@ -30,16 +30,73 @@ const readDocument = async (filePath) => {
   return content;
 };
 
-const saveDocument = async (req, res, next) => {
-  var content = await readDocument(req.file.path);
+const saveDuplicate = async (req, res, next) => {
   var id = parseInt(req.body.idDoc);
   var filename = req.file.originalname;
   var subject = req.body.subject;
   var path = req.file.path;
   var author = req.body.authorname;
   var note = req.body.note;
+  var content = await readDocument(req.file.path);
   var vector = await createVec(content);
 
+  var arrID = [];
+  var arrFilename = [];
+  docmodel.find({}).exec(async function (err, docs) {
+    for (doc in docs) {
+      arrID.push(docs[doc].idDoc);
+      arrFilename.push(docs[doc].filename);
+    }
+  });
+  while (arrID.indexOf(id) != -1) {
+    id += 1;
+  }
+
+  var index = filename.lastIndexOf(".");
+  var preName = filename.slice(0, index);
+  var extension = filereader.getFileExtension(filename);
+  let j = 1;
+  while (arrFilename.indexOf(filename) != -1) {
+    filename = preName + "(" + j + ")" + extension;
+    j += 1;
+  }
+
+  var data = new docmodel();
+  data.idDoc = id;
+  data.subject = subject;
+  data.filename = filename;
+  data.path = path;
+  data.authorname = author;
+  data.note = note;
+  data.data = content;
+
+  for (let word in vector) {
+    data.vector.direction.push(word);
+    data.vector.value.push(vector[word]);
+  }
+
+  data.save();
+  // Thêm document vào chủ đề
+  thememodel.findOne({ name: subject }).exec(function (err, theme) {
+    if (err) console.log(err);
+    if (!theme) console.log("Not find theme");
+    else {
+      theme.listidDoc.push(id);
+      theme.save();
+    }
+  });
+};
+
+const saveDocument = async (
+  id,
+  filename,
+  subject,
+  path,
+  author,
+  note,
+  content,
+  vector
+) => {
   var arrID = [];
   var arrFilename = [];
   docmodel.find({}).exec(async function (err, docs) {
@@ -179,19 +236,34 @@ const checkDuplicate = async (content) => {
 
 const uploadDocument = async (req, res, next) => {
   arrDuplicate = [];
+  var id = parseInt(req.body.idDoc);
+  var filename = req.file.originalname;
+  var subject = req.body.subject;
+  var path = req.file.path;
+  var author = req.body.authorname;
+  var note = req.body.note;
   var content = await readDocument(req.file.path);
+  var vecA = await createVec(content);
   var arrDuplicate = await checkDuplicate(content);
   docmodel.find({}).exec(async function (err, result) {
     if (!result) {
       // Nếu trong db chưa có document nào được up load
       console.log("Không có tài liệu trong db");
-      await saveDocument();
+      await saveDocument(
+        id,
+        filereader,
+        subject,
+        path,
+        author,
+        note,
+        content,
+        vecA
+      );
     } else {
-      console.log(arrDuplicate);
       if (arrDuplicate.length <= 0) {
         // Không có tài liệu tương tự
         console.log("No Duplicate");
-        await saveDocument();
+        saveDocument();
       } else {
         console.log("Yes Duplicate");
         arrDuplicate = [];
@@ -239,6 +311,7 @@ const searchDocument = async (req, res, next) => {
 
 module.exports = {
   saveDocument,
+  saveDuplicate,
   uploadDocument,
   getAllDocument,
   dowloadDocument,
