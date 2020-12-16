@@ -1,5 +1,6 @@
 const sw = require("stopword");
 var fs = require("fs");
+const path = require('path');
 
 module.exports.filter_stopword = function (text) {
   text = ("" + text).split(" ");

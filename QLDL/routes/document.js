@@ -26,11 +26,11 @@ var upload = multer({ storage: storage });
 const LIMIT = 0.2;
 
 /* GET upload file. */
-router.get("/upload", function (req, res, next) {
-  res.render("upload", {
-    title: "Upload Document",
-  });
-});
+//router.get("/upload", function (req, res, next) {
+ // res.render("upload", {
+  //  title: "Upload Document",
+ // });
+//});
 
 router.post("/save", upload.single("filedoc"), function (req, res, next) {
   var data = new docmodel();
@@ -232,7 +232,7 @@ router.post(
               dt.vector.value.push(vecA[word]);
             }
             dt.save();
-
+            res.send('success');
             // Thêm document vào chủ đề
             thememodel.findOne({ name: subject }).exec(function (err, theme) {
               if (err) console.log(err);
@@ -286,6 +286,7 @@ router.post(
             }
 
             res.send(arrcomment);
+            res.send('success');
             //console.log(result);
             //console.log(arrcomment);
             // Danh sách giống nhau:      arrcomment

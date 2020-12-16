@@ -90,8 +90,9 @@ class Notifications extends React.Component {
         formData.append('subject',this.state.subject)
         formData.getAll('filedoc','authorname','subject','note','idDoc')
         console.log(formData);
-        axios.post("/api/doc/upload", formData,{})
+        axios.post("/api/doc/save", formData,{})
         .then((res) => {
+          
             console.log(res.data);
             toast.success('Upload Successful');
            
