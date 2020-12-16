@@ -21,7 +21,7 @@ router
 
 router
   .route("/save")
-  .post(upload.single("filedoc"), doccumentController.saveDocument);
+  .post(upload.single("filedoc"), doccumentController.saveDuplicate);
 
 router.route("/all").get(doccumentController.getAllDocument);
 
