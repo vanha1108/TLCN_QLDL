@@ -32,10 +32,11 @@ class Map extends React.Component {
     this.onchangValue = this.onchangValue.bind(this);
     this.state = {
       datacheck:[],
+      datalist:[],
       filedoc:'',
       authorname:'',
       note:'',
-      subject:'',
+      subject:'alo',
       idDoc:''
     }
   }
@@ -52,6 +53,17 @@ class Map extends React.Component {
       [name]: value
     })
   }
+  componentDidMount() {
+    axios.get('/api/doc/all')
+        .then(response => {
+            console.log(response.data);
+            this.setState({datalist: response.data});
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+  }
+
   onSubmit(event){
     event.preventDefault()
         const formData = new FormData()
@@ -61,6 +73,7 @@ class Map extends React.Component {
         formData.append('idDoc',this.state.idDoc)
         formData.append('subject',this.state.subject)
         formData.getAll('filedoc','authorname','subject','note','idDoc')
+        console.log(formData);
         axios.post("/api/doc/upload", formData,{})
         .then((res) => {
           if(res.data.message)
@@ -109,7 +122,11 @@ class Map extends React.Component {
                   </FormGroup>
                   <FormGroup>
                     <Label tag="h5">Chủ đề</Label>
-                    <Input onChange={this.onchangValue} type="text" name="subject" id="" placeholder="ghi chú về file muốn upload" />
+                    <Input value={this.state.subject} onChange={this.onchangValue} type="select" name="subject" id="">
+                      {this.state.datalist.map((list) => (
+                          <option value={list.filename}>{list.filename}</option>
+                      ))}
+                    </Input>
                   </FormGroup>
                   <FormGroup>
                     <Label tag="h5">File upload</Label>
