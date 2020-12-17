@@ -43,12 +43,12 @@ const saveDuplicate = async (req, res, next) => {
 
   var arrID = [];
   var arrFilename = [];
-  docmodel.find({}).exec(async function (err, docs) {
-    for (doc in docs) {
-      arrID.push(docs[doc].idDoc);
-      arrFilename.push(docs[doc].filename);
-    }
-  });
+  var docs = docmodel.find();
+  for (doc in docs) {
+    arrID.push(docs[doc].idDoc);
+    arrFilename.push(docs[doc].filename);
+  }
+
   while (arrID.indexOf(id) != -1) {
     id += 1;
   }
@@ -78,14 +78,12 @@ const saveDuplicate = async (req, res, next) => {
 
   data.save();
   // Thêm document vào chủ đề
-  thememodel.findOne({ name: subject }).exec(function (err, theme) {
-    if (err) console.log(err);
-    if (!theme) console.log("Not find theme");
-    else {
-      theme.listidDoc.push(id);
-      theme.save();
-    }
-  });
+  var themes = thememodel.findOne({ name: subject });
+  if (themes) {
+    themes.listidDoc.push(id);
+    themes.save();
+  }
+
   res.send({ message: "Save success!" });
 };
 
