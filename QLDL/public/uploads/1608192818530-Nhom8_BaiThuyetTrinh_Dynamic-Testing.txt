@@ -1,0 +1,15 @@
+Nhóm 8:
+Nguyễn Văn Thắng                  17110230
+Nguyễn Văn Hà                     17110130
+Nguyễn Song Hoàng                 17110141
+Trịnh Nguyễn Hoàng Vĩnh Phúc      17110208
+
+Đề Tài: Dynamic Testing
+
+Phân công công viêc:
+Người trình bày đầu tiên:Trịnh Nguyễn Hoàng Vĩnh Phúc trình bày phần: Định nghĩa và mục đich
+NGười trình bày thứ 2: Nguyễn Song Hoàng trình bày phần:Phân loại theo chiến lược kiểm thử
+Người trình bày thứ 3: Nguyễn Văn Hà trình bày phần:Phân loại theo mức độ kiểm thử, ưu nhược điểm, ví dụ và so sánh.
+Chịu trách nhiệm nội dung và làm powerpoint: Nguyễn Văn Thắng
+
+link video thuyết trình:https://drive.google.com/drive/folders/1wBZDrYSumTQi5Ia5Fvkjd7GLiJaH3UOr?usp=sharing

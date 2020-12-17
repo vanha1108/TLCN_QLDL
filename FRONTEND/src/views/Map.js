@@ -76,22 +76,21 @@ class Map extends React.Component {
         console.log(formData);
         axios.post("/api/doc/upload", formData,{})
         .then((res) => {
-          if(res.data.message)
+          if(res.data.arrDuplicate)
           {
-            //this.setState({datacheck: res.data});
+            this.setState({datacheck: res.data});
+            console.log('yess')
+          }
+          else{
             toast.success('Upload Successful');
-          }
-          else
-          {
 
-          }
-             
+          } 
         })
         .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
         
   }
   tabRowCheck(){
-    return this.state.datacheck.map(function (object, i){
+    return this.state.datacheck.map(function (object,i){
       return <TableRowCheck obj={object} key={i}/>;
     });
   }

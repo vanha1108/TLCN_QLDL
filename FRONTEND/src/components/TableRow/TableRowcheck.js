@@ -4,8 +4,7 @@ import {Button} from "reactstrap";
 class TableRowcheck extends Component {
     render() {
         return (
-            <tr>
-                
+            <tr>  
                 <td>
                     {this.props.obj.document}
                 </td>
@@ -16,8 +15,7 @@ class TableRowcheck extends Component {
                 <td>
                     <Button size="sm" color="info">Edit</Button>
                     <Button size="sm" color="danger">Delete</Button>
-                </td>
-                
+                </td> 
             </tr>
         );
     }

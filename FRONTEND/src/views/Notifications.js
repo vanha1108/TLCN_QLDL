@@ -84,8 +84,7 @@ class Notifications extends React.Component {
                               ))}
                             </Input>
                             </Col>
-                            
-                          </FormGroup>
+                        </FormGroup>
                     </CardHeader>   
                   <CardBody>
                     <Table striped>
