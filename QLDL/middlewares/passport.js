@@ -66,7 +66,6 @@ passport.use(
     },
     function (req, email, password, done) {
       loginAttempt();
-
       async function loginAttempt() {
         try {
           const user = await User.findOne({ email: req.body.email });
@@ -91,6 +90,7 @@ passport.use(
               const findUser = await User.findOne({
                 email: req.body.email,
               });
+              res.send(findUser);
               return done(null, findUser);
             }
           }

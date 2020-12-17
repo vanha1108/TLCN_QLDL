@@ -8,6 +8,7 @@ var thememodel = require("./../model/theme");
 var euclid = require("./../handling_data/euclid");
 var special = require("./../handling_data/special_chars");
 var fs = require("fs");
+const { ObjectId } = require("mongodb");
 
 const readDocument = async (filePath) => {
   var content = "";
@@ -166,27 +167,26 @@ const createVec = async (content) => {
 const checkDuplicate = async (content) => {
   var arrDuplicate = [];
   var result = [];
-  var vecA = createVec(content);
+  var vecA = await createVec(content);
   // Lấy ra từng document trong db và so sánh với document vừa được upload
-  docmodel.find({}).exec(async function (err, docs) {
-    if (docs) {
-      for (let doc in docs) {
-        var vecB = [];
-        var direc = docs[doc].vector.direction;
-        var value = docs[doc].vector.value;
+  var allDoc = await docmodel.find();
+  if (allDoc) {
+    for (let doc in allDoc) {
+      var vecB = [];
+      var direc = allDoc[doc].vector.direction;
+      var value = allDoc[doc].vector.value;
 
-        for (let i = 0; i < direc.length; i++) {
-          vecB[direc[i]] = value[i];
-        }
+      for (let i = 0; i < direc.length; i++) {
+        vecB[direc[i]] = value[i];
+      }
 
-        var distance = euclid.compute_distance(vecA, vecB);
+      var distance = euclid.compute_distance(vecA, vecB);
 
-        if (distance < 0.03) {
-          result[docs[doc]._id] = distance;
-        }
-      } // end for docs 1
-    } // end if first
-  });
+      if (distance < 0.03) {
+        result[allDoc[doc]._id] = distance;
+      }
+    }
+  }
 
   var count = 0;
   for (let r in result) {
@@ -196,43 +196,38 @@ const checkDuplicate = async (content) => {
   if (count > 0) {
     var d;
     for (let r in result) {
-      docmodel.find({}).exec(async function (err, docs) {
-        for (let doc in docs) {
-          var s = String(docs[doc]._id);
-          if (("" + r).indexOf(s) != -1 && result[r] <= 0) {
+      var similar = await docmodel.findOne({ _id: r });
+      if (similar)
+        if (result[r] <= 0) {
+          d = {
+            document: similar.filename,
+            message: "Gần như hoàn toàn giống nhau",
+          };
+          arrDuplicate.push(d);
+        } else {
+          if (result[r] < 0.01) {
             d = {
-              document: docs[doc].filename,
-              message: "Gần như hoàn toàn giống nhau",
+              document: similar.filename,
+              message: "Rất giống nhau",
             };
             arrDuplicate.push(d);
           } else {
-            if (("" + r).indexOf(s) != -1 && result[r] < 0.01) {
+            if (result[r] < 0.02) {
               d = {
-                document: docs[doc].filename,
-                message: "Rất giống nhau",
+                document: similar.filename,
+                message: "Giống nhau",
               };
               arrDuplicate.push(d);
             } else {
-              if (("" + r).indexOf(s) != -1 && result[r] < 0.02) {
-                d = {
-                  document: docs[doc].filename,
-                  message: "Giống nhau",
-                };
-                arrDuplicate.push(d);
-              } else {
-                if (("" + r).indexOf(s) != -1) {
-                  d = {
-                    document: docs[doc].filename,
-                    message: "Gần Giống nhau",
-                  };
-                  arrDuplicate.push(d);
-                }
-              }
+              d = {
+                document: similar.filename,
+                message: "Gần Giống nhau",
+              };
+              arrDuplicate.push(d);
             }
           }
-        } // end for docs 2
-      });
-    } //end for result
+        }
+    }
   }
 
   result = [];
@@ -246,8 +241,10 @@ const uploadDocument = async (req, res, next) => {
   var path = req.file.path;
   var author = req.body.authorname;
   var note = req.body.note;
+
   var content = await readDocument(req.file.path);
   var vecA = await createVec(content);
+
   var arrDuplicate = [];
   arrDuplicate = await checkDuplicate(content);
 
@@ -282,6 +279,7 @@ const uploadDocument = async (req, res, next) => {
         res.send({ message: "success" });
       } else {
         console.log("Yes Duplicate");
+        console.log(arrDuplicate);
         res.send({ arrDuplicate: arrDuplicate });
       }
     }
