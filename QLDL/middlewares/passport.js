@@ -22,36 +22,26 @@ passport.use(
   new LocalStrategy(
     {
       usernameField: "email",
-      passwordField: "password",
-      passReqToCallback: true,
     },
-    function (req, email, password, done) {
-      process.nextTick(function () {
-        User.findOne({ email: email }).exec(function (err, user) {
-          if (err) return done(err);
-          if (user) {
-            return done(
-              null,
-              false,
-              req.flash("signupMessage", "That email is already taken.")
-            );
-          } else {
-            var newUser = new User();
-            newUser.email = req.body.email;
-            newUser.password = bcrypt.hashSync(
-              password,
-              bcrypt.genSaltSync(10),
-              null
-            );
-            newUser.role = req.body.role;
-            newUser.save(function (err) {
-              if (err) throw err;
-              console.log("Successful");
-              return done(null, newUser);
-            });
-          }
+    async (email, password, done) => {
+      const user = User.findOne({ email: email });
+      if (user) {
+        return done(null, false);
+      } else {
+        var newUser = new User();
+        newUser.email = req.body.email;
+        newUser.password = bcrypt.hashSync(
+          password,
+          bcrypt.genSaltSync(10),
+          null
+        );
+        newUser.role = req.body.role;
+        newUser.save(function (err) {
+          if (err) throw err;
+          console.log("Successful");
+          return done(null, newUser);
         });
-      });
+      }
     }
   )
 );

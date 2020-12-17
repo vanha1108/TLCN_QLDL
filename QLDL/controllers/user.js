@@ -35,6 +35,14 @@ const getAllUser = async (req, res, next) => {
   }
 };
 
+const signUp = async (req, res, next) => {
+  try {
+    const user = User.findOne({ email: email });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   changePassword,
   logOut,
