@@ -78,7 +78,7 @@ const saveDuplicate = async (req, res, next) => {
 
   data.save();
   // Thêm document vào chủ đề
-  var themes = thememodel.findOne({ name: subject });
+  var themes = await thememodel.findOne({ name: subject });
   if (themes) {
     themes.listidDoc.push(id);
     themes.save();
