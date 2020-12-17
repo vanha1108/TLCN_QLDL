@@ -43,7 +43,7 @@ const saveDuplicate = async (req, res, next) => {
 
   var arrID = [];
   var arrFilename = [];
-  var docs = docmodel.find();
+  var docs = await docmodel.find();
   for (doc in docs) {
     arrID.push(docs[doc].idDoc);
     arrFilename.push(docs[doc].filename);

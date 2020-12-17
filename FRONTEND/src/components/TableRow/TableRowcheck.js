@@ -12,10 +12,7 @@ class TableRowcheck extends Component {
                 <td>
                     {this.props.obj.message}                   
                 </td>
-                <td>
-                    <Button size="sm" color="info">Edit</Button>
-                    <Button size="sm" color="danger">Delete</Button>
-                </td> 
+                
             </tr>
         );
     }

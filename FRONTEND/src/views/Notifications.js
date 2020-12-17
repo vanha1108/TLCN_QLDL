@@ -71,7 +71,7 @@ class Notifications extends React.Component {
           <Row>
             <ToastContainer />
             
-            <Col md="8">
+            <Col md="10">
               <Card>
                 
                     <CardHeader>
