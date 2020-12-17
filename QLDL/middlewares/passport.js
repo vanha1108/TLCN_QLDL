@@ -26,22 +26,22 @@ passport.use(
     async (email, password, done) => {
       const user = User.findOne({ email: email });
       if (user) {
-        return done(null, false);
-      } else {
-        var newUser = new User();
-        newUser.email = req.body.email;
-        newUser.password = bcrypt.hashSync(
-          password,
-          bcrypt.genSaltSync(10),
-          null
-        );
-        newUser.role = req.body.role;
-        newUser.save(function (err) {
-          if (err) throw err;
-          console.log("Successful");
-          return done(null, newUser);
-        });
+        res.send({ message: "Email already exists!" });
       }
+
+      var newUser = new User();
+      newUser.email = req.body.email;
+      newUser.password = bcrypt.hashSync(
+        password,
+        bcrypt.genSaltSync(10),
+        null
+      );
+      newUser.role = req.body.role;
+      newUser.save(function (err) {
+        if (err) throw err;
+        console.log("Successful");
+        return done(null, newUser);
+      });
     }
   )
 );

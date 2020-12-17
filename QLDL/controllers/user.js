@@ -1,3 +1,9 @@
+var bcrypt = require("bcrypt-nodejs");
+const hashPassword = async (text) => {
+  const salt = await bcrypts.genSalt(15);
+  return await bcrypt.hash(textString, salt);
+};
+
 const changePassword = async (req, res, next) => {
   await User.findOne({ email: req.body.current }, async function (err, user) {
     if (err) res.send({ message: err });
@@ -37,7 +43,18 @@ const getAllUser = async (req, res, next) => {
 
 const signUp = async (req, res, next) => {
   try {
+    var email = req.body.email;
+    var password = req.body.password;
+    var role = req.body.role;
     const user = User.findOne({ email: email });
+    if (user) {
+      res.send({ message: "Email already exists!" });
+    }
+    var newUser = new User();
+    newUser.email = req.body.email;
+    newUser.password = await hashPassword(password);
+    newUser.role = req.body.role;
+    await newUser.save();
   } catch (error) {
     next(error);
   }
