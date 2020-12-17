@@ -78,8 +78,8 @@ class Map extends React.Component {
         .then((res) => {
           if(res.data.arrDuplicate)
           {
-            this.setState({datacheck: res.data});
-            console.log('yess')
+            this.setState({datacheck: res.data.arrDuplicate});
+            console.log('yess');
           }
           else{
             toast.success('Upload Successful');
@@ -153,7 +153,7 @@ class Map extends React.Component {
                         </thead>
                         <tbody>
                          
-                          
+                          {this.tabRowCheck()}
                         </tbody>
                       </Table>
                 </CardBody>
