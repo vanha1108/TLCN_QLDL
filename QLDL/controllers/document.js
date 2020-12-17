@@ -97,50 +97,53 @@ const saveDocument = async (
   content,
   vector
 ) => {
+  var idDoc = id;
+  var nameFile = filename;
   var arrID = [];
   var arrFilename = [];
-  docmodel.find({}).exec(async function (err, docs) {
+  await docmodel.find({}).exec(async function (err, docs) {
     for (doc in docs) {
       arrID.push(docs[doc].idDoc);
       arrFilename.push(docs[doc].filename);
     }
-  });
-  while (arrID.indexOf(id) != -1) {
-    id += 1;
-  }
 
-  var index = filename.lastIndexOf(".");
-  var preName = filename.slice(0, index);
-  var extension = filereader.getFileExtension(filename);
-  let j = 1;
-  while (arrFilename.indexOf(filename) != -1) {
-    filename = preName + "(" + j + ")" + extension;
-    j += 1;
-  }
-
-  var data = new docmodel();
-  data.idDoc = id;
-  data.subject = subject;
-  data.filename = filename;
-  data.path = path;
-  data.authorname = author;
-  data.note = note;
-  data.data = content;
-
-  for (let word in vector) {
-    data.vector.direction.push(word);
-    data.vector.value.push(vector[word]);
-  }
-
-  data.save();
-  // Thêm document vào chủ đề
-  thememodel.findOne({ name: subject }).exec(function (err, theme) {
-    if (err) console.log(err);
-    if (!theme) console.log("Not find theme");
-    else {
-      theme.listidDoc.push(id);
-      theme.save();
+    while (arrID.indexOf(idDoc) != -1) {
+      idDoc += 1;
     }
+
+    var index = nameFile.lastIndexOf(".");
+    var preName = nameFile.slice(0, index);
+    var extension = filereader.getFileExtension(nameFile);
+    let j = 1;
+    while (arrFilename.indexOf(nameFile) != -1) {
+      nameFile = preName + "(" + j + ")" + extension;
+      j += 1;
+    }
+
+    var data = new docmodel();
+    data.idDoc = idDoc;
+    data.subject = subject;
+    data.filename = nameFile;
+    data.path = path;
+    data.authorname = author;
+    data.note = note;
+    data.data = content;
+
+    for (let word in vector) {
+      data.vector.direction.push(word);
+      data.vector.value.push(vector[word]);
+    }
+
+    data.save();
+    // Thêm document vào chủ đề
+    thememodel.findOne({ name: subject }).exec(function (err, theme) {
+      if (err) console.log(err);
+      if (!theme) console.log("Not find theme");
+      else {
+        theme.listidDoc.push(idDoc);
+        theme.save();
+      }
+    });
   });
 };
 
@@ -150,14 +153,12 @@ const createVec = async (content) => {
   text = ("" + text).split(" ");
   text = sw.filter_stopword(text);
 
-  warehouse.findOne({}).exec(function (err, t) {
-    if (t) {
-      for (let doc in t.allText) {
-        all_text.push(t.allText[doc]);
-      }
-    }
-    all_text.push(text);
-  });
+  const ware = await warehouse.find();
+
+  for (let doc in ware.allText) {
+    all_text.push(t.allText[doc]);
+  }
+  all_text.push(text);
   var vec = await vector.create_vector(text, all_text);
   return vec;
 };
@@ -184,58 +185,54 @@ const checkDuplicate = async (content) => {
           result[docs[doc]._id] = distance;
         }
       } // end for docs 1
-
-      
     } // end if first
   });
-  
+
   var count = 0;
   for (let r in result) {
     count += 1;
   }
-  console.log("RS " + result.length);
-  
+
   if (count > 0) {
     var d;
     for (let r in result) {
       docmodel.find({}).exec(async function (err, docs) {
-      for (let doc in docs) {
-        var s = String(docs[doc]._id);
-        if (("" + r).indexOf(s) != -1 && result[r] <= 0) {
-          d = {
-            document: docs[doc].filename,
-            message: "Gần như hoàn toàn giống nhau",
-          };
-          arrDuplicate.push(d);
-        } else {
-          if (("" + r).indexOf(s) != -1 && result[r] < 0.01) {
+        for (let doc in docs) {
+          var s = String(docs[doc]._id);
+          if (("" + r).indexOf(s) != -1 && result[r] <= 0) {
             d = {
               document: docs[doc].filename,
-              message: "Rất giống nhau",
+              message: "Gần như hoàn toàn giống nhau",
             };
             arrDuplicate.push(d);
           } else {
-            if (("" + r).indexOf(s) != -1 && result[r] < 0.02) {
+            if (("" + r).indexOf(s) != -1 && result[r] < 0.01) {
               d = {
                 document: docs[doc].filename,
-                message: "Giống nhau",
+                message: "Rất giống nhau",
               };
               arrDuplicate.push(d);
             } else {
-              if (("" + r).indexOf(s) != -1) {
+              if (("" + r).indexOf(s) != -1 && result[r] < 0.02) {
                 d = {
                   document: docs[doc].filename,
-                  message: "Gần Giống nhau",
+                  message: "Giống nhau",
                 };
                 arrDuplicate.push(d);
+              } else {
+                if (("" + r).indexOf(s) != -1) {
+                  d = {
+                    document: docs[doc].filename,
+                    message: "Gần Giống nhau",
+                  };
+                  arrDuplicate.push(d);
+                }
               }
             }
           }
-        }
-      } // end for docs 2
-    });
+        } // end for docs 2
+      });
     } //end for result
-    
   }
 
   result = [];
@@ -253,6 +250,7 @@ const uploadDocument = async (req, res, next) => {
   var vecA = await createVec(content);
   var arrDuplicate = [];
   arrDuplicate = await checkDuplicate(content);
+
   docmodel.find({}).exec(async function (err, result) {
     if (!result) {
       // Nếu trong db chưa có document nào được up load
@@ -268,8 +266,6 @@ const uploadDocument = async (req, res, next) => {
         vecA
       );
     } else {
-      console.log(arrDuplicate.length);
-      console.log(arrDuplicate);
       if (arrDuplicate.length <= 0) {
         // Không có tài liệu tương tự
         console.log("No Duplicate");
@@ -283,9 +279,8 @@ const uploadDocument = async (req, res, next) => {
           content,
           vecA
         );
-        res.send({ message:'success' });
-      }
-       else {
+        res.send({ message: "success" });
+      } else {
         console.log("Yes Duplicate");
         res.send({ arrDuplicate: arrDuplicate });
       }
