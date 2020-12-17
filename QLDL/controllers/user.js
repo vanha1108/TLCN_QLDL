@@ -51,10 +51,11 @@ const signUp = async (req, res, next) => {
       res.send({ message: "Email already exists!" });
     }
     var newUser = new User();
-    newUser.email = req.body.email;
+    newUser.email = email;
     newUser.password = await hashPassword(password);
-    newUser.role = req.body.role;
+    newUser.role = role;
     await newUser.save();
+    res.send({ message: "Sign up success!" });
   } catch (error) {
     next(error);
   }
@@ -64,4 +65,5 @@ module.exports = {
   changePassword,
   logOut,
   getAllUser,
+  signUp,
 };

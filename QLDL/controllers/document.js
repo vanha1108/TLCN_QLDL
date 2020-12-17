@@ -86,6 +86,7 @@ const saveDuplicate = async (req, res, next) => {
       theme.save();
     }
   });
+  res.send({ message: "Save success!" });
 };
 
 const saveDocument = async (
@@ -181,7 +182,6 @@ const checkDuplicate = async (content) => {
       }
 
       var distance = euclid.compute_distance(vecA, vecB);
-    
 
       if (distance < 0.03) {
         result[allDoc[doc]._id] = distance;
@@ -248,7 +248,7 @@ const uploadDocument = async (req, res, next) => {
 
   var arrDuplicate = [];
   arrDuplicate = await checkDuplicate(content);
-  console.log(arrDuplicate)
+  console.log(arrDuplicate);
 
   docmodel.find({}).exec(async function (err, result) {
     if (!result) {

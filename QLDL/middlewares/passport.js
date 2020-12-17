@@ -17,48 +17,47 @@ passport.deserializeUser(function (email, done) {
     });
 });
 
+// passport.use(
+//   "local-register",
+//   new LocalStrategy(
+//     {
+//       usernameField: "email",
+//     },
+//     async (email, password, done) => {
+//       const user = User.findOne({ email: email });
+//       if (user) {
+//         res.send({ message: "Email already exists!" });
+//       }
+
+//       var newUser = new User();
+//       newUser.email = req.body.email;
+//       newUser.password = bcrypt.hashSync(
+//         password,
+//         bcrypt.genSaltSync(10),
+//         null
+//       );
+//       newUser.role = req.body.role;
+//       newUser.save(function (err) {
+//         if (err) throw err;
+//         console.log("Successful");
+//         return done(null, newUser);
+//       });
+//     }
+//   )
+// );
+
 passport.use(
-  "local-register",
+  "login",
   new LocalStrategy(
     {
       usernameField: "email",
-    },
-    async (email, password, done) => {
-      const user = User.findOne({ email: email });
-      if (user) {
-        res.send({ message: "Email already exists!" });
-      }
-
-      var newUser = new User();
-      newUser.email = req.body.email;
-      newUser.password = bcrypt.hashSync(
-        password,
-        bcrypt.genSaltSync(10),
-        null
-      );
-      newUser.role = req.body.role;
-      newUser.save(function (err) {
-        if (err) throw err;
-        console.log("Successful");
-        return done(null, newUser);
-      });
-    }
-  )
-);
-
-passport.use(
-  "local-login",
-  new LocalStrategy(
-    {
-      usernameField: "email",
-      passwordField: "password",
-      passReqToCallback: true,
     },
     function (req, email, password, done) {
       loginAttempt();
       async function loginAttempt() {
         try {
-          const user = await User.findOne({ email: req.body.email });
+          var email = req.body.email;
+          const user = await User.findOne({ email: email });
 
           if (!user) {
             return done(null, false);
@@ -77,15 +76,12 @@ passport.use(
               );
 
               req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000;
-              const findUser = await User.findOne({
-                email: req.body.email,
-              });
-              res.send(findUser);
-              return done(null, findUser);
+              res.send(user);
+              return done(null, user);
             }
           }
-        } catch (e) {
-          throw e;
+        } catch (error) {
+          done(error, false);
         }
       }
     }
