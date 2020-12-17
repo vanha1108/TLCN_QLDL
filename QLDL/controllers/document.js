@@ -181,6 +181,7 @@ const checkDuplicate = async (content) => {
       }
 
       var distance = euclid.compute_distance(vecA, vecB);
+    
 
       if (distance < 0.03) {
         result[allDoc[doc]._id] = distance;
@@ -247,6 +248,7 @@ const uploadDocument = async (req, res, next) => {
 
   var arrDuplicate = [];
   arrDuplicate = await checkDuplicate(content);
+  console.log(arrDuplicate)
 
   docmodel.find({}).exec(async function (err, result) {
     if (!result) {
@@ -279,7 +281,6 @@ const uploadDocument = async (req, res, next) => {
         res.send({ message: "success" });
       } else {
         console.log("Yes Duplicate");
-        console.log(arrDuplicate);
         res.send({ arrDuplicate: arrDuplicate });
       }
     }
