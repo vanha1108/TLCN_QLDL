@@ -30,6 +30,7 @@ class Map extends React.Component {
     this.onchangeFile = this.onchangeFile.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onchangValue = this.onchangValue.bind(this);
+    this.onSaveFile = this.onSaveFile.bind(this);
     this.state = {
       datacheck:[],
       datalist:[],
@@ -78,8 +79,10 @@ class Map extends React.Component {
         .then((res) => {
           if(res.data.arrDuplicate)
           {
+            
             this.setState({datacheck: res.data.arrDuplicate});
             console.log('yess');
+            
           }
           else{
             toast.success('Upload Successful');
@@ -87,6 +90,28 @@ class Map extends React.Component {
           } 
         })
         .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
+        
+  }
+  onSaveFile(event){
+    event.preventDefault()
+        
+    event.preventDefault()
+    const formData1 = new FormData()
+    formData1.append('filedoc', this.state.filedoc)
+    formData1.append('authorname',this.state.authorname)
+    formData1.append('note',this.state.note)
+    formData1.append('idDoc',this.state.idDoc)
+    formData1.append('subject',this.state.subject)
+    formData1.getAll('filedoc','authorname','subject','note','idDoc')
+    console.log(formData1);
+    axios.post("/api/doc/save", formData1,{})
+    .then((res) => {
+        console.log(res)
+        console.log('vao day roi ne');
+        toast.success('Upload Successful');
+
+    })
+    .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
         
   }
   tabRowCheck(){
@@ -154,6 +179,7 @@ class Map extends React.Component {
                         <tbody>
                          
                           {this.tabRowCheck()}
+                          <Button onClick={this.onSaveFile}>save</Button>
                         </tbody>
                       </Table>
                 </CardBody>
