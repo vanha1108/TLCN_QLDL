@@ -28,7 +28,7 @@ class Login extends Component {
       }).then(res => {
             console.log(res);
       }).catch(err => {
-        console.log(err);
+        alert('sai pass');
       });
     } else {
       alert('Please enter valid details');
