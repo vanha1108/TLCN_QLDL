@@ -22,6 +22,7 @@ import {
   Table,
   Col
 } from "reactstrap";
+import CardHeader from "reactstrap/lib/CardHeader";
 
 class Notifications extends React.Component {
 
@@ -56,7 +57,7 @@ class Notifications extends React.Component {
             <NotificationAlert ref="notificationAlert" />
           </div>
           <Row>
-            <Col>
+            <Col md="8">
             <Card>
               <CardBody>
               <FormGroup>
@@ -72,17 +73,21 @@ class Notifications extends React.Component {
             
             <Col md="8">
               <Card>
-                <CardBody>
-                  <div className="places-buttons">
-                    <Row>
-                      <Col md="8">
-                        <CardTitle>
+                
+                    <CardHeader>
                           <FormGroup row>
-                            <Label  md="11" tag="h6">Danh sách tài liệu</Label>
+                            <Label md="6"  sm={6} tag="h6">Danh sách tài liệu</Label>
+                            <Col md="6" sm={6}>
+                            <Input md="2" value={this.state.subject} onChange={this.onchangValue} type="select" name="subject" id="">
+                              {this.state.data.map((list) => (
+                                  <option value={list.filename}>{list.filename}</option>
+                              ))}
+                            </Input>
+                            </Col>
+                            
                           </FormGroup>
-                        </CardTitle>
-                      </Col>
-                    </Row>
+                    </CardHeader>   
+                  <CardBody>
                     <Table striped>
                         <thead>
                           <tr>
@@ -97,7 +102,6 @@ class Notifications extends React.Component {
                           {this.tabRow()}
                         </tbody>
                       </Table>
-                  </div>
                 </CardBody>
               </Card>
             </Col>

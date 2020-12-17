@@ -55,7 +55,7 @@ class UserProfile extends React.Component {
         
   }
   componentDidMount() {
-    axios.get('/api/theme/listall')
+    axios.get('/api/theme/alltheme')
         .then(response => {
             console.log(response.data);
             this.setState({data2: response.data});

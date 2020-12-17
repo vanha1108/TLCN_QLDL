@@ -54,7 +54,7 @@ class Map extends React.Component {
     })
   }
   componentDidMount() {
-    axios.get('/api/doc/all')
+    axios.get('/api/theme/alltheme')
         .then(response => {
             console.log(response.data);
             this.setState({datalist: response.data});
@@ -124,7 +124,7 @@ class Map extends React.Component {
                     <Label tag="h5">Chủ đề</Label>
                     <Input value={this.state.subject} onChange={this.onchangValue} type="select" name="subject" id="">
                       {this.state.datalist.map((list) => (
-                          <option value={list.filename}>{list.filename}</option>
+                          <option value={list.name}>{list.name}</option>
                       ))}
                     </Input>
                   </FormGroup>
