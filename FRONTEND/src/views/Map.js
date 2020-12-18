@@ -40,7 +40,7 @@ class Map extends React.Component {
       note:'',
       subject:'alo',
       idDoc:'',
-      disabled:false
+      disabled:true
     }
   }
   
