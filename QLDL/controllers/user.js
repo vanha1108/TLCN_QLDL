@@ -1,7 +1,10 @@
+const User = require("./../model/user");
+const JWT = require("jsonwebtoken");
 var bcrypt = require("bcrypt-nodejs");
+
 const hashPassword = async (text) => {
-  const salt = await bcrypts.genSalt(15);
-  return await bcrypt.hash(textString, salt);
+  const salt = await bcrypt.genSaltSync(15);
+  return bcrypt.hashSync(text, salt, null);
 };
 
 const changePassword = async (req, res, next) => {
@@ -33,12 +36,28 @@ const logOut = async (req, res, next) => {
 };
 
 const getAllUser = async (req, res, next) => {
-  if (req.isAuthenticated() && "1" == req.session.passport.user.role) {
-    await User.find({}).exec(function (err, users) {
-      if (err) res.send({ message: err });
-      res.send(users);
+  const headers = req.headers;
+  if (!headers.authorization)
+    return res.status(200).json({
+      code: 400,
+      message: "Token khong hop le hoac khong co",
+      success: false,
     });
-  }
+  await JWT.verify(
+    headers.authorization,
+    process.env.SECRETTOKEN,
+    async (err, decodeToken) => {
+      const user = await User.findById(decodeToken.sub);
+      if (user.role != "1")
+        return res
+          .status(200)
+          .json({ success: false, code: 403, message: "denied" });
+      const users = await User.find();
+      return res
+        .status(200)
+        .json({ success: true, code: 200, message: "", users });
+    }
+  );
 };
 
 const signUp = async (req, res, next) => {
@@ -46,19 +65,40 @@ const signUp = async (req, res, next) => {
     var email = req.body.email;
     var password = req.body.password;
     var role = req.body.role;
-    const user = User.findOne({ email: email });
+    const user = await User.findOne({ email: email });
     if (user) {
-      res.send({ message: "Email already exists!" });
+      return res.send({ message: "Email already exists!" });
     }
     var newUser = new User();
     newUser.email = email;
     newUser.password = await hashPassword(password);
     newUser.role = role;
     await newUser.save();
-    res.send({ message: "Sign up success!" });
+    return res.status(200).json({
+      success: true,
+      code: 201,
+      message: "SignUp successfull",
+      user: newUser,
+    });
   } catch (error) {
     next(error);
   }
+};
+const encodedToken = async (userID, times) => {
+  return JWT.sign(
+    {
+      iss: "Van Ha",
+      sub: userID,
+    },
+    process.env.SECRETTOKEN,
+    { expiresIn: times }
+  );
+};
+const signIn = async (req, res, next) => {
+  const token = await encodedToken(req.user._id, "1h");
+
+  res.setHeader("authorization", token);
+  return res.status(200).json({ success: true, code: 200, message: "" });
 };
 
 module.exports = {
@@ -66,4 +106,5 @@ module.exports = {
   logOut,
   getAllUser,
   signUp,
+  signIn,
 };

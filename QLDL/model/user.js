@@ -9,9 +9,12 @@ var userschema = new Schema(
     password: {
       type: String,
     },
-    role: { type: String, default: "2" },
+    role: {
+      type: Number,
+      default: "2",
+    },
   },
-  { collection: "users" }
+  { collection: "users", timestamps: true }
 );
 
 module.exports = mongoose.model("User", userschema);

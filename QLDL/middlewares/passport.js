@@ -17,6 +17,31 @@ passport.deserializeUser(function (email, done) {
     });
 });
 
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: "email",
+    },
+    async (email, password, done) => {
+      try {
+        const user = await User.findOne({ email });
+
+        if (!user) return done(null, false);
+
+        const isCorrectPassword = await bcrypt.compareSync(
+          password,
+          user.password
+        );
+
+        if (!isCorrectPassword) return done(null, false);
+        done(null, user);
+      } catch (error) {
+        done(error, false);
+      }
+    }
+  )
+);
+
 // passport.use(
 //   "local-register",
 //   new LocalStrategy(
@@ -46,44 +71,36 @@ passport.deserializeUser(function (email, done) {
 //   )
 // );
 
-passport.use(
-  "login",
-  new LocalStrategy(
-    {
-      usernameField: "email",
-    },
-    function (req, email, password, done) {
-      loginAttempt();
-      async function loginAttempt() {
-        try {
-          var email = req.body.email;
-          const user = await User.findOne({ email: email });
-
-          if (!user) {
+/*passport.use(
+  new LocalStrategy({
+    usernameField: "email"},
+    async(req, email, done) => {
+      try {
+        const user = await User.findOne({ email: email });
+        console.log(user);
+        if (!user) {
+          return done(null, false);
+        } else {
+          const checkPassword = bcrypt.compareSync(
+            req.body.password,
+            user.password
+          );
+          if (!checkPassword) {
             return done(null, false);
           } else {
-            const checkPassword = bcrypt.compareSync(
+            const hashPassword = bcrypt.hashSync(
               req.body.password,
-              user.password
+              bcrypt.genSaltSync(10),
+              null
             );
-            if (!checkPassword) {
-              return done(null, false);
-            } else {
-              const hashPassword = bcrypt.hashSync(
-                req.body.password,
-                bcrypt.genSaltSync(10),
-                null
-              );
-
-              req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000;
-              res.send(user);
-              return done(null, user);
-            }
+            req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000;
+            res.send(user);
+            return done(null, user);
           }
-        } catch (error) {
-          done(error, false);
         }
+      } catch (error) {
+        done(error, false);
       }
-    }
-  )
-);
+    },
+  })
+);*/

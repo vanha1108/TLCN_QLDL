@@ -68,7 +68,7 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  return res.status(200).json({ success: false, code: 500, message: "Error" });
 });
 
 cron.schedule("50 17 * * *", function () {
