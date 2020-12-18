@@ -8,8 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import TableRowCheck from "components/TableRow/TableRowcheck.js";
 // reactstrap components
 //import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
-import {
-  
+import {  
   Button,
   Card,
   CardHeader,
@@ -22,7 +21,9 @@ import {
   FormText,
   CustomInput,
   Table,
-  Col
+  Col,
+  FormFeedback,
+  Form
 } from "reactstrap";
 class Map extends React.Component {
   constructor(props) {
@@ -38,7 +39,8 @@ class Map extends React.Component {
       authorname:'',
       note:'',
       subject:'alo',
-      idDoc:''
+      idDoc:'',
+      disabled:false
     }
   }
   
@@ -80,7 +82,7 @@ class Map extends React.Component {
           if(res.data.arrDuplicate)
           {
             
-            this.setState({datacheck: res.data.arrDuplicate});
+            this.setState({datacheck: res.data.arrDuplicate,disabled:false});
             console.log('yess');
             
           }
@@ -93,7 +95,6 @@ class Map extends React.Component {
         
   }
   onSaveFile(event){
-    event.preventDefault()
         
     event.preventDefault()
     const formData1 = new FormData()
@@ -108,6 +109,7 @@ class Map extends React.Component {
     .then((res) => {
         console.log(res)
         console.log('vao day roi ne');
+        this.setState({disabled:true,idDoc:'',authorname:'',note:''})
         toast.success('Upload Successful');
 
     })
@@ -119,6 +121,38 @@ class Map extends React.Component {
       return <TableRowCheck obj={object} key={i}/>;
     });
   }
+  onCancelField(){
+    this.setState({
+      idDoc:'',authorname:'',note:'',disabled:true
+    })
+  } 
+  hienThiFormSave(){
+    if(this.state.disabled===false){
+      return(
+        <Card>
+                <CardBody>
+                      <Table striped>
+                        <thead>
+                          <tr>
+                            <th>Filename</th>
+                            <th>Message</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                         
+                          {this.tabRowCheck()}
+                          
+                          
+                        </tbody>
+                      </Table>
+                      <Button disabled={this.state.disabled}  onClick={this.onSaveFile}>save</Button>
+                      <Button disabled={this.state.disabled} onClick={()=>this.onCancelField()} >clear</Button>
+                </CardBody>
+              </Card>
+      );
+    }
+  }
+
   render() {
     return (
         <div className="content">
@@ -132,17 +166,17 @@ class Map extends React.Component {
                 <CardBody>
                   <FormGroup>
                     <Label tag="h5">ID Document</Label>
-                    <Input onChange={this.onchangValue} type="text" name="idDoc" id="" placeholder="Điền Id Doc" />
+                    <Input value={this.state.idDoc} onChange={this.onchangValue} type="text" name="idDoc" id="" placeholder="Điền Id Doc" />
                 
                   </FormGroup>
                   <FormGroup>
                     <Label tag="h5">Người đăng</Label>
-                    <Input onChange={this.onchangValue} type="text" name="authorname" id="" placeholder="Điền tên người đăng file này lên" />
+                    <Input value={this.state.authorname} onChange={this.onchangValue} type="text" name="authorname" id="" placeholder="Điền tên người đăng file này lên" />
                 
                   </FormGroup>
                   <FormGroup>
                     <Label tag="h5">Ghi chú</Label>
-                    <Input onChange={this.onchangValue} type="text" name="note" id="" placeholder="ghi chú về file muốn upload" />
+                    <Input value={this.state.note} onChange={this.onchangValue} type="text" name="note" id="" placeholder="ghi chú về file muốn upload" />
                   </FormGroup>
                   <FormGroup>
                     <Label tag="h5">Chủ đề</Label>
@@ -167,23 +201,23 @@ class Map extends React.Component {
              </Card>
             </Col>
             <Col md="4">
-              <Card>
-                <CardBody>
-                      <Table striped>
-                        <thead>
-                          <tr>
-                            <th>Filename</th>
-                            <th>Message</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                         
-                          {this.tabRowCheck()}
-                          <Button onClick={this.onSaveFile}>save</Button>
-                        </tbody>
-                      </Table>
-                </CardBody>
-              </Card>
+              {this.hienThiFormSave()}
+            </Col>
+            <Col md="6">
+              <Form>
+                <FormGroup>
+                  <Label for="exampleEmail">Valid input</Label>
+                  <Input valid />
+                  <FormFeedback valid>Sweet! that name is available</FormFeedback>
+                  <FormText>Example help text that remains unchanged.</FormText>
+                </FormGroup>
+                <FormGroup>
+                  <Label for="examplePassword">Invalid input</Label>
+                  <Input invalid />
+                  <FormFeedback>Oh noes! that name is already taken</FormFeedback>
+                  <FormText>Example help text that remains unchanged.</FormText>
+                </FormGroup>
+              </Form>
             </Col>
           </Row>
         </div>

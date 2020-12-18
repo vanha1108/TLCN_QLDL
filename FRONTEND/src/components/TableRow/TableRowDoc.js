@@ -10,19 +10,19 @@ class TableRowDoc extends Component {
     }
     
     download1() {
-        axios.get('/api/doc/download/'+this.props.obj.idDoc)
-        .then(response =>{
-            response.blob().then(blob =>{
-                const url = window.URL.createObjectURL(blob);
-				const a = document.createElement('a');
-                a.href = url;
-                a.setAttribute('download','file');
-				document.body.appendChild(a);
-				a.click();
-            });
-        })
-                  
-        .catch(err => console.log(err))
+        //axios.get('/api/doc/dowload/'+this.props.obj.idDoc);
+        axios({
+            url:'/api/doc/dowload/'+this.props.obj.idDoc,
+            moethod:'GET',
+            responseType:'blob',
+        }).then((response) => {
+            const url =  window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download','file.docx');
+            document.body.appendChild(link);
+            link.click();
+        }).catch(console.log('khong tai dc'));
     }
     render() {
         return (
