@@ -11,7 +11,7 @@ var userschema = new Schema(
     },
     role: {
       type: Number,
-      default: "2",
+      default: 2,
     },
   },
   { collection: "users", timestamps: true }

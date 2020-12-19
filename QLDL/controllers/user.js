@@ -48,7 +48,7 @@ const getAllUser = async (req, res, next) => {
     process.env.SECRETTOKEN,
     async (err, decodeToken) => {
       const user = await User.findById(decodeToken.sub);
-      if (user.role != "1")
+      if (user.role != 1)
         return res
           .status(200)
           .json({ success: false, code: 403, message: "denied" });
@@ -72,7 +72,7 @@ const signUp = async (req, res, next) => {
     var newUser = new User();
     newUser.email = email;
     newUser.password = await hashPassword(password);
-    newUser.role = role;
+    newUser.role = parseInt(role);
     await newUser.save();
     return res.status(200).json({
       success: true,
