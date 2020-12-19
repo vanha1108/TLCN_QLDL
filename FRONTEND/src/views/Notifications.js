@@ -3,23 +3,17 @@ import React from "react";
 import axios from 'axios';
 // react plugin for creating notifications over the dashboard
 import NotificationAlert from "react-notification-alert";
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TableRow from "components/TableRow/TableRowDoc.js";
 import {Redirect } from "react-router-dom";
 // reactstrap components
-import {
-  
- 
+import { 
   Card,
-  
   CardBody,
-  CardTitle,
   Row,
   Label,
   Input,
   FormGroup,
-  
   Table,
   Col
 } from "reactstrap";
@@ -70,22 +64,21 @@ class Notifications extends React.Component {
             </Card> 
             </Col>
           </Row>
-          <Row>
-            <ToastContainer />           
+          <Row>          
             <Col md="10">
               <Card>               
-                    <CardHeader>
-                          <FormGroup row>
-                            <Label md="6"  sm={6} tag="h6">Danh sách tài liệu</Label>
-                            <Col md="6" sm={6}>
-                            <Input md="2" value={this.state.subject} onChange={this.onchangValue} type="select" name="subject" id="">
-                              {this.state.data.map((list) => (
-                                  <option value={list.filename}>{list.filename}</option>
+                <CardHeader>
+                  <FormGroup row>
+                    <Label md="6"  sm={6} tag="h6">Danh sách tài liệu</Label>
+                      <Col md="6" sm={6}>
+                        <Input md="2" value={this.state.subject} onChange={this.onchangValue} type="select" name="subject" id="">
+                              {this.state.data.map((list,i) => (
+                                  <option key={i} value={list.filename}>{list.filename}</option>
                               ))}
-                            </Input>
-                            </Col>
-                        </FormGroup>
-                    </CardHeader>   
+                        </Input>
+                      </Col>
+                  </FormGroup>
+                </CardHeader>   
                   <CardBody>
                     <Table striped>
                         <thead>

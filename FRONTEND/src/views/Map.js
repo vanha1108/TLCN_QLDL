@@ -2,10 +2,10 @@
 import React from "react";
 import axios from 'axios';
 // react plugin for creating notifications over the dashboard
-import NotificationAlert from "react-notification-alert";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TableRowCheck from "components/TableRow/TableRowcheck.js";
+import {Redirect } from "react-router-dom";
 // reactstrap components
 //import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 import {  
@@ -80,15 +80,14 @@ class Map extends React.Component {
         axios.post("/api/doc/upload", formData,{})
         .then((res) => {
           if(res.data.arrDuplicate)
-          {
-            
+          {           
             this.setState({datacheck: res.data.arrDuplicate,disabled:false});
-            console.log('yess');
-            
+            console.log('yess');          
           }
           else{
-            toast.success('Upload Successful');
-
+            this.setState({idDoc:'',authorname:'',note:''})
+            toast.success('Upload Successful')
+            window.location.reload();
           } 
         })
         .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
@@ -107,53 +106,45 @@ class Map extends React.Component {
     console.log(formData1);
     axios.post("/api/doc/save", formData1,{})
     .then((res) => {
-        console.log(res)
-        console.log('vao day roi ne');
-        this.setState({disabled:true,idDoc:'',authorname:'',note:''})
-        toast.success('Upload Successful');
-
+        this.setState({disabled:true})
+        toast.success('Upload Successful')
+        console.log('vao day roi ne')
+        window.location.reload()
     })
-    .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
-        
+    .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});     
   }
   tabRowCheck(){
     return this.state.datacheck.map(function (object,i){
       return <TableRowCheck obj={object} key={i}/>;
     });
-  }
-  onCancelField(){
-    this.setState({
-      idDoc:'',authorname:'',note:'',disabled:true
-    })
   } 
   hienThiFormSave(){
     if(this.state.disabled===false){
       return(
         <Card>
-                <CardBody>
-                      <Table striped>
-                        <thead>
-                          <tr>
-                            <th>Filename</th>
-                            <th>Message</th>
-                          </tr>
-                        </thead>
-                        <tbody>
+          <CardBody>
+            <Table striped>
+              <thead>
+                <tr>
+                  <th>Filename</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody>
                          
-                          {this.tabRowCheck()}
-                          
-                          
-                        </tbody>
-                      </Table>
-                      <Button disabled={this.state.disabled}  onClick={this.onSaveFile}>save</Button>
-                      <Button disabled={this.state.disabled} onClick={()=>this.onCancelField()} >clear</Button>
-                </CardBody>
-              </Card>
+                  {this.tabRowCheck()}
+                                    
+              </tbody>
+            </Table>
+              <Button disabled={this.state.disabled}  onClick={this.onSaveFile}>save</Button>
+              <Button disabled={this.state.disabled} onClick={()=>this.onCancelField()} >clear</Button>
+          </CardBody>
+        </Card>
       );
     }
   }
-
   render() {
+    if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return (
         <div className="content">
           <Row>
@@ -181,8 +172,8 @@ class Map extends React.Component {
                   <FormGroup>
                     <Label tag="h5">Chủ đề</Label>
                     <Input value={this.state.subject} onChange={this.onchangValue} type="select" name="subject" id="">
-                      {this.state.datalist.map((list) => (
-                          <option value={list.name}>{list.name}</option>
+                      {this.state.datalist.map((list,i) => (
+                          <option key={i} value={list.name}>{list.name}</option>
                       ))}
                     </Input>
                   </FormGroup>
