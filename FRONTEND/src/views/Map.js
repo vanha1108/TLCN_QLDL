@@ -194,22 +194,6 @@ class Map extends React.Component {
             <Col md="4">
               {this.hienThiFormSave()}
             </Col>
-            <Col md="6">
-              <Form>
-                <FormGroup>
-                  <Label for="exampleEmail">Valid input</Label>
-                  <Input valid />
-                  <FormFeedback valid>Sweet! that name is available</FormFeedback>
-                  <FormText>Example help text that remains unchanged.</FormText>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="examplePassword">Invalid input</Label>
-                  <Input invalid />
-                  <FormFeedback>Oh noes! that name is already taken</FormFeedback>
-                  <FormText>Example help text that remains unchanged.</FormText>
-                </FormGroup>
-              </Form>
-            </Col>
           </Row>
         </div>
     );
