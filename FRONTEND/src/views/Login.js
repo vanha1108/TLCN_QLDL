@@ -41,7 +41,16 @@ class Login extends Component {
             this.setState({
               redirect: true
             });
-            history.push("/admin/icons");
+            
+            if(res.data.user.role===1)
+            {
+              history.push("/admin/icons");
+            }
+            else
+            {
+              history.push("/user");
+            }
+            
         }
         
             

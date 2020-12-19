@@ -6,6 +6,7 @@ import NotificationAlert from "react-notification-alert";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TableRow from "components/TableRow/TableRowDoc.js";
+import {Redirect } from "react-router-dom";
 // reactstrap components
 import {
   
@@ -51,6 +52,7 @@ class Notifications extends React.Component {
     });
   } 
   render() {
+    if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return (
         <div className="content">
           <div className="react-notification-alert-container">

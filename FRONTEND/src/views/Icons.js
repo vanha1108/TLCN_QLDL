@@ -71,14 +71,15 @@ onSubmit(event){
     axios.get('/api/user')
         .then(response => {
             const token = localStorage.getItem('authorization');
+            console.log(token);
             if(!token){
               return <Redirect to="/login" />
             }
             else
             {
               console.log('ok')
-              console.log(response.data.users);
-              this.setState({data1: response.data.users});
+              console.log(response.data);
+              //this.setState({data1: response.data.users});
             }  
         })
         .catch(function (error) {

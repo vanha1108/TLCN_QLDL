@@ -3,7 +3,7 @@ import React from "react";
 import axios from "axios";
 import TableRowType from "components/TableRow/TableRowType.js";
 import { ToastContainer, toast } from 'react-toastify';
-
+import {Redirect } from "react-router-dom";
 // reactstrap components
 import {
   Button,
@@ -172,8 +172,8 @@ class UserProfile extends React.Component {
     }
   }
   render() {
-    return (
-      <>
+    if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
+    return ( 
         <div className="content">
           <Row>
             <ToastContainer/>
@@ -208,7 +208,6 @@ class UserProfile extends React.Component {
             </Col>
           </Row>
         </div>
-      </>
     );
   }
 }
