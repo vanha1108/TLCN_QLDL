@@ -302,16 +302,40 @@ const dowloadDocument = async (req, res, next) => {
 
 const deleteDocument = async (req, res, next) => {
   var iddelete = req.params.iddelete;
-  docmodel.findByIdAndRemove({ idDoc: iddelete }, function (err, doc) {
-    if (data) {
-      try {
-        fs.unlink(doc.path, (err) => {
-          if (err) throw err;
-        });
-      } catch (error) {}
-      res.send({ message: "Delete success!" });
-    }
-  });
+  const doc = await docmodel.findOneAndRemove({ idDoc: iddelete });
+  if (!doc) {
+    return res
+      .status(200)
+      .json({
+        success: false,
+        code: 500,
+        message: "Not foud document to delete!",
+      });
+  }
+
+  const theme = thememodel.findOne({ name: doc.idDoc });
+  if (theme) {
+    const new_arr = arr.filter((item) => item !== valueToRemove);
+    theme.listidDoc = theme.listidDoc.filter((item) => item !== doc.idDoc);
+  } else {
+    return res
+      .status(200)
+      .json({
+        success: false,
+        code: 500,
+        message: "Not foud theme to delete document!",
+      });
+  }
+
+  try {
+    fs.unlink(doc.path, (err) => {
+      if (err) throw err;
+    });
+  } catch (error) {}
+
+  return res
+    .status(200)
+    .json({ success: true, code: 200, message: "Delete success" });
 };
 
 const searchDocument = async (req, res, next) => {
