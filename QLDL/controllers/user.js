@@ -37,9 +37,8 @@ const logOut = async (req, res, next) => {
 
 const getAllUser = async (req, res, next) => {
   const headers = req.headers;
-  console.log(headers.authorization);
+  console.log("TOKEN: " + headers.authorization);
   if (!headers.authorization) {
-    console.log("alo");
     return res.status(200).json({
       code: 400,
       message: "Token khong hop le hoac khong co",
