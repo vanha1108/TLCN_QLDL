@@ -37,12 +37,16 @@ const logOut = async (req, res, next) => {
 
 const getAllUser = async (req, res, next) => {
   const headers = req.headers;
-  if (!headers.authorization)
+  console.log(headers.authorization)
+  if (!headers.authorization)  {
+    console.log("alo")
     return res.status(200).json({
       code: 400,
       message: "Token khong hop le hoac khong co",
       success: false,
     });
+  }
+    
   await JWT.verify(
     headers.authorization,
     process.env.SECRETTOKEN,
@@ -53,6 +57,7 @@ const getAllUser = async (req, res, next) => {
           .status(200)
           .json({ success: false, code: 403, message: "denied" });
       const users = await User.find();
+      console.log(users);
       return res
         .status(200)
         .json({ success: true, code: 200, message: "", users });

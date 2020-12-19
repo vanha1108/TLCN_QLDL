@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { CardTitle,CardText,Row,CardHeader,CardBody,Col,Card } from 'reactstrap';
 import Form from "views/form.js";
+import history from "history.js";
+
 class Login extends Component {
    
   constructor(props) {
@@ -11,7 +13,7 @@ class Login extends Component {
       email: '',
       password: '',
       token: '',
-      redirect: localStorage.getItem('userTokenTime') ? true : false
+      redirect: localStorage.getItem('authorization') ? true : false
     }
 
     this.onSubmitHandler = this.onSubmitHandler.bind(this);
@@ -34,14 +36,12 @@ class Login extends Component {
               token: res.headers.authorization            
             });
             console.log(this.state.token);
-            const data = 
-              this.state.token;
-              
-            
-            localStorage.setItem('userTokenTime', JSON.stringify(data));
+            const data = this.state.token;
+            localStorage.setItem('authorization', JSON.stringify(data));
             this.setState({
               redirect: true
             });
+            history.push("/admin/icons");
         }
         
             

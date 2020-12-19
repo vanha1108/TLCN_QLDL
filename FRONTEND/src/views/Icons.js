@@ -18,7 +18,7 @@ import {
 //import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 import TableRowUser from "components/TableRow/TableRowUser.js";
 import { ToastContainer, toast } from 'react-toastify';
-
+import {Redirect } from "react-router-dom";
 class Icons extends React.Component {
   
   constructor(props) {
@@ -57,7 +57,7 @@ onSubmit(event){
       }
       
       console.log(formData);
-      axios.post('/api/auth/register',formData)
+      axios.post('/api/user/register',formData)
       .then((res) => {
           
           console.log(res.data);
@@ -70,10 +70,19 @@ onSubmit(event){
   componentDidMount() {
     axios.get('/api/user')
         .then(response => {
-            console.log(response.data);
-            this.setState({data1: response.data});
+            const token = localStorage.getItem('authorization');
+            if(!token){
+              return <Redirect to="/login" />
+            }
+            else
+            {
+              console.log('ok')
+              console.log(response.data.users);
+              this.setState({data1: response.data.users});
+            }  
         })
         .catch(function (error) {
+            console.log('loi123');
             console.log(error);
         })
   }
@@ -136,8 +145,9 @@ onSubmit(event){
   }
  
   render() {
+    if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return (
-      <>
+      
         <div className="content">
           <Row>
             <Col md={7}>
@@ -170,7 +180,7 @@ onSubmit(event){
             <ToastContainer />
           </Row>
         </div>
-      </>
+      
     );
   }
 }

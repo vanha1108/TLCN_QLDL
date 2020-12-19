@@ -10,14 +10,17 @@ import "assets/scss/black-dashboard-react.scss";
 import "assets/demo/demo.css";
 import "assets/css/nucleo-icons.css";
 
-const hist = createBrowserHistory();
+import history from "history.js";
+
+//const hist = createBrowserHistory();
 
 ReactDOM.render(
-  <Router history={hist}>
+  <Router history={history}>
     <Switch>
       <Route path="/admin" render={props => <AdminLayout {...props} />} />
       <Route path="/user" render={props => <RTLLayout {...props} />} />
       <Route path="/login" component={Login}/>
+      
       <Redirect from="/" to="/login"/>
     </Switch>
   </Router>,
