@@ -8,7 +8,7 @@ var thememodel = require("./../model/theme");
 var euclid = require("./../handling_data/euclid");
 var special = require("./../handling_data/special_chars");
 var fs = require("fs");
-const { ObjectId } = require("mongodb");
+var pdfParse = require("pdf-parse");
 
 const readDocument = async (filePath) => {
   var content = "";
