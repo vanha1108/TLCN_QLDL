@@ -22,15 +22,34 @@ class Login extends Component {
   onSubmitHandler() {
     if (!(this.state.email === '' || this.state.password === '')
       && (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.state.email))) {
-      axios.post('/api/auth/login', {
+      axios.post('/api/user/login', {
         email: this.state.email,
         password: this.state.password
-      }).then(res => {
-            console.log(res);
+      }).then((res) => {
+        
+        if(res.data.success===true)
+        {
+          console.log('success');
+            this.setState({
+              token: res.headers.authorization            
+            });
+            console.log(this.state.token);
+            const data = 
+              this.state.token;
+              
+            
+            localStorage.setItem('userTokenTime', JSON.stringify(data));
+            this.setState({
+              redirect: true
+            });
+        }
+        
+            
       }).catch(err => {
-        alert('sai pass');
+        console.log('lỗi')
       });
-    } else {
+    } 
+    else {
       alert('Please enter valid details');
     }
   }
