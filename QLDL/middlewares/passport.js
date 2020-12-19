@@ -30,7 +30,7 @@ passport.use(
       try {
         const user = await User.findOne({ email });
 
-        if (!user) return done(null, false);
+        if (!user) return done(error, false);
 
         const isCorrectPassword = await bcrypt.compareSync(
           password,
