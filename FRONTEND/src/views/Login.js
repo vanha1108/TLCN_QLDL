@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { CardTitle,CardText,Row,CardHeader,CardBody,Col,Card } from 'reactstrap';
+import { CardTitle,CardText,Row,CardHeader,CardBody,Col,Card,FormFeedback } from 'reactstrap';
 import Form from "views/form.js";
 import history from "history.js";
 
@@ -52,6 +52,9 @@ class Login extends Component {
             }
             
         }
+        else{
+          alert('sai pass rồi hoac tài khoản rồi !!!');
+        }
         
             
       }).catch(err => {
@@ -59,7 +62,7 @@ class Login extends Component {
       });
     } 
     else {
-      alert('Please enter valid details');
+      alert('Hãy nhâp đầy đủ tài khoản và mật khẩu!!');
     }
   }
 
@@ -120,7 +123,8 @@ class Login extends Component {
                                 required />
                             </div>
                             <div className="d-flex justify-content-between align-items-end">
-                            <button onClick={this.onSubmitHandler} className="btn btn-info btn-md" type="button">Submit</button>
+                           
+                            <button onClick={this.onSubmitHandler} className="btn btn-info btn-md" type="button">Đăng nhập</button>
                             </div>
                           </Form>
                         

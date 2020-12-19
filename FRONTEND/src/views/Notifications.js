@@ -6,6 +6,7 @@ import NotificationAlert from "react-notification-alert";
 import 'react-toastify/dist/ReactToastify.css';
 import TableRow from "components/TableRow/TableRowDoc.js";
 import {Redirect } from "react-router-dom";
+import TableRowSearch from "components/TableRow/TableRowSearch.js";
 // reactstrap components
 import { 
   Card,
@@ -15,36 +16,146 @@ import {
   Input,
   FormGroup,
   Table,
+  CardTitle,
   Col
 } from "reactstrap";
 import CardHeader from "reactstrap/lib/CardHeader";
+import Button from "reactstrap/lib/Button";
 
 class Notifications extends React.Component {
 
-
   constructor(props) {
-    super(props); 
+    super(props);
+    this.onChangeValue = this.onChangeValue.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onSubmitTheme = this.onSubmitTheme.bind(this);
+    this.onChangeValueTheme = this.onChangeValueTheme.bind(this);
     this.state = {
-      data:[]  
+      data:[] ,
+      dataserch:[],
+      datatheme:[],
+      trangthai:false,
+      trangthaiserarch:false,
+      subjectView:'alo'
     }
   }
+  // componentDidMount() {
+  //   axios.get('/api/doc/all')
+  //       .then(response => {
+  //           console.log(response.data);
+  //           this.setState({data: response.data});
+  //       })
+  //       .catch(function (error) {
+  //           console.log(error);
+  //       })
+  // }
+
+  onSubmitTheme(event){
+    event.preventDefault();
+    const theme = {
+      subjectView:this.state.subjectView
+    };
+    console.log(theme);
+    axios.post('/api/doc/subject',theme)
+    .then((res)=>{
+      console.log(res.data.lstDoc);
+    })
+  }
+  onChangeValue(event){
+    this.setState({
+      key:event.target.value
+    });
+  }
+  onChangeValueTheme(event){
+    this.setState({
+      subjectView:event.target.value
+    });
+  }
+  onSubmit(event){
+    event.preventDefault();
+    const b ={ 
+      key:this.state.key
+    };
+    console.log(b)
+    axios.post('/api/doc/search',b)
+    .then((res)=>{
+      console.log(res.data.document)
+      this.setState({
+        dataserch:res.data.document,
+        trangthai:true
+      });
+    })
+  }
+  tabRow() {
+    return this.state.data.map(function (object, i) {
+        return <TableRow obj={object} key={i}/>;
+    });
+  }
+  tabRowSearch=()=>this.state.dataserch.map((object,i)=>(
+      <TableRowSearch obj={object} key={i}/>
+    )
+  )
+  checkNut(){
+    if(this.state.trangthai===false){
+      return <Button onClick={()=>this.thayTrangThai()} size="sm" md="2">+</Button>;    
+    }
+    else{
+      return <Button onClick={()=>this.thayTrangThai()} size="sm" md="2">-</Button>
+    }
+  }
+  thayTrangThai=()=>{
+    this.setState({
+      trangthai: !this.state.trangthai,
+      dataserch:[]
+    });
+  }
+  hienThiForm(){
+    if(this.state.trangthai===true){
+      return(
+        <Card>
+                <CardHeader>          
+                  <FormGroup row>
+                    <Label  md="10" tag="h6">Danh sách chủ đề</Label>
+                    {this.checkNut()}
+                  </FormGroup>
+                </CardHeader>
+                <CardBody>
+                <Table striped>
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Filename</th>
+                            <th>Authorname</th>
+                            <th>Note</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {this.tabRowSearch()}
+                        </tbody>
+                      </Table>
+                </CardBody>
+              </Card>
+      );
+    }
+  }
+
   componentDidMount() {
-    axios.get('/api/doc/all')
+    axios.get('/api/theme/alltheme')
         .then(response => {
             console.log(response.data);
-            this.setState({data: response.data});
+            this.setState({datatheme: response.data});
         })
         .catch(function (error) {
             console.log(error);
         })
   }
+//   tabRowSearch=()=>this.state.dataserch.map((object,i)=>(
+//     <TableRowSearch obj={object} key={i}/>
+//   )
+// )
   
-  
-  tabRow() {
-    return this.state.data.map(function (object, i) {
-        return <TableRow obj={object} key={i}/>;
-    });
-  } 
+
   render() {
     if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return (
@@ -53,29 +164,41 @@ class Notifications extends React.Component {
             <NotificationAlert ref="notificationAlert" />
           </div>
           <Row>
-            <Col md="8">
+            <Col md="10">
             <Card>
               <CardBody>
-              <FormGroup>
-                <Label tag="h6">Tìm kiếm</Label>
-                <Input type="text" name="search" id="" placeholder="tài liệu muốn tìm kiếm"/>
+              <FormGroup row>
+                <Label sm={2} tag="h6">Tìm kiếm</Label>
+                <Col sm={5}>
+
+                  <Input  onChange={this.onChangeValue} type="text" name="key" id="" placeholder="tài liệu muốn tìm kiếm"/>
+
+                </Col>
+                <Col sm={2}>
+                  <Button onClick={this.onSubmit}>tìm</Button>
+                 
+                </Col>
+                
+                
               </FormGroup>
               </CardBody>
             </Card> 
             </Col>
-          </Row>
-          <Row>          
+            <Col md="10">
+              {this.hienThiForm()}
+            </Col>
             <Col md="10">
               <Card>               
                 <CardHeader>
                   <FormGroup row>
                     <Label md="6"  sm={6} tag="h6">Danh sách tài liệu</Label>
                       <Col md="6" sm={6}>
-                        <Input md="2" value={this.state.subject} onChange={this.onchangValue} type="select" name="subject" id="">
-                              {this.state.data.map((list,i) => (
-                                  <option key={i} value={list.filename}>{list.filename}</option>
+                        <Input md="2" value={this.state.subjectView} onChange={this.onChangeValueTheme} type="select" name="subjectView" id="">
+                              {this.state.datatheme.map((list,i) => (
+                                  <option key={i} value={list.name}>{list.name}</option>
                               ))}
                         </Input>
+                        <Button onClick={this.onSubmitTheme}>alo</Button>
                       </Col>
                   </FormGroup>
                 </CardHeader>   
@@ -96,7 +219,7 @@ class Notifications extends React.Component {
                       </Table>
                 </CardBody>
               </Card>
-            </Col>           
+            </Col>
           </Row>
         </div>
     );

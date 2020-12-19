@@ -32,7 +32,7 @@ class Icons extends React.Component {
       dataedituser:[],
       email:'',
       password:'',
-      role:'',
+      role:'1',
       current:'',
       currentPassword:'',
       newPassword:'',
@@ -121,7 +121,9 @@ onSubmit(event){
           <div>
             <Card>
                 <CardHeader>
-                  <CardTitle>Thêm user</CardTitle>
+                <CardTitle>
+                    <Label tag="h4">Thêm tài khoản</Label>
+                </CardTitle>
                 </CardHeader>
                 <CardBody>
                   <FormGroup row>
@@ -139,12 +141,13 @@ onSubmit(event){
                   <FormGroup row>
                     <Label for="exampleSelect" sm={3}>Role</Label>
                     <Col sm={9}>
-                      <Input onChange={this.onChangeValue} type="role" name="role" id="" />
-                      
-                      
+                      <Input value={this.state.role} onChange={this.onChangeValue} type="select" name="role" id="">
+                          <option>1</option>
+                          <option>2</option>
+                      </Input>
                     </Col>
                   </FormGroup>
-                  <Button onClick={this.onSubmit} color="primary" >Thêm user</Button>
+                  <Button onClick={this.onSubmit} color="primary" >Thêm User</Button>
                 </CardBody>
             </Card>
             </div>
@@ -164,30 +167,32 @@ onSubmit(event){
         <div>
           <Card>
               <CardHeader>
-                <CardTitle>Sửa user</CardTitle>
+                <CardTitle>
+                    <Label tag="h4">Đổi Password</Label>
+                </CardTitle>
               </CardHeader>
               <CardBody>
                 <FormGroup row>
-                <Label for="exampleEmail" sm={3}>Email</Label>
-                <Col sm={9}>
+                <Label  sm={5}>Email</Label>
+                <Col sm={7}>
                   <Input value={this.state.dataedituser.email} disabled type="email" name="current" id="" placeholder="Nhập địa chỉ Email" />
                 </Col>
                 </FormGroup>
                 <FormGroup row>
-                  <Label for="examplePassword" sm={3}>Password</Label>
-                  <Col sm={9}>
-                    <Input onChange={this.onChangeValue} type="password" name="currentPassword" id="" placeholder="Nhập mật khẩu" />
+                  <Label  sm={5}>currentPassword</Label>
+                  <Col sm={7}>
+                    <Input onChange={this.onChangeValue} type="password" name="currentPassword" id="" placeholder="Nhập mật khẩu cũ" />
                   </Col>
                 </FormGroup>
                 <FormGroup row>
-                  <Label for="exampleSelect" sm={3}>Role</Label>
-                  <Col sm={9}>
-                    <Input onChange={this.onChangeValue} type="role" name="newPassword" id="" />
+                  <Label  sm={5}>newPassword</Label>
+                  <Col sm={7}>
+                    <Input onChange={this.onChangeValue} type="role" name="newPassword" id="" placeholder="nhâp mật khẩu mới" />
                     
                     
                   </Col>
                 </FormGroup>
-                <Button onClick={this.onSubmitEdit} color="primary" >Thêm user</Button>
+                <Button onClick={this.onSubmitEdit} color="primary" >Sửa User</Button>
               </CardBody>
           </Card>
           </div>

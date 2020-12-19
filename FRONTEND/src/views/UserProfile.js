@@ -129,7 +129,9 @@ class UserProfile extends React.Component {
       return(
         <Card>
                   <CardHeader>
-                    <CardTitle>sửa chủ đề</CardTitle>
+                    <CardTitle>
+                      <Label tag="h4">Sửa chủ đề</Label>
+                    </CardTitle>
                   </CardHeader>
                   <CardBody>                
                     <FormGroup row>
@@ -153,7 +155,9 @@ class UserProfile extends React.Component {
       return(
         <Card>
         <CardHeader>
-          <CardTitle>Thêm chủ đề</CardTitle>
+          <CardTitle>
+            <Label tag="h4">Thêm chủ đề</Label>
+          </CardTitle>
         </CardHeader>
         <CardBody>                
           <FormGroup row>
@@ -177,7 +181,7 @@ class UserProfile extends React.Component {
         <div className="content">
           <Row>
             <ToastContainer/>
-            <Col md="7">
+            <Col md="4">
               <Card>
                 <CardHeader>
                   <FormGroup row>

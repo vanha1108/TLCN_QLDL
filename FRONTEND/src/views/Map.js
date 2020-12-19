@@ -143,6 +143,9 @@ class Map extends React.Component {
       );
     }
   }
+  onCancelField(){
+    this.setState({disabled:true});
+  }
   render() {
     if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return (

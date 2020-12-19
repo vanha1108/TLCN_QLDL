@@ -3,10 +3,7 @@ import React, { Component } from 'react';
 import{Button} from "reactstrap";
 //import axios from 'axios';
 class TableRowUser extends Component {
-    constructor(props) {
-        super(props);
-        
-    }
+    
     onClickEdit=()=>{
         this.props.onView();
         this.props.onChangeTT();
