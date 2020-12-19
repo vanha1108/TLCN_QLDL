@@ -44,36 +44,44 @@ const deleteTheme = async (req, res, next) => {
 const editTheme = async (req, res, next) => {
   var idEdit = req.params.idEdit;
   var newName = req.body.newName;
-  await thememodel.findOne({ _id: idEdit }).exec(async function (err, data) {
-    if (err) res.send({ message: err });
-    await thememodel.findOne({ name: newName }, function (err, re) {
-      if (err) res.send({ message: err });
-      if (re) {
-        res.send({ message: "Theme name already exists" });
-      } else {
-        var dt = new thememodel();
-        dt.name = newName;
-        dt.save();
 
-        if (re.listidDoc.length <= 0) {
-          for (let i in re.listidDoc) {
-            docmodel.find({ subject: re.listidDoc[i] }, function (err, result) {
-              if (err) res.send({ message: err });
-              if (!result) {
-                res.send({ message: "Not found document!" });
-              } else {
-                for (let doc in result) {
-                  result[doc].subject = newName;
-                  result[doc].save();
-                }
-              }
-            });
-          }
-        }
-        res.send({ message: "Edit theme success!" });
-      }
+  const theme = await thememodel.findById(idEdit);
+  if (!theme) {
+    return res
+      .status(200)
+      .json({ success: false, code: 404, message: "Not found theme with id!" });
+  }
+
+  const newtheme = await thememodel.findOne({ name: newName });
+
+  if (newtheme) {
+    return res.status(200).json({
+      success: false,
+      code: 500,
+      message: "Theme name already exists",
     });
-  });
+  }
+
+  theme.name = newName;
+  theme.save();
+
+  if (theme.listidDoc.length > 0) {
+    for (let i in theme.listidDoc) {
+      const doc = await docmodel.findOne({ idDoc: listidDoc[i] });
+      if (!doc) {
+        return res.status(200).json({
+          success: false,
+          code: 404,
+          message: "Not found document with id!",
+        });
+      }
+      doc.subject = newName;
+      doc.save();
+    }
+    return res
+      .status(200)
+      .json({ success: true, code: 200, message: "Edit theme success" });
+  }
 };
 
 module.exports = {
