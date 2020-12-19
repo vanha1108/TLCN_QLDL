@@ -9,6 +9,6 @@ router.route("/alltheme").get(themeController.getAllTheme);
 
 router.route("/deletetheme/:idDelete").get(themeController.deleteTheme);
 
-router.route("/edit/:idEdit").get(themeController.editTheme);
+router.route("/edit/:idEdit").post(themeController.editTheme);
 
 module.exports = router;
