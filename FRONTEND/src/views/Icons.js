@@ -68,7 +68,7 @@ onSubmit(event){
     }
   // hiển thị list user
   componentDidMount() {
-    axios.get('/api/users/listuser')
+    axios.get('/api/users/')
         .then(response => {
             console.log(response.data);
             this.setState({data1: response.data});
@@ -158,7 +158,7 @@ onSubmit(event){
                       </tr>
                     </thead>
                     <tbody>
-                        {this.tabUser()}                     
+                                            
                     </tbody>
                   </Table>
                 </CardBody>

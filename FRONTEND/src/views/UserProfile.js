@@ -22,20 +22,30 @@ class UserProfile extends React.Component {
   constructor(props) {
     super(props);
     this.onChangeValue = this.onChangeValue.bind(this);
+    this.onChangeValueEdit = this.onChangeValueEdit.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onSubmitEdit=this.onSubmitEdit.bind(this);
     this.state = {
       data2:[],
+      dataedit:[],
       name:'',
-      trangthai:false
+      newName:'',
+      trangthai:false,
+      trangthaiedit:false
     }
   }
   
-
+  
 
   onChangeValue(event){
     
-      this.setState({
+    this.setState({
         name: event.target.value
+    });
+  }
+  onChangeValueEdit(event){
+    this.setState({
+      newName:event.target.value
     });
   }
 
@@ -45,7 +55,7 @@ class UserProfile extends React.Component {
           name:this.state.name
         };
         console.log(a);
-        axios.post('/api/theme/createtheme', a)
+        axios.post('/api/theme/addtheme', a)
         .then((res) => {
             
             console.log(res.data);
@@ -54,6 +64,19 @@ class UserProfile extends React.Component {
         .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
         
   }
+  onSubmitEdit(event) {
+    event.preventDefault();
+    const b = {
+      newName:this.state.newName
+    };
+    console.log(b);
+    axios.post('/api/theme/edit/'+this.state.dataedit._id,b)
+    .then((res)=>{
+      console.log(res.data.message);
+    })
+    
+  }
+
   componentDidMount() {
     axios.get('/api/theme/alltheme')
         .then(response => {
@@ -64,11 +87,23 @@ class UserProfile extends React.Component {
             console.log(error);
         })
   }
-  tabType() {
-    return this.state.data2.map(function (object, i) {
-        return <TableRowType obj={object} key={i}/>;
+  onClickEdit=(theme)=>{
+    console.log('ket noi ok');
+    console.log(theme);
+    this.setState({
+      dataedit:theme
     });
+    
   }
+  tabType=()=> this.state.data2.map((object, i) =>(
+    
+    <TableRowType 
+    onTest={()=>this.onClickEdit(object)} 
+    obj={object} key={i}
+    onChangEdit={()=>this.thayTrangThaiEdit()}
+    />  
+  ))
+  
 
   checkNut(){
     if(this.state.trangthai===false){
@@ -84,18 +119,47 @@ class UserProfile extends React.Component {
       trangthai: !this.state.trangthai
     });
   }
+  thayTrangThaiEdit=()=>{
+    this.setState({
+      trangthaiedit:!this.state.trangthaiedit
+    });
+  }
+  hienThiFormEdit=()=>{
+    if(this.state.trangthaiedit===true){
+      return(
+        <Card>
+                  <CardHeader>
+                    <CardTitle>sửa chủ đề</CardTitle>
+                  </CardHeader>
+                  <CardBody>                
+                    <FormGroup row>
+                    <Label for="exampleEmail" sm={4}>Document Type</Label>
+                    <Col sm={8}>
+                      <Input defaultValue={this.state.dataedit.name} onChange={this.onChangeValueEdit} type="text" name="newName" id="" placeholder="nhập tên theme" />
+                    </Col>
+                    </FormGroup>
+
+                    <Button onClick={this.onSubmitEdit} color="primary" > Sửa </Button>
+                    <Button onClick={()=>this.thayTrangThaiEdit()}>Hủy</Button>
+              
+                  </CardBody>
+       
+               </Card>
+      );
+    }
+  }
   hienThiForm=()=>{
     if(this.state.trangthai===true){
       return(
         <Card>
         <CardHeader>
-          <CardTitle>Thêm user</CardTitle>
+          <CardTitle>Thêm chủ đề</CardTitle>
         </CardHeader>
         <CardBody>                
           <FormGroup row>
           <Label for="exampleEmail" sm={4}>Document Type</Label>
           <Col sm={8}>
-            <Input onChange={this.onChangeValue} type="text" name="name" id="" placeholder="Nhập địa chỉ Email" />
+            <Input onChange={this.onChangeValue} type="text" name="name" id="" placeholder="nhập tên theme" />
           </Col>
           </FormGroup>
 
@@ -131,7 +195,7 @@ class UserProfile extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                        {this.tabType()}                   
+                        {this.tabType()}                  
                     </tbody>
                   </Table>
                 </CardBody>
@@ -140,6 +204,7 @@ class UserProfile extends React.Component {
             
             <Col md="4">
               {this.hienThiForm()}
+              {this.hienThiFormEdit()}
             </Col>
           </Row>
         </div>

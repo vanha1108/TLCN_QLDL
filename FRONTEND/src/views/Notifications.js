@@ -44,6 +44,7 @@ class Notifications extends React.Component {
         })
   }
   
+  
   tabRow() {
     return this.state.data.map(function (object, i) {
         return <TableRow obj={object} key={i}/>;
@@ -51,7 +52,6 @@ class Notifications extends React.Component {
   } 
   render() {
     return (
-      <>
         <div className="content">
           <div className="react-notification-alert-container">
             <NotificationAlert ref="notificationAlert" />
@@ -69,11 +69,9 @@ class Notifications extends React.Component {
             </Col>
           </Row>
           <Row>
-            <ToastContainer />
-            
+            <ToastContainer />           
             <Col md="10">
-              <Card>
-                
+              <Card>               
                     <CardHeader>
                           <FormGroup row>
                             <Label md="6"  sm={6} tag="h6">Danh sách tài liệu</Label>
@@ -103,11 +101,9 @@ class Notifications extends React.Component {
                       </Table>
                 </CardBody>
               </Card>
-            </Col>
-            
+            </Col>           
           </Row>
         </div>
-      </>
     );
   }
 }

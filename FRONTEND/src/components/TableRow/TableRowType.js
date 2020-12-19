@@ -6,11 +6,14 @@ class TableRowType extends Component {
     super(props);
     this.delete = this.delete.bind(this);
   }
-
+  onClickEdit=()=>{
+    this.props.onTest();
+    this.props.onChangEdit();
+  }
   delete() {
     axios
       .get("/api/theme/deletetheme/" + this.props.obj._id)
-      .then(console.log("Deleted"))
+      .then((res)=>{console.log(res.data.message);})
       .catch((err) => console.log(err));
   }
   render() {
@@ -19,7 +22,7 @@ class TableRowType extends Component {
         <td>{this.props.obj.name}</td>
 
         <td>
-          <Button size="sm" color="info">
+          <Button onClick={()=>this.onClickEdit()} size="sm" color="info">
             Edit
           </Button>
           <Button onClick={this.delete} size="sm" color="danger">
