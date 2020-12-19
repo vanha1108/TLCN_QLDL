@@ -3,9 +3,16 @@ import React, { Component } from 'react';
 import{Button} from "reactstrap";
 //import axios from 'axios';
 class TableRowUser extends Component {
-    
+    constructor(props) {
+        super(props);
+        
+    }
+    onClickEdit=()=>{
+        this.props.onView();
+        this.props.onChangeTT();
+    }
     hienThiRole =()=>{
-        if(this.props.obj.role ==="1") {return "admin";}
+        if(this.props.obj.role ===1) {return "admin";}
         else {return "Staff";}
     }
     
@@ -21,7 +28,7 @@ class TableRowUser extends Component {
                     {this.hienThiRole()}    
                 </td>
                 <td>
-                    <Button size="sm" color="info">Edit</Button>
+                    <Button onClick={()=>this.onClickEdit()} size="sm" color="info">Edit</Button>
                     <Button size="sm" color="danger">Delete</Button>
                 </td>
                 

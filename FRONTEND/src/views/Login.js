@@ -48,7 +48,7 @@ class Login extends Component {
             }
             else
             {
-              history.push("/user");
+              history.push("/user/notifications");
             }
             
         }

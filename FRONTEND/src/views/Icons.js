@@ -26,12 +26,18 @@ class Icons extends React.Component {
     this.onChangeValue = this.onChangeValue.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onSelectValue = this.onSelectValue.bind(this);
+    this.onSubmitEdit = this.onSubmitEdit.bind(this);
     this.state = {
       data1:[],
+      dataedituser:[],
       email:'',
       password:'',
       role:'',
-      trangthai:false
+      current:'',
+      currentPassword:'',
+      newPassword:'',
+      trangthai:false,
+      trangthaiedit:false
     }
   }
 
@@ -74,24 +80,25 @@ onSubmit(event){
         'Authorization': JSON.parse(localStorage.getItem('authorization'))
       }
     })
-        .then(response => {
-            
-            
-              console.log('ok')
-              console.log(response.data.users);
-              this.setState({data1: response.data.users});
-             
+        .then(response => {   
+            console.log('ok')
+            console.log(response.data.users);
+            this.setState({data1: response.data.users});    
         })
         .catch(function (error) {
             console.log('loi123');
             console.log(error);
         })
   }
-  tabUser() {
-    return this.state.data1.map(function (object, i) {
-        return <TableRowUser obj={object} key={i}/>;
-    });
-  }
+  tabUser=()=>this.state.data1.map((object, i)=>(
+      <TableRowUser 
+      onView={()=>this.onClickEdit(object)}
+      obj={object} key={i}
+      onChangeTT={()=>this.thayDoiTrangThaiEdit()}
+      />
+  ))
+    
+  
   // Check trạng thái thay đổi button
   checkNut(){
     if(this.state.trangthai===false){
@@ -144,14 +151,76 @@ onSubmit(event){
         );
     }
   }
- 
+  onClickEdit=(user)=>{
+    console.log('ket noi ok');
+    console.log(user);
+    this.setState({
+      dataedituser:user
+    }); 
+  }
+  hienThiFormEdit(){
+    if(this.state.trangthaiedit===true){
+      return(
+        <div>
+          <Card>
+              <CardHeader>
+                <CardTitle>Sửa user</CardTitle>
+              </CardHeader>
+              <CardBody>
+                <FormGroup row>
+                <Label for="exampleEmail" sm={3}>Email</Label>
+                <Col sm={9}>
+                  <Input value={this.state.dataedituser.email} disabled type="email" name="current" id="" placeholder="Nhập địa chỉ Email" />
+                </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label for="examplePassword" sm={3}>Password</Label>
+                  <Col sm={9}>
+                    <Input onChange={this.onChangeValue} type="password" name="currentPassword" id="" placeholder="Nhập mật khẩu" />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label for="exampleSelect" sm={3}>Role</Label>
+                  <Col sm={9}>
+                    <Input onChange={this.onChangeValue} type="role" name="newPassword" id="" />
+                    
+                    
+                  </Col>
+                </FormGroup>
+                <Button onClick={this.onSubmitEdit} color="primary" >Thêm user</Button>
+              </CardBody>
+          </Card>
+          </div>
+      );
+    }
+  }
+  thayDoiTrangThaiEdit(){
+    this.setState({
+        trangthaiedit:!this.state.trangthaiedit
+    });
+  }
+
+  onSubmitEdit(event) {
+    event.preventDefault();
+    const b = {
+      current:this.state.dataedituser.email,
+      currentPassword:this.state.currentPassword,
+      newPassword:this.state.newPassword
+    };
+    console.log(b);
+    axios.post('/api/user/changepass',b)
+    .then((res)=>{
+      console.log(res.data.message);
+    })
+    
+  }
   render() {
     if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return (
       
         <div className="content">
           <Row>
-            <Col md={7}>
+            <Col md="5">
               <Card>
                 <CardHeader>
                   <FormGroup row>
@@ -177,7 +246,11 @@ onSubmit(event){
             </Col>
             <Col md ="4">
               {this.hienThiForm()}
+              {this.hienThiFormEdit()}
             </Col>
+            
+              
+            
             <ToastContainer />
           </Row>
         </div>

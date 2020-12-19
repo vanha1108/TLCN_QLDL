@@ -1,10 +1,7 @@
 var express = require("express");
-const { session } = require("passport");
 var router = express.Router();
 const passport = require("passport");
-
 const userController = require("../controllers/user");
-
 router.route("/register").post(userController.signUp);
 
 router

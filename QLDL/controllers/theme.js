@@ -67,7 +67,7 @@ const editTheme = async (req, res, next) => {
 
   if (theme.listidDoc.length > 0) {
     for (let i in theme.listidDoc) {
-      const doc = await docmodel.findOne({ idDoc: listidDoc[i] });
+      var doc = await docmodel.findOne({ idDoc: theme.listidDoc[i] });
       if (!doc) {
         return res.status(200).json({
           success: false,
@@ -75,6 +75,7 @@ const editTheme = async (req, res, next) => {
           message: "Not found document with id!",
         });
       }
+      
       doc.subject = newName;
       doc.save();
     }
