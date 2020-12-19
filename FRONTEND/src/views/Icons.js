@@ -68,19 +68,19 @@ onSubmit(event){
     }
   // hiển thị list user
   componentDidMount() {
-    axios.get('/api/user')
+    axios.get('/api/user',{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': JSON.parse(localStorage.getItem('authorization'))
+      }
+    })
         .then(response => {
-            const token = localStorage.getItem('authorization');
-            console.log(token);
-            if(!token){
-              return <Redirect to="/login" />
-            }
-            else
-            {
+            
+            
               console.log('ok')
               console.log(response.data);
               //this.setState({data1: response.data.users});
-            }  
+             
         })
         .catch(function (error) {
             console.log('loi123');
