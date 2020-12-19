@@ -37,7 +37,7 @@ passport.use(
           user.password
         );
 
-        if (!isCorrectPassword) return done(null, false);
+        if (!isCorrectPassword) return done(error, false);
         done(null, user);
       } catch (error) {
         done(error, false);
