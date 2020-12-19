@@ -30,11 +30,6 @@ const changePassword = async (req, res, next) => {
   });
 };
 
-const logOut = async (req, res, next) => {
-  req.logOut();
-  req.session.destroy();
-};
-
 const getAllUser = async (req, res, next) => {
   const headers = req.headers;
   console.log("TOKEN: " + headers.authorization);
@@ -98,6 +93,7 @@ const encodedToken = async (userID, times) => {
     { expiresIn: times }
   );
 };
+
 const signIn = async (req, res, next) => {
   const token = await encodedToken(req.user._id, "1h");
 
@@ -107,10 +103,18 @@ const signIn = async (req, res, next) => {
   return res.status(200).json({ success: true, code: 200, message: "", user });
 };
 
+const logOut = async (req, res, next) => {
+  headers = req.headers;
+  return res
+    .status(200)
+    .json({ success: true, message: "logout success", code: 200 });
+};
+
 module.exports = {
   changePassword,
   logOut,
   getAllUser,
   signUp,
   signIn,
+  logOut,
 };

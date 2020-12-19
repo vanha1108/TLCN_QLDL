@@ -321,6 +321,30 @@ const searchDocument = async (req, res, next) => {
   });
 };
 
+const getDocumentWithSubject = async (req, res, next) => {
+  const subjectView = req.body.subjectView;
+
+  const theme = docmodel.find({ name: subjectView });
+  if (!theme)
+    return res
+      .status(200)
+      .json({ success: false, code: 500, message: "Not found theme!" });
+  const lstDoc = [];
+  for (let i in theme.listidDoc) {
+    const doc = docmodel.findOne(theme.listidDoc[i]);
+    if (doc) {
+      lstDoc.push(doc);
+    } else {
+      return res
+        .status(200)
+        .json({ success: false, code: 500, message: "Not found document!" });
+    }
+  }
+  return res
+    .status(200)
+    .json({ success: true, code: 200, message: "Success!", lstDoc });
+};
+
 module.exports = {
   saveDocument,
   saveDuplicate,
@@ -329,4 +353,5 @@ module.exports = {
   dowloadDocument,
   deleteDocument,
   searchDocument,
+  getDocumentWithSubject,
 };
