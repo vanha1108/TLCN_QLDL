@@ -304,27 +304,22 @@ const deleteDocument = async (req, res, next) => {
   var iddelete = req.params.iddelete;
   const doc = await docmodel.findOneAndRemove({ idDoc: iddelete });
   if (!doc) {
-    return res
-      .status(200)
-      .json({
-        success: false,
-        code: 500,
-        message: "Not foud document to delete!",
-      });
+    return res.status(200).json({
+      success: false,
+      code: 500,
+      message: "Not foud document to delete!",
+    });
   }
 
   const theme = thememodel.findOne({ name: doc.idDoc });
   if (theme) {
-    const new_arr = arr.filter((item) => item !== valueToRemove);
     theme.listidDoc = theme.listidDoc.filter((item) => item !== doc.idDoc);
   } else {
-    return res
-      .status(200)
-      .json({
-        success: false,
-        code: 500,
-        message: "Not foud theme to delete document!",
-      });
+    return res.status(200).json({
+      success: false,
+      code: 500,
+      message: "Not foud theme to delete document!",
+    });
   }
 
   try {
@@ -348,14 +343,16 @@ const searchDocument = async (req, res, next) => {
 const getDocumentWithSubject = async (req, res, next) => {
   const subjectView = req.body.subjectView;
 
-  const theme = docmodel.find({ name: subjectView });
-  if (!theme)
+  const themeDoc = await thememodel.findOne({ name: subjectView });
+  if (!themeDoc) {
     return res
       .status(200)
       .json({ success: false, code: 500, message: "Not found theme!" });
+  }
   const lstDoc = [];
-  for (let i in theme.listidDoc) {
-    const doc = docmodel.findOne(theme.listidDoc[i]);
+  for (let i in themeDoc.listidDoc) {
+    const doc = await docmodel.findOne({ idDoc: themeDoc.listidDoc[i] });
+
     if (doc) {
       lstDoc.push(doc);
     } else {
