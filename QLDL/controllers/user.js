@@ -152,6 +152,35 @@ const logOut = async (req, res, next) => {
     .json({ success: true, message: "logout success", code: 200 });
 };
 
+const editUser = async (req, res, next) => {
+  var newFirst = req.body.newfirst;
+  var newLast = req.body.newlast;
+  var newSex = req.body.newsex;
+  if (newSex == "Female") {
+    sex = false;
+  } else {
+    newSex = true;
+  }
+  var newDOB = new Date(req.body.newdob);
+  var newPhone = req.body.newphone;
+  var newAddress = req.body.newaddress;
+
+  const user = await User.findOne({ iduser });
+  if (!user) {
+    res
+      .status(200)
+      .json({ success: false, code: 500, message: "Not found user!" });
+  }
+  user.firstname = newFirst;
+  user.lastname = newLast;
+  user.sex = newSex;
+  user.dob = newDOB;
+  user.phonenumber = newPhone;
+  user.address = newAddress;
+  await user.save();
+  res.status(200).json({ success: true, code: 200, message: "Edit success" });
+};
+
 module.exports = {
   changePassword,
   logOut,
