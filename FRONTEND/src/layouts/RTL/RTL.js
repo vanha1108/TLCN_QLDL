@@ -101,7 +101,7 @@ class User extends React.Component {
             bgColor={this.state.backgroundColor}
             logo={{
               outterLink: "https://www.creative-tim.com/",
-              text:"ahihi",
+              text:"MD COMPANY",
               imgSrc: logo
             }}
             toggleSidebar={this.toggleSidebar}

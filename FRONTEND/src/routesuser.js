@@ -5,7 +5,7 @@ import Maps from "views/Map.js"
 var routesuser = [
   {
     path: "/notifications",
-    name: "Tài liệu",
+    name: "Document",
     rtlName: "إخطارات",
     icon: "tim-icons icon-bell-55",
     component: Notifications,
@@ -13,7 +13,7 @@ var routesuser = [
   },
   {
     path: "/map",
-    name: "Upload Tài liệu",
+    name: "Upload Document",
     rtlName: "إخطارات",
     icon: "tim-icons icon-bell-55",
     component: Maps,

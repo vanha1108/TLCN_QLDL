@@ -30,6 +30,13 @@ class Icons extends React.Component {
     this.state = {
       data1:[],
       dataedituser:[],
+      firstsname:'',
+      lastname:'',
+      sex:'',
+      dbo:'',
+      idUser:'',
+      phonenumber:'',
+      address:'',
       email:'',
       password:'',
       role:'1',
@@ -59,18 +66,25 @@ onSubmit(event){
       const formData = {
         email:this.state.email,
         password:this.state.password,
-        role:this.state.role
+        role:this.state.role,
+        idUser:this.state.idUser,
+        firstname:this.state.firstname,
+        lastname:this.state.lastname,
+        sex:this.state.sex,
+        dbo:this.state.dbo,
+        phonenumber:this.state.phonenumber,
+        address:this.state.address
       }
       
       console.log(formData);
-      axios.post('/api/user/register',formData)
-      .then((res) => {
+      // axios.post('/api/user/register',formData)
+      // .then((res) => {
           
-          console.log(res.data);
-          toast.success('Upload Successful');
+      //     console.log(res.data);
+      //     toast.success('Upload Successful');
           
-      })
-      .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
+      // })
+      // .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
     }
   // hiển thị list user
   componentDidMount() {
@@ -91,7 +105,7 @@ onSubmit(event){
         })
   }
   tabUser=()=>this.state.data1.map((object, i)=>(
-      <TableRowUser 
+      <TableRowUser
       onView={()=>this.onClickEdit(object)}
       obj={object} key={i}
       onChangeTT={()=>this.thayDoiTrangThaiEdit()}
@@ -120,34 +134,103 @@ onSubmit(event){
         return(
           <div>
             <Card>
-                <CardHeader>
+              <CardHeader>
                 <CardTitle>
-                    <Label tag="h4">Thêm tài khoản</Label>
+                  <Label tag="h4">Create account</Label>
                 </CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <FormGroup row>
-                  <Label for="exampleEmail" sm={3}>Email</Label>
+              </CardHeader>
+              <CardBody>
+                <FormGroup row>
+                  <Label sm={3}>ID user</Label>
                   <Col sm={9}>
-                    <Input onChange={this.onChangeValue} type="email" name="email" id="" placeholder="Nhập địa chỉ Email" />
+                    <Input onChange={this.onChangeValue} type="email" name="idUser" id="" placeholder="Input email" />
                   </Col>
-                  </FormGroup>
-                  <FormGroup row>
-                    <Label for="examplePassword" sm={3}>Password</Label>
+                </FormGroup>
+                <FormGroup row>
+                  <Label sm={3}>FirstName</Label>
+                  <Col sm={9}>
+                    <Input onChange={this.onChangeValue} type="email" name="firstname" id="" placeholder="Input email" />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label sm={3}>LastName</Label>
+                  <Col sm={9}>
+                    <Input onChange={this.onChangeValue} type="email" name="lastname" id="" placeholder="Input email" />
+                  </Col>
+                </FormGroup>
+                <FormGroup tag="fieldset" row>
+                    <Label sm={4}>Sex</Label>
+                    <Col sm={8}>
+                      <FormGroup row check>
+                        <Label sm={4} check>
+                          <Input 
+                          type="radio" 
+                          name="sex"
+                          value="Male"
+                          checked={this.state.sex === "Male"}
+                          onChange={this.onChangeValue}
+                          />{' '}
+                          Male
+                        </Label>
+                        <Label sm={4} check>
+                            <Input 
+                            type="radio" 
+                            name="sex"
+                            value="Female"
+                            checked={this.state.sex === "Female"}
+                            onChange={this.onChangeValue}
+                             />{' '}
+                          Female
+                        </Label>
+                      </FormGroup>
+                    </Col>                  
+                </FormGroup>
+                <FormGroup row>
+                  <Label sm={3}>DOB</Label>
+                  <Col sm={9}>
+                    <Input
+                    type="date"
+                    name="dbo"
+                    id=""
+                    placeholder="date placeholder"
+                    onChange={this.onChangeValue}
+                    />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label sm={3}>Phone Number</Label>
+                  <Col sm={9}>
+                    <Input onChange={this.onChangeValue} type="email" name="phonenumber" id="" placeholder="Input email" />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label sm={3}>Address</Label>
+                  <Col sm={9}>
+                    <Input onChange={this.onChangeValue} type="email" name="address" id="" placeholder="Input email" />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label sm={3}>Email</Label>
+                  <Col sm={9}>
+                    <Input onChange={this.onChangeValue} type="email" name="email" id="" placeholder="Input email" />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Label sm={3}>Password</Label>
                     <Col sm={9}>
-                      <Input onChange={this.onChangeValue} type="password" name="password" id="" placeholder="Nhập mật khẩu" />
+                      <Input onChange={this.onChangeValue} type="password" name="password" id="" placeholder="Input password" />
                     </Col>
-                  </FormGroup>
-                  <FormGroup row>
-                    <Label for="exampleSelect" sm={3}>Role</Label>
+                 </FormGroup>
+                 <FormGroup row>
+                    <Label sm={3}>Role</Label>
                     <Col sm={9}>
                       <Input value={this.state.role} onChange={this.onChangeValue} type="select" name="role" id="">
                           <option>1</option>
                           <option>2</option>
                       </Input>
                     </Col>
-                  </FormGroup>
-                  <Button onClick={this.onSubmit} color="primary" >Thêm User</Button>
+                 </FormGroup>
+                  <Button onClick={this.onSubmit} color="primary" >Add user</Button>
                 </CardBody>
             </Card>
             </div>
@@ -168,7 +251,7 @@ onSubmit(event){
           <Card>
               <CardHeader>
                 <CardTitle>
-                    <Label tag="h4">Đổi Password</Label>
+                    <Label tag="h4">Change Password</Label>
                 </CardTitle>
               </CardHeader>
               <CardBody>
@@ -179,20 +262,21 @@ onSubmit(event){
                 </Col>
                 </FormGroup>
                 <FormGroup row>
-                  <Label  sm={5}>currentPassword</Label>
+                  <Label  sm={5}>Current Password</Label>
                   <Col sm={7}>
-                    <Input onChange={this.onChangeValue} type="password" name="currentPassword" id="" placeholder="Nhập mật khẩu cũ" />
+                    <Input onChange={this.onChangeValue} type="password" name="currentPassword" id="" placeholder="Input current password" />
                   </Col>
                 </FormGroup>
                 <FormGroup row>
-                  <Label  sm={5}>newPassword</Label>
+                  <Label  sm={5}>New Password</Label>
                   <Col sm={7}>
-                    <Input onChange={this.onChangeValue} type="role" name="newPassword" id="" placeholder="nhâp mật khẩu mới" />
+                    <Input onChange={this.onChangeValue} type="role" name="newPassword" id="" placeholder="Input new password" />
                     
                     
                   </Col>
                 </FormGroup>
-                <Button onClick={this.onSubmitEdit} color="primary" >Sửa User</Button>
+                <Button onClick={this.onSubmitEdit} color="primary" >Change User</Button>
+                <Button>Cancel</Button>
               </CardBody>
           </Card>
           </div>
@@ -229,7 +313,7 @@ onSubmit(event){
               <Card>
                 <CardHeader>
                   <FormGroup row>
-                    <Label  md="10" tag="h6">Danh sách user</Label>
+                    <Label  md="10" tag="h6">List user</Label>
                     {this.checkNut()}
                   </FormGroup>
                 </CardHeader>
@@ -238,7 +322,7 @@ onSubmit(event){
                     <thead className="text-primary">
                       <tr>
                         <th>Email</th>                                              
-                        <th>Quyền</th>
+                        <th>Role</th>
                         <th>action</th>
                       </tr>
                     </thead>

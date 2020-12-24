@@ -30,8 +30,10 @@ class UserProfile extends React.Component {
       dataedit:[],
       name:'',
       newName:'',
+      idtheme:'',
       trangthai:false,
       trangthaiedit:false
+      
     }
   }
   
@@ -52,7 +54,8 @@ class UserProfile extends React.Component {
   onSubmit(event){
     event.preventDefault();
         const a = { 
-          name:this.state.name
+          name:this.state.name,
+          idtheme:this.state.idtheme
         };
         console.log(a);
         axios.post('/api/theme/addtheme', a)
@@ -130,19 +133,19 @@ class UserProfile extends React.Component {
         <Card>
                   <CardHeader>
                     <CardTitle>
-                      <Label tag="h4">Sửa chủ đề</Label>
+                      <Label tag="h4">Edit Theme</Label>
                     </CardTitle>
                   </CardHeader>
                   <CardBody>                
                     <FormGroup row>
-                    <Label for="exampleEmail" sm={4}>Document Type</Label>
+                    <Label for="exampleEmail" sm={4}>Name</Label>
                     <Col sm={8}>
                       <Input defaultValue={this.state.dataedit.name} onChange={this.onChangeValueEdit} type="text" name="newName" id="" placeholder="nhập tên theme" />
                     </Col>
                     </FormGroup>
 
-                    <Button onClick={this.onSubmitEdit} color="primary" > Sửa </Button>
-                    <Button onClick={()=>this.thayTrangThaiEdit()}>Hủy</Button>
+                    <Button onClick={this.onSubmitEdit} color="primary" > Update </Button>
+                    <Button onClick={()=>this.thayTrangThaiEdit()}>Cancel</Button>
               
                   </CardBody>
        
@@ -156,18 +159,24 @@ class UserProfile extends React.Component {
         <Card>
         <CardHeader>
           <CardTitle>
-            <Label tag="h4">Thêm chủ đề</Label>
+            <Label tag="h4">Create theme</Label>
           </CardTitle>
         </CardHeader>
-        <CardBody>                
-          <FormGroup row>
-          <Label for="exampleEmail" sm={4}>Document Type</Label>
+        <CardBody>
+        <FormGroup row>
+          <Label for="exampleEmail" sm={4}>ID theme</Label>
           <Col sm={8}>
-            <Input onChange={this.onChangeValue} type="text" name="name" id="" placeholder="nhập tên theme" />
+            <Input onChange={this.onChangeValue} type="text" name="idtheme" id="" placeholder="ID theme" />
+          </Col>
+          </FormGroup>             
+          <FormGroup row>
+          <Label for="exampleEmail" sm={4}>Name</Label>
+          <Col sm={8}>
+            <Input onChange={this.onChangeValue} type="text" name="name" id="" placeholder="Name theme" />
           </Col>
           </FormGroup>
 
-          <Button onClick={this.onSubmit} color="primary" >Thêm </Button>
+          <Button onClick={this.onSubmit} color="primary" >Add </Button>
     
         </CardBody>
        
@@ -185,7 +194,7 @@ class UserProfile extends React.Component {
               <Card>
                 <CardHeader>
                   <FormGroup row>
-                    <Label  md="10" tag="h6">Danh sách chủ đề</Label>
+                    <Label  md="10" tag="h6">List theme</Label>
                     {this.checkNut()}
                   </FormGroup>
                  
@@ -194,7 +203,7 @@ class UserProfile extends React.Component {
                   <Table className="tablesorter" responsive>
                     <thead className="text-primary">
                       <tr>                                           
-                        <th>Loại tài liệu</th>
+                        <th>Name</th>
                         <th>action</th>
                       </tr>
                     </thead>

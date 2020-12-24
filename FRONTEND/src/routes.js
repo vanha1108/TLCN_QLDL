@@ -6,7 +6,7 @@ import UserProfile from "views/UserProfile.js";
 var routes = [  
   {
     path: "/icons",
-    name: "Quản lý tài khoản",
+    name: "Manage users",
     rtlName: "الرموز",
     icon: "tim-icons icon-atom",
     component: Icons,
@@ -14,7 +14,7 @@ var routes = [
   },
   {
     path: "/notifications",
-    name: "Upload Tài liệu",
+    name: "Documents",
     rtlName: "إخطارات",
     icon: "tim-icons icon-bell-55",
     component: Notifications,
@@ -22,7 +22,7 @@ var routes = [
   },
   {
     path: "/user-profile",
-    name: "Quản lý chủ đề",
+    name: "Manage theme",
     rtlName: "ملف تعريفي للمستخدم",
     icon: "tim-icons icon-single-02",
     component: UserProfile,

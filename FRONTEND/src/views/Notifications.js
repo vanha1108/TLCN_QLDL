@@ -39,16 +39,16 @@ class Notifications extends React.Component {
       subjectView:'alo'
     }
   }
-  // componentDidMount() {
-  //   axios.get('/api/doc/all')
-  //       .then(response => {
-  //           console.log(response.data);
-  //           this.setState({data: response.data});
-  //       })
-  //       .catch(function (error) {
-  //           console.log(error);
-  //       })
-  // }
+  componentDidMount() {
+    axios.get('/api/doc/all')
+        .then(response => {
+            console.log(response.data);
+            this.setState({data: response.data});
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+  }
 
   onSubmitTheme(event){
     event.preventDefault();
@@ -73,6 +73,7 @@ class Notifications extends React.Component {
   }
   onSubmit(event){
     event.preventDefault();
+    //this.setState({key:event.target.value});
     const b ={ 
       key:this.state.key
     };
@@ -140,16 +141,16 @@ class Notifications extends React.Component {
     }
   }
 
-  componentDidMount() {
-    axios.get('/api/theme/alltheme')
-        .then(response => {
-            console.log(response.data);
-            this.setState({datatheme: response.data});
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-  }
+  // componentDidMount() {
+  //   axios.get('/api/theme/alltheme')
+  //       .then(response => {
+  //           console.log(response.data);
+  //           this.setState({datatheme: response.data});
+  //       })
+  //       .catch(function (error) {
+  //           console.log(error);
+  //       })
+  // }
 //   tabRowSearch=()=>this.state.dataserch.map((object,i)=>(
 //     <TableRowSearch obj={object} key={i}/>
 //   )
@@ -168,14 +169,14 @@ class Notifications extends React.Component {
             <Card>
               <CardBody>
               <FormGroup row>
-                <Label sm={2} tag="h6">Tìm kiếm</Label>
+                <Label sm={2} tag="h6">Search document</Label>
                 <Col sm={5}>
 
-                  <Input  onChange={this.onChangeValue} type="text" name="key" id="" placeholder="tài liệu muốn tìm kiếm"/>
+                  <Input  onChange={this.onChangeValue} type="text" name="key" id="" placeholder="Input name document"/>
 
                 </Col>
                 <Col sm={2}>
-                  <Button onClick={this.onSubmit}>tìm</Button>
+                  <Button onClick={this.onSubmit}>search</Button>
                  
                 </Col>
                 
@@ -191,14 +192,14 @@ class Notifications extends React.Component {
               <Card>               
                 <CardHeader>
                   <FormGroup row>
-                    <Label md="6"  sm={6} tag="h6">Danh sách tài liệu</Label>
+                    <Label md="6"  sm={6} tag="h6">document list</Label>
                       <Col md="6" sm={6}>
                         <Input md="2" value={this.state.subjectView} onChange={this.onChangeValueTheme} type="select" name="subjectView" id="">
                               {this.state.datatheme.map((list,i) => (
                                   <option key={i} value={list.name}>{list.name}</option>
                               ))}
                         </Input>
-                        <Button onClick={this.onSubmitTheme}>alo</Button>
+                        <Button onClick={this.onSubmitTheme}>Sort</Button>
                       </Col>
                   </FormGroup>
                 </CardHeader>   

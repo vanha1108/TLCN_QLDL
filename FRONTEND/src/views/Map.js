@@ -21,9 +21,7 @@ import {
   FormText,
   CustomInput,
   Table,
-  Col,
-  FormFeedback,
-  Form
+  Col
 } from "reactstrap";
 class Map extends React.Component {
   constructor(props) {
@@ -38,9 +36,10 @@ class Map extends React.Component {
       filedoc:'',
       authorname:'',
       note:'',
-      subject:'alo',
+      subject:'',
       idDoc:'',
-      disabled:true
+      disabled:true,
+      iduser:''
     }
   }
   
@@ -61,6 +60,7 @@ class Map extends React.Component {
         .then(response => {
             console.log(response.data);
             this.setState({datalist: response.data});
+            
         })
         .catch(function (error) {
             console.log(error);
@@ -70,12 +70,13 @@ class Map extends React.Component {
   onSubmit(event){
     event.preventDefault()
         const formData = new FormData()
+        formData.append('iduser',this.state.iduser)
         formData.append('filedoc', this.state.filedoc)
         formData.append('authorname',this.state.authorname)
         formData.append('note',this.state.note)
         formData.append('idDoc',this.state.idDoc)
         formData.append('subject',this.state.subject)
-        formData.getAll('filedoc','authorname','subject','note','idDoc')
+        formData.getAll('iduser','filedoc','authorname','subject','note','idDoc')
         console.log(formData);
         axios.post("/api/doc/upload", formData,{})
         .then((res) => {
@@ -136,8 +137,8 @@ class Map extends React.Component {
                                     
               </tbody>
             </Table>
-              <Button disabled={this.state.disabled}  onClick={this.onSaveFile}>save</Button>
-              <Button disabled={this.state.disabled} onClick={()=>this.onCancelField()} >clear</Button>
+              <Button disabled={this.state.disabled}  onClick={this.onSaveFile}>Save</Button>
+              <Button disabled={this.state.disabled} onClick={()=>this.onCancelField()} >Cancel</Button>
           </CardBody>
         </Card>
       );
@@ -158,22 +159,27 @@ class Map extends React.Component {
                   <CardTitle tag="h3">UPLOAD FILE</CardTitle>
                 </CardHeader>
                 <CardBody>
+                <FormGroup>
+                    <Label tag="h5">ID user</Label>
+                    <Input value={this.state.idDoc} onChange={this.onchangValue} type="text" name="iduser" id="" placeholder="Input id document" />
+                
+                  </FormGroup>
                   <FormGroup>
                     <Label tag="h5">ID Document</Label>
-                    <Input value={this.state.idDoc} onChange={this.onchangValue} type="text" name="idDoc" id="" placeholder="Điền Id Doc" />
+                    <Input value={this.state.idDoc} onChange={this.onchangValue} type="text" name="idDoc" id="" placeholder="Input id document" />
                 
                   </FormGroup>
                   <FormGroup>
-                    <Label tag="h5">Người đăng</Label>
-                    <Input value={this.state.authorname} onChange={this.onchangValue} type="text" name="authorname" id="" placeholder="Điền tên người đăng file này lên" />
+                    <Label tag="h5">Authorname</Label>
+                    <Input value={this.state.authorname} onChange={this.onchangValue} type="text" name="authorname" id="" placeholder="Input authorname" />
                 
                   </FormGroup>
                   <FormGroup>
-                    <Label tag="h5">Ghi chú</Label>
-                    <Input value={this.state.note} onChange={this.onchangValue} type="text" name="note" id="" placeholder="ghi chú về file muốn upload" />
+                    <Label tag="h5">Note</Label>
+                    <Input value={this.state.note} onChange={this.onchangValue} type="text" name="note" id="" placeholder="Input note" />
                   </FormGroup>
                   <FormGroup>
-                    <Label tag="h5">Chủ đề</Label>
+                    <Label tag="h5">Theme</Label>
                     <Input value={this.state.subject} onChange={this.onchangValue} type="select" name="subject" id="">
                       {this.state.datalist.map((list,i) => (
                           <option key={i} value={list.name}>{list.name}</option>
@@ -186,7 +192,7 @@ class Map extends React.Component {
                   <FormGroup></FormGroup>
                   <CustomInput onChange={this.onchangeFile} type="file" accept=".pdf,.doc,.docx,.txt" id="" name="filedoc" />
                   <FormText color="muted">
-                      Chọn file mà bạn muốn upload
+                      Select file you want upload
                   </FormText>
                   <Button onClick={this.onSubmit}>Upload</Button>
                   

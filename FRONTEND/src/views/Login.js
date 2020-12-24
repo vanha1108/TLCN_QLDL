@@ -89,7 +89,7 @@ class Login extends Component {
                             <Col className="ml-auto mr-auto text-center" md="6">
                               
                                 
-                                <CardTitle  tag="h2">Login</CardTitle>
+                                <CardTitle  tag="h3">Hello User</CardTitle>
                                   <img
                                       alt="..."
                                       className="avatar"
@@ -124,7 +124,7 @@ class Login extends Component {
                             </div>
                             <div className="d-flex justify-content-between align-items-end">
                            
-                            <button onClick={this.onSubmitHandler} className="btn btn-info btn-md" type="button">Đăng nhập</button>
+                            <button onClick={this.onSubmitHandler} className="btn btn-info btn-md" type="button">Login</button>
                             </div>
                           </Form>
                         
@@ -148,13 +148,13 @@ class Login extends Component {
                                 className="avatar"
                                 src={require("assets/img/james.jpg")}
                               />
-                              <h5 className="title">Nguyễn Văn Thắng</h5>
+                              <h5 className="title">Nguyen Van Thang</h5>
                             </a>
                             <p className="description">Admin</p>
                           </div>
                           <div className="card-description ml-auto mr-auto text-center">
-                            Cần hỗ trợ vui lòng liên hệ vơi admin
-                            <p className="card-description">Số điện thoại:{' '}0971484530</p>
+                          Need support please contact admin
+                            <p className="card-description">Phone Number:{' '}0971484530</p>
                             <p className="card-description">Email:{' '}admin@gmail.com</p>
                             <p  className="container mt-3" >---------------</p>                    
                           </div>                  

@@ -11,10 +11,17 @@ class TableRowType extends Component {
     this.props.onChangEdit();
   }
   delete() {
-    axios
+    var result = window.confirm("Are you sure you want to delete")
+    if(result){
+      axios
       .get("/api/theme/deletetheme/" + this.props.obj._id)
       .then((res)=>{console.log(res.data.message);})
       .catch((err) => console.log(err));
+    }
+    else
+    {
+      console.log('vao day')
+    }
   }
   render() {
     return (
