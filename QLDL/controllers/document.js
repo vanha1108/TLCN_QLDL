@@ -71,7 +71,7 @@ const saveDuplicate = async (req, res, next) => {
   data.path = path;
   data.authorname = author;
   data.note = note;
-  data.data = content;
+  data.content = content;
 
   for (let word in vector) {
     data.vector.direction.push(word);
@@ -129,7 +129,7 @@ const saveDocument = async (
     data.path = path;
     data.authorname = author;
     data.note = note;
-    data.data = content;
+    data.content = content;
 
     for (let word in vector) {
       data.vector.direction.push(word);
@@ -248,7 +248,6 @@ const uploadDocument = async (req, res, next) => {
 
   var arrDuplicate = [];
   arrDuplicate = await checkDuplicate(content);
-  console.log(arrDuplicate);
 
   docmodel.find({}).exec(async function (err, result) {
     if (!result) {
