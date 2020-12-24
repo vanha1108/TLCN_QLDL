@@ -15,7 +15,7 @@ var userschema = new Schema(
     sex: {
       type: Boolean,
     },
-    dbo: {
+    dob: {
       type: Date,
     },
     phonenumber: {

@@ -45,7 +45,6 @@ const getAllUser = async (req, res, next) => {
       success: false,
     });
   }
-
   await JWT.verify(
     headers.authorization,
     process.env.SECRETTOKEN,
@@ -65,9 +64,7 @@ const getAllUser = async (req, res, next) => {
 
 const signUp = async (req, res, next) => {
   try {
-    var idUser = req.body.iduser;
-    console.log(idUser);
-    var iduser = Int.parseInt(req.body.iduser);
+    var iduser = req.body.iduser;
     var firstname = req.body.firstname;
     var lastname = req.body.lastname;
     var sex = req.body.sex;
@@ -76,15 +73,14 @@ const signUp = async (req, res, next) => {
     } else {
       sex = true;
     }
-    var parts = req.body.dob.split("-");
-    var dob = new Date(parts[0], parts[1] - 1, parts[2]);
+
+    var dob = new Date(req.body.dob);
     var phonenumber = req.body.phonenumber;
     var address = req.body.address;
     var username = req.body.username;
     var password = req.body.password;
-    var role = Int.parseInt(req.body.role);
+    var role = req.body.role;
     const user = await User.findOne({ username: username });
-
     if (user) {
       return res.status.json({
         success: false,
@@ -92,14 +88,17 @@ const signUp = async (req, res, next) => {
         message: "Email already exists!",
       });
     }
+
     var newUser = new User();
     // Kiểm tra iduser đã có chưa --> nếu có thì +1
-    const users = User.find();
     const arrIDuser = [];
-    for (let u in users) {
-      arrIDuser.push(users[u].iduser);
+    const users = await User.find();
+    if (users) {
+      for (let u in users) {
+        arrIDuser.push(users[u].iduser);
+      }
     }
-    while (arrID.indexOf(iduser) != -1) {
+    while (arrIDuser.indexOf(iduser) != -1) {
       iduser += 1;
     }
     //
@@ -112,9 +111,10 @@ const signUp = async (req, res, next) => {
     newUser.address = address;
     newUser.username = username;
     newUser.password = await hashPassword(password);
-    newUser.role = role;
+    newUser.role = Number(role);
+
     await newUser.save();
-    console.log(newUser);
+
     return res.status(200).json({
       success: true,
       code: 201,
@@ -137,11 +137,11 @@ const encodedToken = async (userID, times) => {
 };
 
 const signIn = async (req, res, next) => {
-  //const token = await encodedToken(req.user._id, "1h");
+  const token = await encodedToken(req.user._id, "1h");
 
   const user = await User.findById(req.user._id);
 
-  //res.setHeader("authorization", token);
+  res.setHeader("authorization", token);
   return res.status(200).json({ success: true, code: 200, message: "", user });
 };
 
