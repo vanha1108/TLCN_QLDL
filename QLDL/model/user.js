@@ -3,7 +3,28 @@ var Schema = mongoose.Schema;
 
 var userschema = new Schema(
   {
-    email: {
+    iduser: {
+      type: String,
+    },
+    firstname: {
+      type: String,
+    },
+    lastname: {
+      type: String,
+    },
+    sex: {
+      type: Boolean,
+    },
+    dbo: {
+      type: Date,
+    },
+    phonenumber: {
+      type: String,
+    },
+    adress: {
+      type: String,
+    },
+    username: {
       type: String,
     },
     password: {

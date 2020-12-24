@@ -8,14 +8,17 @@ const hashPassword = async (text) => {
 };
 
 const changePassword = async (req, res, next) => {
-  await User.findOne({ email: req.body.current }, async function (err, user) {
+  await User.findOne({ iduser: req.body.iduser }, async function (err, user) {
     if (err) res.send({ message: err });
     if (user) {
       var checkPass = await bcrypt.compareSync(
         req.body.currentPassword,
         user.password
       );
-      if (!checkPass) res.send({ message: "Password incorrect!" });
+      if (!checkPass)
+        res
+          .status(200)
+          .json({ success: false, code: 500, message: "Password incorrect!" });
       else {
         var passwordHash = bcrypt.hashSync(
           req.body.newPassword,
@@ -24,7 +27,9 @@ const changePassword = async (req, res, next) => {
         );
         user.password = passwordHash;
         user.save();
-        res.send({ message: "Changed success!" });
+        res
+          .status(200)
+          .json({ success: true, code: 200, message: "Change success!" });
       }
     }
   });
@@ -51,7 +56,6 @@ const getAllUser = async (req, res, next) => {
           .status(200)
           .json({ success: false, code: 403, message: "denied" });
       const users = await User.find();
-      console.log(users);
       return res
         .status(200)
         .json({ success: true, code: 200, message: "", users });
@@ -61,17 +65,50 @@ const getAllUser = async (req, res, next) => {
 
 const signUp = async (req, res, next) => {
   try {
-    var email = req.body.email;
+    var iduser = Int.parseInt(req.body.iduser);
+    var firstname = req.body.firstname;
+    var lastname = req.body.lastname;
+    var sex = req.body.sex;
+    if (sex == "Female") {
+      sex = false;
+    } else {
+      sex = true;
+    }
+    var parts = req.body.dob.split("-");
+    var dob = new Date(parts[0], parts[1] - 1, parts[2]);
+    var phonenumber = req.body.phonenumber;
+    var address = req.body.address;
+    var username = req.body.username;
     var password = req.body.password;
-    var role = req.body.role;
-    const user = await User.findOne({ email: email });
+    var role = Int.parseInt(req.body.role);
+    const user = await User.findOne({ username: username });
     if (user) {
-      return res.send({ message: "Email already exists!" });
+      return res.status.json({
+        success: false,
+        code: 500,
+        message: "Email already exists!",
+      });
     }
     var newUser = new User();
-    newUser.email = email;
+    // Kiểm tra iduser đã có chưa --> nếu có thì +1
+    const users = User.find();
+    const arrIDuser = [];
+    for (let u in users) {
+      arrIDuser.push(users[u].iduser);
+    }
+    while (arrID.indexOf(iduser) != -1) {
+      iduser += 1;
+    }
+    //
+    newUser.iduser = iduser;
+    newUser.firstname = firstname;
+    newUser.lastname = lastname;
+    newUser.sex = sex;
+    newUser.dob = dob;
+    newUser.address = address;
+    newUser.username = username;
     newUser.password = await hashPassword(password);
-    newUser.role = parseInt(role);
+    newUser.role = role;
     await newUser.save();
     return res.status(200).json({
       success: true,

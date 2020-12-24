@@ -12,7 +12,9 @@ const addTheme = async (req, res, next) => {
       data.name = req.body.name;
       data.listidDoc = [];
       data.save();
-      res.send("Add theme success!");
+      res
+        .status(200)
+        .json({ success: true, code: 200, message: "Add theme success" });
     }
   });
 };
@@ -25,6 +27,7 @@ const getAllTheme = async (req, res, next) => {
 };
 
 const deleteTheme = async (req, res, next) => {
+  console.log("Here");
   var idDelete = req.params.idDelete;
   thememodel.findOne({ _id: idDelete }).exec(function (err, data) {
     if (err) res.send({ message: err });
@@ -34,7 +37,10 @@ const deleteTheme = async (req, res, next) => {
       } else {
         thememodel.findByIdAndRemove({ _id: idDelete }, function (err, de) {
           if (err) handleError();
-          if (de) res.send({ message: "Delete success" });
+          if (de)
+            res
+              .status(200)
+              .json({ success: true, code: 200, message: "Delete success" });
         });
       }
     }
@@ -75,7 +81,7 @@ const editTheme = async (req, res, next) => {
           message: "Not found document with id!",
         });
       }
-      
+
       doc.subject = newName;
       doc.save();
     }

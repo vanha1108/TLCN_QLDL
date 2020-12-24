@@ -2,6 +2,7 @@ const special_chars = require("./special_chars");
 
 module.exports.TF_IDF = function (text, all_text) {
   let appearDict = {};
+  //appearDict = compute_appear(text);
   text = special_chars.clear_special_chars(text);
 
   let bow = ("" + text).split(" ");
