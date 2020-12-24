@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var userschema = new Schema(
   {
     iduser: {
-      type: String,
+      type: Number,
     },
     firstname: {
       type: String,
@@ -21,7 +21,7 @@ var userschema = new Schema(
     phonenumber: {
       type: String,
     },
-    adress: {
+    address: {
       type: String,
     },
     username: {

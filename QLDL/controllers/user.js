@@ -65,6 +65,8 @@ const getAllUser = async (req, res, next) => {
 
 const signUp = async (req, res, next) => {
   try {
+    var idUser = req.body.iduser;
+    console.log(idUser);
     var iduser = Int.parseInt(req.body.iduser);
     var firstname = req.body.firstname;
     var lastname = req.body.lastname;
@@ -82,6 +84,7 @@ const signUp = async (req, res, next) => {
     var password = req.body.password;
     var role = Int.parseInt(req.body.role);
     const user = await User.findOne({ username: username });
+
     if (user) {
       return res.status.json({
         success: false,
@@ -104,12 +107,14 @@ const signUp = async (req, res, next) => {
     newUser.firstname = firstname;
     newUser.lastname = lastname;
     newUser.sex = sex;
+    newUser.phonenumber = phonenumber;
     newUser.dob = dob;
     newUser.address = address;
     newUser.username = username;
     newUser.password = await hashPassword(password);
     newUser.role = role;
     await newUser.save();
+    console.log(newUser);
     return res.status(200).json({
       success: true,
       code: 201,
@@ -132,11 +137,11 @@ const encodedToken = async (userID, times) => {
 };
 
 const signIn = async (req, res, next) => {
-  const token = await encodedToken(req.user._id, "1h");
+  //const token = await encodedToken(req.user._id, "1h");
 
   const user = await User.findById(req.user._id);
 
-  res.setHeader("authorization", token);
+  //res.setHeader("authorization", token);
   return res.status(200).json({ success: true, code: 200, message: "", user });
 };
 
