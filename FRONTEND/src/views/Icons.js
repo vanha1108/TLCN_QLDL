@@ -64,7 +64,7 @@ onSelectValue(event){
 onSubmit(event){
   event.preventDefault()
       const formData = {
-        email:this.state.email,
+        username:this.state.email,
         password:this.state.password,
         role:this.state.role,
         idUser:this.state.idUser,
@@ -77,14 +77,18 @@ onSubmit(event){
       }
       
       console.log(formData);
-      // axios.post('/api/user/register',formData)
-      // .then((res) => {
+      axios.post('/api/user/register',formData)
+      .then((res) => {
+          if(res.data.success===true)
+          {
+            toast.success('Upload Successful');
+            console.log(res.data);
+          }
+          console.log(res.data);
           
-      //     console.log(res.data);
-      //     toast.success('Upload Successful');
           
-      // })
-      // .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
+      })
+      .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
     }
   // hiển thị list user
   componentDidMount() {

@@ -25,7 +25,7 @@ class Login extends Component {
     if (!(this.state.email === '' || this.state.password === '')
       && (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.state.email))) {
       axios.post('/api/user/login', {
-        email: this.state.email,
+        username: this.state.mail,
         password: this.state.password
       }).then((res) => {
         
