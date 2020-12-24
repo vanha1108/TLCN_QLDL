@@ -37,7 +37,7 @@ const changePassword = async (req, res, next) => {
 
 const getAllUser = async (req, res, next) => {
   const headers = req.headers;
-  console.log("TOKEN: " + headers.authorization);
+
   if (!headers.authorization) {
     return res.status(200).json({
       code: 400,
@@ -64,11 +64,10 @@ const getAllUser = async (req, res, next) => {
 
 const signUp = async (req, res, next) => {
   try {
-    var iduser = req.body.iduser;
+    var iduser = Number(req.body.iduser);
     var firstname = req.body.firstname;
     var lastname = req.body.lastname;
-    var sex = req.body.sex1;
-    console.log(sex);
+    var sex = req.body.sex;
     if (sex == "Female") {
       sex = false;
     } else {
@@ -80,8 +79,8 @@ const signUp = async (req, res, next) => {
     var address = req.body.address;
     var username = req.body.username;
     var password = req.body.password;
-    var role = req.body.role;
-    
+    var role = Number(req.body.role);
+
     const user = await User.findOne({ username: username });
     if (user) {
       return res.status.json({
@@ -113,7 +112,7 @@ const signUp = async (req, res, next) => {
     newUser.address = address;
     newUser.username = username;
     newUser.password = await hashPassword(password);
-    newUser.role = Number(role);
+    newUser.role = role;
 
     await newUser.save();
 
