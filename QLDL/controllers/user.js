@@ -67,7 +67,8 @@ const signUp = async (req, res, next) => {
     var iduser = req.body.iduser;
     var firstname = req.body.firstname;
     var lastname = req.body.lastname;
-    var sex = req.body.sex;
+    var sex = req.body.sex1;
+    console.log(sex);
     if (sex == "Female") {
       sex = false;
     } else {
@@ -80,6 +81,7 @@ const signUp = async (req, res, next) => {
     var username = req.body.username;
     var password = req.body.password;
     var role = req.body.role;
+    
     const user = await User.findOne({ username: username });
     if (user) {
       return res.status.json({

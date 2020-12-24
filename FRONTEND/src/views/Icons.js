@@ -38,11 +38,11 @@ class Icons extends React.Component {
       username: "",
       password: "",
       role: "1",
-      current: "",
       currentPassword: "",
       newPassword: "",
       trangthai: false,
       trangthaiedit: false,
+      newSex:""
     };
   }
 
@@ -61,32 +61,48 @@ class Icons extends React.Component {
   }
   onSubmit(event) {
     event.preventDefault();
-    const formData = {
-      username: this.state.username,
-      password: this.state.password,
-      role: this.state.role,
-      iduser: this.state.iduser,
-      firstname: this.state.firstname,
-      lastname: this.state.lastname,
-      sex: this.state.sex,
-      dob: this.state.dob,
-      phonenumber: this.state.phonenumber,
-      address: this.state.address,
-    };
-
-    console.log(formData);
-    axios
-      .post("/api/user/register", formData)
-      .then((res) => {
-        if (res.data.success === true) {
-          toast.success("Upload Successful");
-          console.log(res.data);
-        }
-        console.log(res.data);
-      })
-      .catch((err) => {
-        toast.error(`Upload Fail with status: ${err.statusText}`);
-      });
+    if(this.state.iduser!==''&&this.state.firstname!==''&&this.state.lastname!==''
+    &&this.state.sex!==''&&this.state.dob!==''&&this.state.phonenumber!==''&&this.state.address!==''
+    &&this.state.username!==''&&this.state.password!=='')
+    {
+      const formData = {
+        username: this.state.username,
+        password: this.state.password,
+        role: this.state.role,
+        iduser: this.state.iduser,
+        firstname: this.state.firstname,
+        lastname: this.state.lastname,
+        sex1: this.state.sex,
+        dob: this.state.dob,
+        phonenumber: this.state.phonenumber,
+        address: this.state.address,
+      };
+  
+      console.log(formData);
+      axios
+        .post("/api/user/register", formData)
+        .then((res) => {
+          if (res.data.success === true) {
+            toast.success("add user success");
+            setTimeout(function () {
+              window.location.reload(1);
+            },1000);
+          }
+          else
+          {
+            toast.error("username already exists!");
+          }
+          
+        })
+        .catch((err) => {
+          toast.error(`Upload Fail with status: ${err.statusText}`);
+        });
+    }
+    else
+    {
+      alert('please fill out all information');
+    }
+    
   }
   // hiển thị list user
   componentDidMount() {
@@ -143,7 +159,6 @@ class Icons extends React.Component {
   hienThiForm() {
     if (this.state.trangthai === true) {
       return (
-        <div>
           <Card>
             <CardHeader>
               <CardTitle>
@@ -294,7 +309,6 @@ class Icons extends React.Component {
               </Button>
             </CardBody>
           </Card>
-        </div>
       );
     }
   }
@@ -305,7 +319,7 @@ class Icons extends React.Component {
       dataedituser: user,
     });
   };
-  hienThiFormEdit() {
+  hienThiFormChangePassword() {
     if (this.state.trangthaiedit === true) {
       return (
         <div>
@@ -317,15 +331,15 @@ class Icons extends React.Component {
             </CardHeader>
             <CardBody>
               <FormGroup row>
-                <Label sm={5}>Email</Label>
+                <Label sm={5}>UserName</Label>
                 <Col sm={7}>
                   <Input
-                    value={this.state.dataedituser.email}
+                    value={this.state.dataedituser.iduser||''}
                     disabled
-                    type="email"
-                    name="current"
+                    type="text"
+                    name="iduser"
                     id=""
-                    placeholder="Nhập địa chỉ Email"
+                    placeholder=""
                   />
                 </Col>
               </FormGroup>
@@ -356,7 +370,7 @@ class Icons extends React.Component {
               <Button onClick={this.onSubmitEdit} color="primary">
                 Change User
               </Button>
-              <Button>Cancel</Button>
+              <Button onClick={()=>this.thayDoiTrangThaiEdit()} >Cancel</Button>
             </CardBody>
           </Card>
         </div>
@@ -371,22 +385,72 @@ class Icons extends React.Component {
 
   onSubmitEdit(event) {
     event.preventDefault();
-    const b = {
-      current: this.state.dataedituser.email,
-      currentPassword: this.state.currentPassword,
-      newPassword: this.state.newPassword,
-    };
-    console.log(b);
-    axios.post("/api/user/changepass", b).then((res) => {
-      console.log(res.data.message);
-    });
+    if(this.state.currentPassword!==''&&this.state.newPassword!=='') {
+      const b = {
+        iduser: this.state.dataedituser.iduser,
+        currentPassword: this.state.currentPassword,
+        newPassword: this.state.newPassword,
+      };
+      console.log(b);
+      axios.post("/api/user/changepass", b).
+      then((res) => {
+        if(res.data.success===true) {
+          toast.success('change password success');
+        }
+        else
+        {
+          toast.error('current password is incorrect');
+        }
+      });
+    }
+    else
+    {
+      alert('Please fill out all information');
+    }
+    
+  }
+  hienThiDate=()=>{
+    //document.getElementsByName('dob').value=this.state.dataedituser.dob;
+
+    var d = new Date(this.state.dataedituser.dob),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+      return [year, month, day].join('-');
+    
+  }
+  hienThiSex1=()=>{
+    
+    if(this.state.dataedituser.sex===true) {
+      
+      var a = document.getElementById('rMale');
+      var b = document.getElementById('rFemale');
+      a.checked=true;
+      b.checked=false;
+      return;
+    }  else if(this.state.dataedituser.sex===false) {
+      var a = document.getElementById('rFemale');
+      var b = document.getElementById('rMale');
+      a.checked=true;
+      b.checked=false;
+      return;
+    }
+  }
+  checkSex=()=>{
+
   }
   render() {
     if (!localStorage.getItem("authorization")) return <Redirect to="/login" />;
     return (
       <div className="content">
         <Row>
-          <Col md="5">
+          <Col md="12">
             <Card>
               <CardHeader>
                 <FormGroup row>
@@ -400,7 +464,14 @@ class Icons extends React.Component {
                 <Table className="tablesorter" responsive>
                   <thead className="text-primary">
                     <tr>
-                      <th>Email</th>
+                      <th>ID User</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Sex</th>
+                      <th>Date of birth</th>
+                      <th>Phone Number</th>
+                      <th>Address</th>
+                      <th>UserName</th>
                       <th>Role</th>
                       <th>action</th>
                     </tr>
@@ -412,7 +483,143 @@ class Icons extends React.Component {
           </Col>
           <Col md="4">
             {this.hienThiForm()}
-            {this.hienThiFormEdit()}
+            {this.hienThiFormChangePassword()}
+          </Col>
+          <Col md="4">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                <Label tag="h4">Edit User</Label>
+              </CardTitle>
+            </CardHeader>
+            <CardBody>
+              <FormGroup row>
+                <Label sm={3}>ID user</Label>
+                <Col sm={9}>
+                  <Input
+                    onChange={this.onChangeValue}
+                    type="text"
+                    name="iduser"
+                    id=""
+                    value={this.state.dataedituser.iduser ||''}
+                    placeholder="Input email"
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label sm={3}>FirstName</Label>
+                <Col sm={9}>
+                  <Input
+                    onChange={this.onChangeValue}
+                    type="text"
+                    name="firstname"
+                    id=""
+                    value={this.state.dataedituser.firstname ||''}
+                    placeholder="Input email"
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label sm={3}>LastName</Label>
+                <Col sm={9}>
+                  <Input
+                    onChange={this.onChangeValue}
+                    type="text"
+                    name="lastname"
+                    id=""
+                    value={this.state.dataedituser.lastname ||''}
+                    placeholder="Input email"
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup tag="fieldset" row>
+                <Label sm={4}>Sex</Label>
+                <Col sm={8}>
+                  <FormGroup row check>
+                    <Label sm={4} check>
+                      <Input
+                        id="rMale"
+                        type="radio"
+                        name="rMale"
+                        value={this.hienThiSex1() ||''}
+                        
+                        onChange={this.onChangeValue}
+                      />{" "}
+                      Male
+                    </Label>
+                    <Label sm={4} check>
+                      <Input
+                        id="rFemale"
+                        type="radio"
+                        name="rFemale"
+                        
+                        
+                        onChange={this.onChangeValue}
+                      />{" "}
+                      Female
+                    </Label>
+                  </FormGroup>
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label sm={3}>DOB</Label>
+                <Col sm={9}>
+                  <Input
+                    type="date"
+                    name="dob"
+                    id=""
+                    value={this.hienThiDate() ||''}
+                    placeholder="date placeholder"
+                    onChange={this.onChangeValue}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label sm={3}>Phone Number</Label>
+                <Col sm={9}>
+                  <Input
+                    onChange={this.onChangeValue}
+                    type="text"
+                    name="phonenumber"
+                    id=""
+                    value={this.state.dataedituser.phonenumber ||''}
+                    placeholder="Input email"
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label sm={3}>Address</Label>
+                <Col sm={9}>
+                  <Input
+                    onChange={this.onChangeValue}
+                    type="text"
+                    name="address"
+                    id=""
+                    value={this.state.dataedituser.address ||''}
+                    placeholder="Input email"
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label sm={3}>Role</Label>
+                <Col sm={9}>
+                  <Input
+                    value={this.state.dataedituser.role ||''}
+                    onChange={this.onChangeValue}
+                    type="select"
+                    name="role"
+                    id=""
+                  >
+                    <option>1</option>
+                    <option>2</option>
+                  </Input>
+                </Col>
+              </FormGroup>
+              <Button onClick={this.onSubmit} color="primary">
+                Add user
+              </Button>
+            </CardBody>
+          </Card>
           </Col>
 
           <ToastContainer />

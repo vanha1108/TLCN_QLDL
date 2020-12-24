@@ -10,8 +10,8 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      email: '',
-      password: '',
+      username:'',
+      password:'',
       token: '',
       redirect: localStorage.getItem('authorization') ? true : false
     }
@@ -23,9 +23,9 @@ class Login extends Component {
 
   onSubmitHandler() {
     if (!(this.state.email === '' || this.state.password === '')
-      && (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.state.email))) {
+      ) {
       axios.post('/api/user/login', {
-        username: this.state.mail,
+        username: this.state.username,
         password: this.state.password
       }).then((res) => {
         
@@ -68,7 +68,7 @@ class Login extends Component {
 
   emailInputChangeHandler(event) {
     this.setState({
-      email: event.target.value
+      username: event.target.value
     });
   }
 
@@ -103,10 +103,10 @@ class Login extends Component {
                             <div className="form-group">
                             <label htmlFor="email" className="text-info">Email:</label><br />
                             <input
-                                id="email"
+                                id=""
                                 className="form-control"
-                                type="email"
-                                name="email"
+                                type="text"
+                                name="username"
                                 placeholder="example@domain.com"
                                 onChange={this.emailInputChangeHandler}
                                 required />
@@ -114,7 +114,7 @@ class Login extends Component {
                             <div className="form-group">
                             <label htmlFor="password" className="text-info">Password:</label><br />
                             <input
-                                id="password"
+                                id=""
                                 className="form-control"
                                 type="password"
                                 name="password"
