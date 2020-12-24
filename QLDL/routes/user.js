@@ -17,4 +17,6 @@ router.route("/logout").get(userController.logOut);
 
 router.route("/").get(userController.getAllUser);
 
+router.route("/edit/:idedit").put(userController.editUser);
+
 module.exports = router;

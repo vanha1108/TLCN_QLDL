@@ -7,8 +7,8 @@ router.route("/addtheme").post(themeController.addTheme);
 
 router.route("/alltheme").get(themeController.getAllTheme);
 
-router.route("/deletetheme/:idDelete").delete(themeController.deleteTheme);
+router.route("/deletetheme/:iddelete").delete(themeController.deleteTheme);
 
-router.route("/edit/:idEdit").put(themeController.editTheme);
+router.route("/edit/:idedit").put(themeController.editTheme);
 
 module.exports = router;

@@ -153,6 +153,7 @@ const logOut = async (req, res, next) => {
 };
 
 const editUser = async (req, res, next) => {
+  var idedit = req.params.idedit;
   var newFirst = req.body.newfirst;
   var newLast = req.body.newlast;
   var newSex = req.body.newsex;
@@ -165,7 +166,7 @@ const editUser = async (req, res, next) => {
   var newPhone = req.body.newphone;
   var newAddress = req.body.newaddress;
 
-  const user = await User.findOne({ iduser });
+  const user = await User.findOne({ iduser: idedit });
   if (!user) {
     res
       .status(200)
@@ -188,4 +189,5 @@ module.exports = {
   signUp,
   signIn,
   logOut,
+  editUser,
 };

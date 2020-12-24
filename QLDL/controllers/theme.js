@@ -2,56 +2,75 @@ var thememodel = require("./../model/theme");
 var docmodel = require("./../model/document");
 
 const addTheme = async (req, res, next) => {
-  var subjectName = req.body.name;
-  thememodel.findOne({ name: subjectName }).exec(function (err, data) {
-    if (err) console.log(err);
-    if (data) {
-      res.send({ message: "Theme name already exists!" });
-    } else {
-      var data = new thememodel();
-      data.name = req.body.name;
-      data.listidDoc = [];
-      data.save();
-      res
-        .status(200)
-        .json({ success: true, code: 200, message: "Add theme success" });
+  var idtheme = Number(req.body.idtheme);
+  var name = req.body.name;
+  const theme = await thememodel.findOne({ name });
+  if (theme) {
+    res.status(200).json({
+      success: false,
+      code: 500,
+      message: "Theme name already exists!",
+    });
+  }
+  const newTheme = new thememodel();
+  // Kiem tra idtheme da co chua
+  const arrIDTheme = [];
+  const themes = await thememodel.find();
+  if (users) {
+    for (let t in themes) {
+      arrIDTheme.push(themes[t].idtheme);
     }
-  });
+  }
+  while (arrIDTheme.indexOf(idtheme) != -1) {
+    idtheme += 1;
+  }
+  //
+  newTheme.idtheme = idtheme;
+  newTheme.name = name;
+  newTheme.listidDoc = [];
+  await newTheme.save();
+  res
+    .status(200)
+    .json({ success: true, code: 200, message: "Add theme success" });
 };
 
 const getAllTheme = async (req, res, next) => {
   thememodel.find(function (err, listtheme) {
-    if (err) handleError();
-    res.send(listtheme);
+    if (err)
+      res
+        .status(200)
+        .json({ success: false, code: 500, message: "Error get all theme!" });
+    res.status(200).json({ success: true, code: 200, message: "", listtheme });
   });
 };
 
 const deleteTheme = async (req, res, next) => {
-  console.log("Here");
-  var idDelete = req.params.idDelete;
-  thememodel.findOne({ _id: idDelete }).exec(function (err, data) {
-    if (err) res.send({ message: err });
-    if (data) {
-      if (data.listidDoc.length != 0) {
-        res.send({ message: "Theme cannot be deleted" });
-      } else {
-        thememodel.findByIdAndRemove({ _id: idDelete }, function (err, de) {
-          if (err) handleError();
-          if (de)
-            res
-              .status(200)
-              .json({ success: true, code: 200, message: "Delete success" });
-        });
-      }
-    }
-  });
+  var iddelete = req.params.iddelete;
+  const theme = thememodel.findOne({ idtheme: iddelete });
+  if (!theme)
+    res.status(200).json({
+      success: false,
+      code: 500,
+      message: "Not found theme to delete!",
+    });
+  if (theme.listidDoc.length != 0) {
+    res
+      .status(200)
+      .json({ success: false, code: 500, message: "Theme cannot be deleted" });
+  }
+  const themeDel = thememodel.findOneAndRemove({ idtheme: iddelete });
+  if (!themeDel)
+    res
+      .status(200)
+      .json({ success: false, code: 500, message: "Error delete theme!" });
+  res.status(200).json({ success: true, code: 200, message: "Delete success" });
 };
 
 const editTheme = async (req, res, next) => {
-  var idEdit = req.params.idEdit;
+  var idedit = req.params.idedit;
   var newName = req.body.newName;
 
-  const theme = await thememodel.findById(idEdit);
+  const theme = await thememodel.findOne({ idtheme: idedit });
   if (!theme) {
     return res
       .status(200)
@@ -60,13 +79,12 @@ const editTheme = async (req, res, next) => {
 
   const newtheme = await thememodel.findOne({ name: newName });
 
-  if (newtheme) {
+  if (newtheme)
     return res.status(200).json({
       success: false,
       code: 500,
       message: "Theme name already exists",
     });
-  }
 
   theme.name = newName;
   theme.save();

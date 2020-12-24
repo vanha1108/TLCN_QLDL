@@ -3,6 +3,9 @@ var Schema = mongoose.Schema;
 
 var themeSchema = new Schema(
   {
+    idtheme: {
+      type: Number,
+    },
     name: {
       type: String,
       required: true,
