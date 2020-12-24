@@ -14,7 +14,7 @@ var themeSchema = new Schema(
       type: Array,
     },
   },
-  { collection: "themes" }
+  { collection: "themes", timestamps: true }
 );
 
 module.exports = mongoose.model("Theme", themeSchema);

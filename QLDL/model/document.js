@@ -1,10 +1,13 @@
-const { Double, Int32, Long } = require("mongodb");
+const { Double, Int32, Long, Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
 const doc = new mongoose.Schema(
   {
     idDoc: {
       type: Number,
       default: 1,
+    },
+    iduser: {
+      type: Number,
     },
     filename: {
       type: String,
@@ -21,12 +24,12 @@ const doc = new mongoose.Schema(
     note: {
       type: String,
     },
-    data: {
+    content: {
       type: String,
     },
     vector: { direction: Array, value: Array },
   },
-  { collection: "document" }
+  { collection: "document", timestamps: true }
 );
 
 doc.index({ filename: "text", data: "text" });

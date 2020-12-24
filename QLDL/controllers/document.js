@@ -33,6 +33,7 @@ const readDocument = async (filePath) => {
 
 const saveDuplicate = async (req, res, next) => {
   var id = parseInt(req.body.idDoc);
+  var iduser = Number(req.user.iduser);
   var filename = req.file.originalname;
   var subject = req.body.subject;
   var path = req.file.path;
@@ -64,6 +65,7 @@ const saveDuplicate = async (req, res, next) => {
 
   var data = new docmodel();
   data.idDoc = id;
+  data.iduser = iduser;
   data.subject = subject;
   data.filename = filename;
   data.path = path;
@@ -83,8 +85,7 @@ const saveDuplicate = async (req, res, next) => {
     themes.listidDoc.push(id);
     themes.save();
   }
-
-  res.send({ message: "Save success!" });
+  res.status(200).json({ success: true, code: 200, message: "Save success!" });
 };
 
 const saveDocument = async (
@@ -122,6 +123,7 @@ const saveDocument = async (
 
     var data = new docmodel();
     data.idDoc = idDoc;
+    data.iduser = Number(req.user.iduser);
     data.subject = subject;
     data.filename = nameFile;
     data.path = path;
@@ -276,10 +278,14 @@ const uploadDocument = async (req, res, next) => {
           content,
           vecA
         );
-        res.send({ message: "success" });
+        res.status(200).json({ success: true, code: 200, message: "success" });
       } else {
-        console.log("Yes Duplicate");
-        res.send({ arrDuplicate: arrDuplicate });
+        res.status(200).json({
+          success: false,
+          code: 500,
+          message: "Document duplicate!",
+          arrDuplicate,
+        });
       }
     }
   });
@@ -287,15 +293,21 @@ const uploadDocument = async (req, res, next) => {
 
 const getAllDocument = async (req, res, next) => {
   docmodel.find(function (err, listdoc) {
-    if (err) handleError();
-    res.send(listdoc);
+    if (err)
+      res
+        .status(200)
+        .json({ success: false, code: 500, message: "Error get all document" });
+    res.status(200).json({ success: true, code: 200, message: "", listdoc });
   });
 };
 
 const dowloadDocument = async (req, res, next) => {
-  var id = req.params.idDowload;
+  var id = req.params.iddowload;
   docmodel.findOne({ idDoc: id }).exec(function (err, doc) {
-    if (err) console.log(err);
+    if (err)
+      res
+        .status(200)
+        .json({ success: false, code: 500, message: "Error dowload document" });
     if (doc) res.download(doc.path);
   });
 };
@@ -336,7 +348,13 @@ const deleteDocument = async (req, res, next) => {
 const searchDocument = async (req, res, next) => {
   var key = req.body.key;
   docmodel.search(key, function (err, doc) {
-    res.send({ document: doc });
+    if (err)
+      res
+        .status(200)
+        .json({ success: false, code: 500, message: "Error search document" });
+    res
+      .status(200)
+      .json({ success: true, code: 200, message: "", document: doc });
   });
 };
 
