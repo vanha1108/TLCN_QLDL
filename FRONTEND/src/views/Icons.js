@@ -31,11 +31,11 @@ class Icons extends React.Component {
       firstsname: "",
       lastname: "",
       sex: "",
-      dbo: "",
-      idUser: "",
+      dob: "",
+      iduser: "",
       phonenumber: "",
       address: "",
-      email: "",
+      username: "",
       password: "",
       role: "1",
       current: "",
@@ -62,14 +62,14 @@ class Icons extends React.Component {
   onSubmit(event) {
     event.preventDefault();
     const formData = {
-      username: this.state.email,
+      username: this.state.username,
       password: this.state.password,
       role: this.state.role,
-      idUser: this.state.idUser,
+      iduser: this.state.iduser,
       firstname: this.state.firstname,
       lastname: this.state.lastname,
       sex: this.state.sex,
-      dbo: this.state.dbo,
+      dob: this.state.dob,
       phonenumber: this.state.phonenumber,
       address: this.state.address,
     };
@@ -156,8 +156,8 @@ class Icons extends React.Component {
                 <Col sm={9}>
                   <Input
                     onChange={this.onChangeValue}
-                    type="email"
-                    name="idUser"
+                    type="text"
+                    name="iduser"
                     id=""
                     placeholder="Input email"
                   />
@@ -168,7 +168,7 @@ class Icons extends React.Component {
                 <Col sm={9}>
                   <Input
                     onChange={this.onChangeValue}
-                    type="email"
+                    type="text"
                     name="firstname"
                     id=""
                     placeholder="Input email"
@@ -180,7 +180,7 @@ class Icons extends React.Component {
                 <Col sm={9}>
                   <Input
                     onChange={this.onChangeValue}
-                    type="email"
+                    type="text"
                     name="lastname"
                     id=""
                     placeholder="Input email"
@@ -219,7 +219,7 @@ class Icons extends React.Component {
                 <Col sm={9}>
                   <Input
                     type="date"
-                    name="dbo"
+                    name="dob"
                     id=""
                     placeholder="date placeholder"
                     onChange={this.onChangeValue}
@@ -231,7 +231,7 @@ class Icons extends React.Component {
                 <Col sm={9}>
                   <Input
                     onChange={this.onChangeValue}
-                    type="email"
+                    type="text"
                     name="phonenumber"
                     id=""
                     placeholder="Input email"
@@ -243,7 +243,7 @@ class Icons extends React.Component {
                 <Col sm={9}>
                   <Input
                     onChange={this.onChangeValue}
-                    type="email"
+                    type="text"
                     name="address"
                     id=""
                     placeholder="Input email"
@@ -251,12 +251,12 @@ class Icons extends React.Component {
                 </Col>
               </FormGroup>
               <FormGroup row>
-                <Label sm={3}>Email</Label>
+                <Label sm={3}>UserName</Label>
                 <Col sm={9}>
                   <Input
                     onChange={this.onChangeValue}
-                    type="email"
-                    name="email"
+                    type="text"
+                    name="username"
                     id=""
                     placeholder="Input email"
                   />
