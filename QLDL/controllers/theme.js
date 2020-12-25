@@ -16,7 +16,7 @@ const addTheme = async (req, res, next) => {
   // Kiem tra idtheme da co chua
   const arrIDTheme = [];
   const themes = await thememodel.find();
-  if (users) {
+  if (themes) {
     for (let t in themes) {
       arrIDTheme.push(themes[t].idtheme);
     }
@@ -45,7 +45,7 @@ const getAllTheme = async (req, res, next) => {
 };
 
 const deleteTheme = async (req, res, next) => {
-  var iddelete = req.params.iddelete;
+  var iddelete = Number(req.params.iddelete);
   const theme = thememodel.findOne({ idtheme: iddelete });
   if (!theme)
     return res.status(200).json({
@@ -53,19 +53,24 @@ const deleteTheme = async (req, res, next) => {
       code: 500,
       message: "Not found theme to delete!",
     });
-    console.log(theme.listidDoc);
-    return;
-  if (theme.listidDoc.length != 0) {
-    res
-      .status(200)
-      .json({ success: false, code: 500, message: "Theme cannot be deleted" });
+
+  if (theme.listidDoc) {
+    if (theme.listidDoc.length > 0)
+      return res.status(200).json({
+        success: false,
+        code: 500,
+        message: "Theme cannot be deleted",
+      });
   }
-  const themeDel = thememodel.findOneAndRemove({ idtheme: iddelete });
+  const themeDel = await thememodel.findOneAndDelete({ idtheme: iddelete });
+
   if (!themeDel)
-    res
+    return res
       .status(200)
       .json({ success: false, code: 500, message: "Error delete theme!" });
-  res.status(200).json({ success: true, code: 200, message: "Delete success" });
+  return res
+    .status(200)
+    .json({ success: true, code: 200, message: "Delete success" });
 };
 
 const editTheme = async (req, res, next) => {
@@ -105,10 +110,10 @@ const editTheme = async (req, res, next) => {
       doc.subject = newName;
       doc.save();
     }
-    return res
-      .status(200)
-      .json({ success: true, code: 200, message: "Edit theme success" });
   }
+  return res
+    .status(200)
+    .json({ success: true, code: 200, message: "Edit theme success" });
 };
 
 module.exports = {
