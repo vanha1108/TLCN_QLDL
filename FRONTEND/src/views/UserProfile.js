@@ -40,9 +40,10 @@ class UserProfile extends React.Component {
   
 
   onChangeValue(event){
-    
+    var name = event.target.name
+    var value = event.target.value
     this.setState({
-        name: event.target.value
+        [name]: value
     });
   }
   onChangeValueEdit(event){
@@ -53,53 +54,75 @@ class UserProfile extends React.Component {
 
   onSubmit(event){
     event.preventDefault();
-        const a = { 
-          name:this.state.name,
-          idtheme:this.state.idtheme
-        };
-        console.log(a);
-        axios.post('/api/theme/addtheme', a)
-        .then((res) => {
-          if(res.data.success===true)
-          {
-            console.log(res.data);
-            toast.success('create theme success');
-
-          }
-          else
-          {
-            toast.error('create theme fail');
-          }
-            
-                
-        })
-        .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
+    console.log(this.state.idtheme)
+    console.log(this.state.name)
+    if(this.state.idtheme!==''&&this.state.name!==''){
+      const a = { 
+        name:this.state.name,
+        idtheme:this.state.idtheme
+      };
+      console.log(a);
+      axios.post('/api/theme/addtheme', a)
+      .then((res) => {
+        if(res.data.success===true)
+        {
+          console.log(res.data);
+          toast.success('create theme success');
+          this.setState({
+            idtheme:'',
+            name:''
+          });
+          
+          this.componentDidMount();
+        }
+        else
+        {
+          toast.error('create theme fail');
+        }    
+      })
+      .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
+    }
+    else{
+      alert('please fill all');
+    }   
         
   }
   onSubmitEdit(event) {
     event.preventDefault();
-    const b = {
-      newName:this.state.newName
-    };
-    console.log(b);
-    var idedit = this.state.dataedit.idtheme;
-    axios.put('/api/theme/edit/'+idedit,b)
-    .then((res)=>{
-      console.log(res.data.message)
-      if(res.data.success===true)
-      {
-        toast.success(`${res.data.message}`);
-      }
-      else
-      {
-        toast.error(`${res.data.message}`);
-      }
-    })
+    if(this.state.newName!==''){
+      const b = {
+        newName:this.state.newName
+      };
+      console.log(b);
+      var idedit = this.state.dataedit.idtheme;
+      axios.put('/api/theme/edit/'+idedit,b)
+      .then((res)=>{
+        console.log(res.data.message)
+        if(res.data.success===true)
+        {
+          toast.success(`${res.data.message}`);
+          this.componentDidMount();
+        }
+        else
+        {
+          toast.error(`${res.data.message}`);
+        }
+      });
+    }
+    else
+    {
+      alert('please fill all');
+    }
     
   }
 
   componentDidMount() {
-    axios.get('/api/theme/alltheme')
+    axios.get('/api/theme/alltheme',{
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: JSON.parse(localStorage.getItem("authorization")),
+          },
+        })
         .then(response => {
             if(response.data.success===true)
             {
@@ -128,7 +151,8 @@ class UserProfile extends React.Component {
   tabType=()=> this.state.data2.map((object, i) =>(
     
     <TableRowType 
-    onTest={()=>this.onClickEdit(object)} 
+    onTest={()=>this.onClickEdit(object)}
+    
     obj={object} key={i}
     onChangEdit={()=>this.thayTrangThaiEdit()}
     />  
@@ -199,13 +223,13 @@ class UserProfile extends React.Component {
         <FormGroup row>
           <Label for="exampleEmail" sm={4}>ID theme</Label>
           <Col sm={8}>
-            <Input onChange={this.onChangeValue} type="text" name="idtheme" id="" placeholder="ID theme" />
+            <Input value={this.state.idtheme} onChange={this.onChangeValue} type="text" name="idtheme" id="" placeholder="ID theme" />
           </Col>
           </FormGroup>             
           <FormGroup row>
           <Label for="exampleEmail" sm={4}>Name</Label>
           <Col sm={8}>
-            <Input onChange={this.onChangeValue} type="text" name="name" id="" placeholder="Name theme" />
+            <Input value={this.state.name} onChange={this.onChangeValue} type="text" name="name" id="" placeholder="Name theme" />
           </Col>
           </FormGroup>
 
@@ -217,14 +241,11 @@ class UserProfile extends React.Component {
       );
     }
   }
-  render() {
-    if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
-    return ( 
-        <div className="content">
-          <Row>
-            <ToastContainer/>
-            <Col md="4">
-              <Card>
+  hienThiFormMain=()=>{
+    if(this.state.trangthaiedit===false)
+    {
+      return(
+        <Card>
                 <CardHeader>
                   <FormGroup row>
                     <Label  md="10" tag="h6">List theme</Label>
@@ -247,11 +268,24 @@ class UserProfile extends React.Component {
                   </Table>
                 </CardBody>
               </Card>
+
+      );
+    }
+  }
+  render() {
+    if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
+    return ( 
+        <div className="content">
+          <Row>
+            <ToastContainer/>
+            <Col md="4">
+              {this.hienThiFormMain()}
+              {this.hienThiFormEdit()}
             </Col>
             
             <Col md="4">
               {this.hienThiForm()}
-              {this.hienThiFormEdit()}
+              
             </Col>
           </Row>
         </div>

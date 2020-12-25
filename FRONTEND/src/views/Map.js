@@ -78,7 +78,12 @@ class Map extends React.Component {
         formData.append('subject',this.state.subject)
         formData.getAll('iduser','filedoc','authorname','subject','note','idDoc')
         console.log(formData);
-        axios.post("/api/doc/upload", formData,{})
+        axios.post("/api/doc/upload", formData,{},{
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: JSON.parse(localStorage.getItem("authorization")),
+          },
+        })
         .then((res) => {
           console.log(res.data.message);
           if(res.data.arrDuplicate)
@@ -160,11 +165,6 @@ class Map extends React.Component {
                   <CardTitle tag="h3">UPLOAD FILE</CardTitle>
                 </CardHeader>
                 <CardBody>
-                <FormGroup>
-                    <Label tag="h5">ID user</Label>
-                    <Input  onChange={this.onchangValue} type="text" name="iduser" id="" placeholder="Input id document" />
-                
-                  </FormGroup>
                   <FormGroup>
                     <Label tag="h5">ID Document</Label>
                     <Input value={this.state.idDoc} onChange={this.onchangValue} type="text" name="idDoc" id="" placeholder="Input id document" />

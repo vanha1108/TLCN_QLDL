@@ -2,7 +2,8 @@
 import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
-
+//import { Redirect } from "react-router-dom";
+import history from "history.js";
 // reactstrap components
 import {
   Collapse,
@@ -67,6 +68,13 @@ class AdminNavbar extends React.Component {
       modalSearch: !this.state.modalSearch
     });
   };
+  signOut =()=> {
+    console.log('doday')
+    if (localStorage.getItem('authorization')) {
+      localStorage.removeItem('authorization');
+    }
+    return history.push("/login");
+  }
   render() {
     return (
       <>
@@ -123,11 +131,11 @@ class AdminNavbar extends React.Component {
                       <img alt="..." src={require("assets/img/anime3.png")} />
                     </div>
                     <b className="caret d-none d-lg-block d-xl-block" />
-                    <p className="d-lg-none">Log out</p>
+                    <p onClick={()=>this.signOut()} className="d-lg-none">Log out</p>
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-navbar" right tag="ul">
                     <NavLink tag="li">
-                      <DropdownItem className="nav-item">Log out</DropdownItem>
+                      <DropdownItem onClick={()=>this.signOut()} className="nav-item">Log out</DropdownItem>
                     </NavLink>
                   </DropdownMenu>
                 </UncontrolledDropdown>

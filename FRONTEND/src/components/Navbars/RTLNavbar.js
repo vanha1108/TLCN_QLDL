@@ -2,7 +2,7 @@
 import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
-
+import history from "history.js";
 // reactstrap components
 import {
   Button,
@@ -69,6 +69,13 @@ class AdminNavbar extends React.Component {
       modalSearch: !this.state.modalSearch
     });
   };
+  signOut =()=> {
+    console.log('doday')
+    if (localStorage.getItem('authorization')) {
+      localStorage.removeItem('authorization');
+    }
+    return history.push("/login");
+  }
   render() {
     return (
       <>

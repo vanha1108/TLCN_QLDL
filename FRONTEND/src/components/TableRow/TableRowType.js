@@ -21,7 +21,7 @@ class TableRowType extends Component {
         console.log(res.data.message);
         if(res.data.success===true){
           toast.success('delete success');
-        }
+          window.location.reload();}
         else
         {
           toast.error('delete failed');
@@ -49,9 +49,12 @@ class TableRowType extends Component {
           <Button onClick={this.delete} size="sm" color="danger">
             Delete
           </Button>
+          <ToastContainer/>
         </td>
-        <ToastContainer/>
+        
       </tr>
+      
+      
     );
   }
 }

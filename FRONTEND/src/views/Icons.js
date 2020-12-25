@@ -44,6 +44,7 @@ class Icons extends React.Component {
       newPassword: "",
       trangthai: false,
       trangthaiedit: false,
+      trangthaiedit1: false,
       newSex:"",
       newfirst:"",
       newlast:"",
@@ -122,12 +123,9 @@ class Icons extends React.Component {
         },
       })
       .then((response) => {
-        console.log("ok");
-        console.log(response.data.users);
         this.setState({ data1: response.data.users });
       })
       .catch(function (error) {
-        console.log("loi123");
         console.log(error);
       });
   }
@@ -138,6 +136,7 @@ class Icons extends React.Component {
         obj={object}
         key={i}
         onChangeTT={() => this.thayDoiTrangThaiEdit()}
+        onCHangeEdit={() => this.thayDoiTrangThaiEdit1()}
       />
     ));
 
@@ -218,8 +217,8 @@ class Icons extends React.Component {
                       <Input
                         type="radio"
                         name="sex"
-                        value={this.state.sex === "Male"}
-                        checked="Male"
+                        value="Male"
+                        checked={this.state.sex === "Male"}
                         onChange={this.onChangeValue}
                       />{" "}
                       Male
@@ -387,10 +386,168 @@ class Icons extends React.Component {
   }
   thayDoiTrangThaiEdit() {
     this.setState({
-      trangthaiedit: !this.state.trangthaiedit,
+      trangthaiedit: !this.state.trangthaiedit
     });
   }
-
+  thayDoiTrangThaiEdit1(){
+    this.setState({
+      trangthaiedit1: !this.state.trangthaiedit1
+    });
+  }
+  hienThiFormEdit(){
+    if(this.state.trangthaiedit1===true)
+    {
+      return(
+        <Card>
+            <CardHeader>
+              <CardTitle>
+                <Label tag="h4">Edit User</Label>
+              </CardTitle>
+            </CardHeader>
+            <CardBody>
+              <FormGroup row>
+                <Label sm={3}>FirstName</Label>
+                <Col sm={9}>
+                  <Input
+                    onChange={this.onChangeNewName}
+                    type="text"
+                    name="newfirst"
+                    id=""
+                    defaultValue={this.state.dataedituser.firstname ||''}
+                    placeholder="Input email"
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label sm={3}>LastName</Label>
+                <Col sm={9}>
+                  <Input
+                    onChange={this.onChangeValue}
+                    type="text"
+                    name="newlast"
+                    id=""
+                    defaultValue={this.state.dataedituser.lastname ||''}
+                    placeholder="Input email"
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup tag="fieldset" row>
+                <Label sm={4}>Sex</Label>
+                <Col sm={8}>
+                  <FormGroup row check>
+                    <Label sm={4} check>
+                      <Input
+                        id="rMale"
+                        type="radio"
+                        name="newsex"
+                        value="Male"
+                        //checked={this.state.newsex==="Male"}
+                        defaultChecked={this.state.newSex=this.hienThiSexMale()||this.state.newSex==="Male"}
+                        onChange={this.onChangeValue}
+                      />{" "}
+                      Male
+                    </Label>
+                    <Label sm={4} check>
+                      <Input
+                        id="rFemale"
+                        type="radio"
+                        name="newsex"
+                        value="Female"
+                        //checked={this.state.newsex==="Female"}
+                        defaultChecked={this.state.newSex=this.hienThiSexFemale()||this.state.newSex==="Female"}
+                        onChange={this.onChangeValue}
+                      />{" "}
+                      Female
+                    </Label>
+                  </FormGroup>
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label sm={3}>DOB</Label>
+                <Col sm={9}>
+                  <Input
+                    type="date"
+                    name="newdob"
+                    id=""
+                    value={this.hienThiDate() ||''}
+                    placeholder="date placeholder"
+                    onChange={this.onChangeValue}
+                  
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label sm={3}>Phone Number</Label>
+                <Col sm={9}>
+                  <Input
+                    onChange={this.onChangeValue}
+                    type="text"
+                    name="newphone"
+                    id=""
+                    defaultValue={this.state.dataedituser.phonenumber ||''}
+                    placeholder="Input email"
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label sm={3}>Address</Label>
+                <Col sm={9}>
+                  <Input
+                    onChange={this.onChangeValue}
+                    type="text"
+                    name="newaddress"
+                    id=""
+                    defaultValue={this.state.dataedituser.address ||''}
+                    placeholder="Input email"
+                  />
+                </Col>
+              </FormGroup>
+              <Button onClick={this.onSubmitEditUser} color="primary">
+                Update user
+              </Button>
+              <Button onClick={()=>this.thayDoiTrangThaiEdit1()}>Cancel</Button>
+            </CardBody>
+          </Card>
+      );
+    }
+  }
+  hienThiFormMain(){
+    if(this.state.trangthaiedit===false&&this.state.trangthaiedit1===false){
+      return(
+        <Col md="12">
+            <Card>
+              <CardHeader>
+                <FormGroup row>
+                  <Label md="10" tag="h6">
+                    List user
+                  </Label>
+                  {this.checkNut()}
+                </FormGroup>
+              </CardHeader>
+              <CardBody>
+                <Table className="tablesorter" responsive>
+                  <thead className="text-primary">
+                    <tr>
+                      <th>ID User</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Sex</th>
+                      <th>Date of birth</th>
+                      <th>Phone Number</th>
+                      <th>Address</th>
+                      <th>UserName</th>
+                      <th>Role</th>
+                      <th>action</th>
+                    </tr>
+                  </thead>
+                  <tbody>{this.tabUser()}</tbody>
+                </Table>
+              </CardBody>
+            </Card>
+          </Col>
+      );
+    }
+  }
   onSubmitEdit(event) {
     event.preventDefault();
     if(this.state.currentPassword!==''&&this.state.newPassword!=='') {
@@ -453,19 +610,34 @@ class Icons extends React.Component {
   }
   onSubmitEditUser(event){
     event.preventDefault();
-     const formEdit={
-      newfirst:this.state.newfirst,
-      newlast:this.state.newlast,
-      newsex:this.state.newSex,
-      newdob:this.state.newdob,
-      newphone:this.state.newphone,
-      newaddress:this.state.newaddress
-    };
-    console.log(formEdit)
-    axios.put('/api/user/edit/'+this.state.dataedituser.iduser,formEdit)
-    .then((res)=>{
-      toast.success('thành công');
-    })
+    if(this.state.newfirst!==''&&this.state.newlast!==''&&this.state.newSex!==''
+    &&this.state.newdob!==''&&this.state.newphone!==''&&this.state.newaddress!==''){
+      const formEdit={
+        newfirst:this.state.newfirst,
+        newlast:this.state.newlast,
+        newsex:this.state.newsex,
+        newdob:this.state.newdob,
+        newphone:this.state.newphone,
+        newaddress:this.state.newaddress
+      };
+      console.log(formEdit)
+      axios.put('/api/user/edit/'+this.state.dataedituser.iduser,formEdit)
+      .then((res)=>{
+        if(res.data.success===true)
+        {
+          toast.success(`${res.data.message}`);
+          this.componentDidMount();
+        }
+        else
+        {
+          toast.error(`${res.data.message}`);
+        }
+      })
+    }
+    else {
+      alert('fill all');
+    }
+
   }
   onChangeNewName(event){
     this.setState({
@@ -480,9 +652,9 @@ class Icons extends React.Component {
       console.log("MMMMM");
       return "Male";
     }
-    else if (this.state.dataedituser.sex===false) { 
-      console.log("RRRRRRMMM");
-      return "";}
+    // else if (this.state.dataedituser.sex===false) { 
+    //   console.log("RRRRRRMMM");
+    //   return "";}
   
   }
   hienThiSexFemale=()=>{
@@ -494,8 +666,9 @@ class Icons extends React.Component {
     if(this.state.dataedituser.sex===false) {
       console.log("FFFFFFFF");
       return "Female";
-    } else if(this.state.dataedituser.sex===true) {console.log("RRRRRRRRRFFFMMM");
-  return "";}
+    } 
+  //   else if(this.state.dataedituser.sex===true) {console.log("RRRRRRRRRFFFMMM");
+  // return "";}
     
   }
   render() {
@@ -503,168 +676,14 @@ class Icons extends React.Component {
     return (
       <div className="content">
         <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader>
-                <FormGroup row>
-                  <Label md="10" tag="h6">
-                    List user
-                  </Label>
-                  {this.checkNut()}
-                </FormGroup>
-              </CardHeader>
-              <CardBody>
-                <Table className="tablesorter" responsive>
-                  <thead className="text-primary">
-                    <tr>
-                      <th>ID User</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Sex</th>
-                      <th>Date of birth</th>
-                      <th>Phone Number</th>
-                      <th>Address</th>
-                      <th>UserName</th>
-                      <th>Role</th>
-                      <th>action</th>
-                    </tr>
-                  </thead>
-                  <tbody>{this.tabUser()}</tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
+          {this.hienThiFormMain()}
           <Col md="4">
             {this.hienThiForm()}
             {this.hienThiFormChangePassword()}
+            {this.hienThiFormEdit()}
           </Col>
           <Col md="4">
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <Label tag="h4">Edit User</Label>
-              </CardTitle>
-            </CardHeader>
-            <CardBody>
-              <FormGroup row>
-                <Label sm={3}>FirstName</Label>
-                <Col sm={9}>
-                  <Input
-                    onChange={this.onChangeNewName}
-                    type="text"
-                    name="newfirst"
-                    id=""
-                    defaultValue={this.state.dataedituser.firstname ||''}
-                    placeholder="Input email"
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label sm={3}>LastName</Label>
-                <Col sm={9}>
-                  <Input
-                    onChange={this.onChangeValue}
-                    type="text"
-                    name="newlast"
-                    id=""
-                    defaultValue={this.state.dataedituser.lastname ||''}
-                    placeholder="Input email"
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup tag="fieldset" row>
-                <Label sm={4}>Sex</Label>
-                <Col sm={8}>
-                  <FormGroup row check>
-                    <Label sm={4} check>
-                      <Input
-                        id="rMale"
-                        type="radio"
-                        name="newsex"
-                        //defaultValue={this.hienThiSex1() ||''}
-                        //checked={this.state.newsex==="Male"}
-                        defaultchecked={this.hienThiSexMale}
-                        defaultChecked={this.hienThiSexMale()}
-                        onChange={this.onChangeValue}
-                      />{" "}
-                      Male
-                    </Label>
-                    <Label sm={4} check>
-                      <Input
-                        id="rFemale"
-                        type="radio"
-                        name="newsex"
-            
-                        //checked={this.state.newsex==="Female"}
-                        defaultchecked={this.hienThiSexFemale}
-                        defaultChecked={this.hienThiSexFemale()}
-                        onChange={this.onChangeValue}
-                      />{" "}
-                      Female
-                    </Label>
-                  </FormGroup>
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label sm={3}>DOB</Label>
-                <Col sm={9}>
-                  <Input
-                    type="date"
-                    name="newdob"
-                    id=""
-                    value={this.hienThiDate() ||''}
-                    placeholder="date placeholder"
-                    onChange={this.onChangeValue}
-                  
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label sm={3}>Phone Number</Label>
-                <Col sm={9}>
-                  <Input
-                    onChange={this.onChangeValue}
-                    type="text"
-                    name="newphone"
-                    id=""
-                    defaultValue={this.state.dataedituser.phonenumber ||''}
-                    placeholder="Input email"
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label sm={3}>Address</Label>
-                <Col sm={9}>
-                  <Input
-                    onChange={this.onChangeValue}
-                    type="text"
-                    name="newaddress"
-                    id=""
-                    defaultValue={this.state.dataedituser.address ||''}
-                    placeholder="Input email"
-                  />
-                </Col>
-              </FormGroup>
-              {/* <FormGroup row>
-                <Label sm={3}>Role</Label>
-                <Col sm={9}>
-                  <Input
-                    value={this.state.dataedituser.role ||''}
-                    onChange={this.onChangeValue}
-                    type="select"
-                    name="newrole"
-                    id=""
-                  >
-                    <option>1</option>
-                    <option>2</option>
-                  </Input>
-                </Col>
-              </FormGroup> */}
-              <Button onClick={this.onSubmitEditUser} color="primary">
-                Add user
-              </Button>
-            </CardBody>
-          </Card>
+          
           </Col>
 
           <ToastContainer />

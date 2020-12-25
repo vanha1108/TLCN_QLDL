@@ -8,8 +8,10 @@ class TableRowUser extends Component {
         this.props.onView();
         this.props.onChangeTT();
     }
+    
     onClickEdit=()=>{
         this.props.onView();
+        this.props.onCHangeEdit();
     }
     hienThiRole =()=>{
         if(this.props.obj.role ===1) {return "admin";}

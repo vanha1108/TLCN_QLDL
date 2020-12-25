@@ -2,7 +2,7 @@
 import Icons from "views/Icons.js";
 import Notifications from "views/Notifications.js";
 import UserProfile from "views/UserProfile.js";
-
+import Maps from "views/Map.js"
 var routes = [  
   {
     path: "/icons",
@@ -19,6 +19,14 @@ var routes = [
     icon: "tim-icons icon-bell-55",
     component: Notifications,
     layout: "/admin"
+  },
+  {
+    path: "/map",
+    name: "Upload Document",
+    rtlName: "إخطارات",
+    icon: "tim-icons icon-bell-55",
+    component: Maps,
+    layout: "/user"
   },
   {
     path: "/user-profile",
