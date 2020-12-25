@@ -16,7 +16,7 @@ const addTheme = async (req, res, next) => {
   // Kiem tra idtheme da co chua
   const arrIDTheme = [];
   const themes = await thememodel.find();
-  if (users) {
+  if (themes) {
     for (let t in themes) {
       arrIDTheme.push(themes[t].idtheme);
     }
