@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Button } from "reactstrap";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 class TableRowType extends Component {
   constructor(props) {
     super(props);
@@ -13,9 +14,19 @@ class TableRowType extends Component {
   delete() {
     var result = window.confirm("Are you sure you want to delete")
     if(result){
+      var iddelete = this.props.obj.idtheme;
       axios
-      .get("/api/theme/deletetheme/" + this.props.obj._id)
-      .then((res)=>{console.log(res.data.message);})
+      .delete("/api/theme/deletetheme/" + iddelete)
+      .then((res)=>{
+        console.log(res.data.message);
+        if(res.data.success===true){
+          toast.success('delete success');
+        }
+        else
+        {
+          toast.error('delete failed');
+        }
+      })
       .catch((err) => console.log(err));
     }
     else
@@ -25,7 +36,10 @@ class TableRowType extends Component {
   }
   render() {
     return (
+      
       <tr>
+        
+        <td>{this.props.obj.idtheme}</td>
         <td>{this.props.obj.name}</td>
 
         <td>
@@ -36,6 +50,7 @@ class TableRowType extends Component {
             Delete
           </Button>
         </td>
+        <ToastContainer/>
       </tr>
     );
   }

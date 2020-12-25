@@ -25,6 +25,8 @@ class Icons extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onSelectValue = this.onSelectValue.bind(this);
     this.onSubmitEdit = this.onSubmitEdit.bind(this);
+    this.onChangeNewName= this.onChangeNewName.bind(this);
+    this.onSubmitEditUser=this.onSubmitEditUser.bind(this);
     this.state = {
       data1: [],
       dataedituser: [],
@@ -42,7 +44,13 @@ class Icons extends React.Component {
       newPassword: "",
       trangthai: false,
       trangthaiedit: false,
-      newSex:""
+      newSex:"",
+      newfirst:"",
+      newlast:"",
+      newsex:"",
+      newdob:"",
+      newphone:"",
+      newaddress:"",
     };
   }
 
@@ -72,7 +80,7 @@ class Icons extends React.Component {
         iduser: this.state.iduser,
         firstname: this.state.firstname,
         lastname: this.state.lastname,
-        sex1: this.state.sex,
+        sex: this.state.sex,
         dob: this.state.dob,
         phonenumber: this.state.phonenumber,
         address: this.state.address,
@@ -210,8 +218,8 @@ class Icons extends React.Component {
                       <Input
                         type="radio"
                         name="sex"
-                        value="Male"
-                        checked={this.state.sex === "Male"}
+                        value={this.state.sex === "Male"}
+                        checked="Male"
                         onChange={this.onChangeValue}
                       />{" "}
                       Male
@@ -432,6 +440,7 @@ class Icons extends React.Component {
       var a = document.getElementById('rMale');
       var b = document.getElementById('rFemale');
       a.checked=true;
+      //a.setAttribute(checked)
       b.checked=false;
       return;
     }  else if(this.state.dataedituser.sex===false) {
@@ -442,11 +451,55 @@ class Icons extends React.Component {
       return;
     }
   }
-  checkSex=()=>{
+  onSubmitEditUser(event){
+    event.preventDefault();
+     const formEdit={
+      newfirst:this.state.newfirst,
+      newlast:this.state.newlast,
+      newsex:this.state.newSex,
+      newdob:this.state.newdob,
+      newphone:this.state.newphone,
+      newaddress:this.state.newaddress
+    };
+    console.log(formEdit)
+    axios.put('/api/user/edit/'+this.state.dataedituser.iduser,formEdit)
+    .then((res)=>{
+      toast.success('thành công');
+    })
+  }
+  onChangeNewName(event){
+    this.setState({
+      newfirst:event.target.value
+    });
+  }
+  hienThiSexMale=()=>{
+    if(this.state.dataedituser.sex == null)
+      return "";
+      console.log("'DDD");
+    if(this.state.dataedituser.sex===true) {
+      console.log("MMMMM");
+      return "Male";
+    }
+    else if (this.state.dataedituser.sex===false) { 
+      console.log("RRRRRRMMM");
+      return "";}
+  
+  }
+  hienThiSexFemale=()=>{
 
+    if(this.state.dataedituser.sex==null) {
+      console.log(this.state.dataedituser.sex);
+      return "";
+    }
+    if(this.state.dataedituser.sex===false) {
+      console.log("FFFFFFFF");
+      return "Female";
+    } else if(this.state.dataedituser.sex===true) {console.log("RRRRRRRRRFFFMMM");
+  return "";}
+    
   }
   render() {
-    if (!localStorage.getItem("authorization")) return <Redirect to="/login" />;
+    if (!localStorage.getItem("authorization")) return <Redirect to="/login" />; 
     return (
       <div className="content">
         <Row>
@@ -494,27 +547,14 @@ class Icons extends React.Component {
             </CardHeader>
             <CardBody>
               <FormGroup row>
-                <Label sm={3}>ID user</Label>
-                <Col sm={9}>
-                  <Input
-                    onChange={this.onChangeValue}
-                    type="text"
-                    name="iduser"
-                    id=""
-                    value={this.state.dataedituser.iduser ||''}
-                    placeholder="Input email"
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
                 <Label sm={3}>FirstName</Label>
                 <Col sm={9}>
                   <Input
-                    onChange={this.onChangeValue}
+                    onChange={this.onChangeNewName}
                     type="text"
-                    name="firstname"
+                    name="newfirst"
                     id=""
-                    value={this.state.dataedituser.firstname ||''}
+                    defaultValue={this.state.dataedituser.firstname ||''}
                     placeholder="Input email"
                   />
                 </Col>
@@ -525,9 +565,9 @@ class Icons extends React.Component {
                   <Input
                     onChange={this.onChangeValue}
                     type="text"
-                    name="lastname"
+                    name="newlast"
                     id=""
-                    value={this.state.dataedituser.lastname ||''}
+                    defaultValue={this.state.dataedituser.lastname ||''}
                     placeholder="Input email"
                   />
                 </Col>
@@ -540,9 +580,11 @@ class Icons extends React.Component {
                       <Input
                         id="rMale"
                         type="radio"
-                        name="rMale"
-                        value={this.hienThiSex1() ||''}
-                        
+                        name="newsex"
+                        //defaultValue={this.hienThiSex1() ||''}
+                        //checked={this.state.newsex==="Male"}
+                        defaultchecked={this.hienThiSexMale}
+                        defaultChecked={this.hienThiSexMale()}
                         onChange={this.onChangeValue}
                       />{" "}
                       Male
@@ -551,9 +593,11 @@ class Icons extends React.Component {
                       <Input
                         id="rFemale"
                         type="radio"
-                        name="rFemale"
-                        
-                        
+                        name="newsex"
+            
+                        //checked={this.state.newsex==="Female"}
+                        defaultchecked={this.hienThiSexFemale}
+                        defaultChecked={this.hienThiSexFemale()}
                         onChange={this.onChangeValue}
                       />{" "}
                       Female
@@ -566,11 +610,12 @@ class Icons extends React.Component {
                 <Col sm={9}>
                   <Input
                     type="date"
-                    name="dob"
+                    name="newdob"
                     id=""
                     value={this.hienThiDate() ||''}
                     placeholder="date placeholder"
                     onChange={this.onChangeValue}
+                  
                   />
                 </Col>
               </FormGroup>
@@ -580,9 +625,9 @@ class Icons extends React.Component {
                   <Input
                     onChange={this.onChangeValue}
                     type="text"
-                    name="phonenumber"
+                    name="newphone"
                     id=""
-                    value={this.state.dataedituser.phonenumber ||''}
+                    defaultValue={this.state.dataedituser.phonenumber ||''}
                     placeholder="Input email"
                   />
                 </Col>
@@ -593,29 +638,29 @@ class Icons extends React.Component {
                   <Input
                     onChange={this.onChangeValue}
                     type="text"
-                    name="address"
+                    name="newaddress"
                     id=""
-                    value={this.state.dataedituser.address ||''}
+                    defaultValue={this.state.dataedituser.address ||''}
                     placeholder="Input email"
                   />
                 </Col>
               </FormGroup>
-              <FormGroup row>
+              {/* <FormGroup row>
                 <Label sm={3}>Role</Label>
                 <Col sm={9}>
                   <Input
                     value={this.state.dataedituser.role ||''}
                     onChange={this.onChangeValue}
                     type="select"
-                    name="role"
+                    name="newrole"
                     id=""
                   >
                     <option>1</option>
                     <option>2</option>
                   </Input>
                 </Col>
-              </FormGroup>
-              <Button onClick={this.onSubmit} color="primary">
+              </FormGroup> */}
+              <Button onClick={this.onSubmitEditUser} color="primary">
                 Add user
               </Button>
             </CardBody>

@@ -60,9 +60,18 @@ class UserProfile extends React.Component {
         console.log(a);
         axios.post('/api/theme/addtheme', a)
         .then((res) => {
-            
+          if(res.data.success===true)
+          {
             console.log(res.data);
-            toast.success('Upload Successful');    
+            toast.success('create theme success');
+
+          }
+          else
+          {
+            toast.error('create theme fail');
+          }
+            
+                
         })
         .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
         
@@ -83,8 +92,17 @@ class UserProfile extends React.Component {
   componentDidMount() {
     axios.get('/api/theme/alltheme')
         .then(response => {
-            console.log(response.data);
-            this.setState({data2: response.data});
+            if(response.data.success===true)
+            {
+              console.log(response.data.listtheme);
+              this.setState({data2: response.data.listtheme});
+              
+            }
+            else
+            {
+              toast.error('error');
+            }
+            
         })
         .catch(function (error) {
             console.log(error);
@@ -202,7 +220,8 @@ class UserProfile extends React.Component {
                 <CardBody>
                   <Table className="tablesorter" responsive>
                     <thead className="text-primary">
-                      <tr>                                           
+                      <tr>
+                        <th>ID Theme</th>                                      
                         <th>Name</th>
                         <th>action</th>
                       </tr>

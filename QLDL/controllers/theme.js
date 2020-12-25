@@ -16,7 +16,7 @@ const addTheme = async (req, res, next) => {
   // Kiem tra idtheme da co chua
   const arrIDTheme = [];
   const themes = await thememodel.find();
-  if (themes) {
+  if (users) {
     for (let t in themes) {
       arrIDTheme.push(themes[t].idtheme);
     }
@@ -48,11 +48,13 @@ const deleteTheme = async (req, res, next) => {
   var iddelete = req.params.iddelete;
   const theme = thememodel.findOne({ idtheme: iddelete });
   if (!theme)
-    res.status(200).json({
+    return res.status(200).json({
       success: false,
       code: 500,
       message: "Not found theme to delete!",
     });
+    console.log(theme.listidDoc);
+    return;
   if (theme.listidDoc.length != 0) {
     res
       .status(200)
