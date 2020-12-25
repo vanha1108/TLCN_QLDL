@@ -9,6 +9,7 @@ var euclid = require("./../handling_data/euclid");
 var special = require("./../handling_data/special_chars");
 var fs = require("fs");
 var pdfParse = require("pdf-parse");
+const JWT = require("jsonwebtoken");
 
 const readDocument = async (filePath) => {
   var content = "";
@@ -123,7 +124,7 @@ const saveDocument = async (
 
     var data = new docmodel();
     data.idDoc = idDoc;
-    data.iduser = Number(req.user.iduser);
+    //data.iduser = Number(req.user.iduser);
     data.subject = subject;
     data.filename = nameFile;
     data.path = path;
@@ -236,6 +237,19 @@ const checkDuplicate = async (content) => {
 };
 
 const uploadDocument = async (req, res, next) => {
+  // Mã hoá token để lấy iduser
+  const headers = req.headers;
+  console.log(headers);
+  if (!headers.authorization) {
+    return res.status(200).json({
+      code: 400,
+      message: "Token khong hop le hoac khong co",
+      success: false,
+    });
+  }
+  const x = JWT.decode(headers.authorization);
+  console.log(x);
+  //
   var id = parseInt(req.body.idDoc);
   var filename = req.file.originalname;
   var subject = req.body.subject;

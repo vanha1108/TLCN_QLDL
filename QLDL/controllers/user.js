@@ -37,7 +37,6 @@ const changePassword = async (req, res, next) => {
 
 const getAllUser = async (req, res, next) => {
   const headers = req.headers;
-
   if (!headers.authorization) {
     return res.status(200).json({
       code: 400,
@@ -126,6 +125,7 @@ const signUp = async (req, res, next) => {
     next(error);
   }
 };
+
 const encodedToken = async (userID, times) => {
   return JWT.sign(
     {
@@ -159,7 +159,7 @@ const editUser = async (req, res, next) => {
   var newLast = req.body.newlast;
   var newSex = req.body.newsex;
   if (newSex == "Female") {
-    sex = false;
+    newSex = false;
   } else {
     newSex = true;
   }
