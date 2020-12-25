@@ -42,8 +42,8 @@ class Notifications extends React.Component {
   componentDidMount() {
     axios.get('/api/doc/all')
         .then(response => {
-            console.log(response.data);
-            this.setState({data: response.data});
+            console.log(response.data.listdoc);
+            this.setState({data: response.data.listdoc});
         })
         .catch(function (error) {
             console.log(error);

@@ -58,8 +58,8 @@ class Map extends React.Component {
   componentDidMount() {
     axios.get('/api/theme/alltheme')
         .then(response => {
-            console.log(response.data);
-            this.setState({datalist: response.data});
+            console.log(response.data.listtheme);
+            this.setState({datalist: response.data.listtheme});
             
         })
         .catch(function (error) {
@@ -80,6 +80,7 @@ class Map extends React.Component {
         console.log(formData);
         axios.post("/api/doc/upload", formData,{})
         .then((res) => {
+          console.log(res.data.message);
           if(res.data.arrDuplicate)
           {           
             this.setState({datacheck: res.data.arrDuplicate,disabled:false});
@@ -88,7 +89,7 @@ class Map extends React.Component {
           else{
             this.setState({idDoc:'',authorname:'',note:''})
             toast.success('Upload Successful')
-            window.location.reload();
+            //window.location.reload();
           } 
         })
         .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
@@ -161,7 +162,7 @@ class Map extends React.Component {
                 <CardBody>
                 <FormGroup>
                     <Label tag="h5">ID user</Label>
-                    <Input value={this.state.idDoc} onChange={this.onchangValue} type="text" name="iduser" id="" placeholder="Input id document" />
+                    <Input  onChange={this.onchangValue} type="text" name="iduser" id="" placeholder="Input id document" />
                 
                   </FormGroup>
                   <FormGroup>

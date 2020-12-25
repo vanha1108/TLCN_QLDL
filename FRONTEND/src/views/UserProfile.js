@@ -82,9 +82,18 @@ class UserProfile extends React.Component {
       newName:this.state.newName
     };
     console.log(b);
-    axios.post('/api/theme/edit/'+this.state.dataedit._id,b)
+    var idedit = this.state.dataedit.idtheme;
+    axios.put('/api/theme/edit/'+idedit,b)
     .then((res)=>{
-      console.log(res.data.message);
+      console.log(res.data.message)
+      if(res.data.success===true)
+      {
+        toast.success(`${res.data.message}`);
+      }
+      else
+      {
+        toast.error(`${res.data.message}`);
+      }
     })
     
   }
@@ -100,7 +109,7 @@ class UserProfile extends React.Component {
             }
             else
             {
-              toast.error('error');
+              toast.error(`${response.data.message}`);
             }
             
         })
@@ -154,7 +163,13 @@ class UserProfile extends React.Component {
                       <Label tag="h4">Edit Theme</Label>
                     </CardTitle>
                   </CardHeader>
-                  <CardBody>                
+                  <CardBody>
+                  <FormGroup row>
+                    <Label for="exampleEmail" sm={4}>Name</Label>
+                    <Col sm={8}>
+                      <Input disabled defaultValue={this.state.dataedit.idtheme} onChange={this.onChangeValueEdit} type="text" id="" placeholder="nhập tên theme" />
+                    </Col>
+                    </FormGroup>            
                     <FormGroup row>
                     <Label for="exampleEmail" sm={4}>Name</Label>
                     <Col sm={8}>
