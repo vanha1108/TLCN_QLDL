@@ -29,8 +29,8 @@ async function update_warehouse() {
       ware.allText.push(temp);
       sum++;
     }
-    data.total = sum;
-    data.save();
+    ware.total = sum;
+    ware.save();
   }
 
   for (let doc in documents) {
