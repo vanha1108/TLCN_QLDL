@@ -36,7 +36,7 @@ class Notifications extends React.Component {
       datatheme:[],
       trangthai:false,
       trangthaiserarch:false,
-      idsubjectView:1
+      idsubjectView:"1"
     }
   }
   // componentDidMount() {
@@ -52,11 +52,9 @@ class Notifications extends React.Component {
 
   onSubmitTheme(event){
     event.preventDefault();
-    const theme = {
-      idsubjectView:this.state.idsubjectView
-    };
-    console.log(theme);
-    axios.get('/api/doc/subject',theme)
+    
+    console.log(this.state.idsubjectView);
+    axios.get('/api/doc/subject',{idsubjectView:this.state.idsubjectView})
     .then((res)=>{
       console.log(res.data);
     })
