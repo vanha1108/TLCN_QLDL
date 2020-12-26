@@ -356,23 +356,22 @@ const dowloadDocument = async (req, res, next) => {
 
 const deleteDocument = async (req, res, next) => {
   // Kiem tra co phai user upload document can xoa
-  // const headers = req.headers;
-  // if (!headers.authorization) {
-  //   return res.status(200).json({
-  //     code: 400,
-  //     message: "Token khong hop le hoac khong co",
-  //     success: false,
-  //   });
-  // }
-  // const decodeToken = JWT.decode(headers.authorization);
-  // const userCurrent = await User.findById(decodeToken.sub);
-  // if (!userCurrent) {
-  //   return res
-  //     .status(200)
-  //     .json({ success: false, code: 500, message: "Not found user current" });
-  // }
+  const headers = req.headers;
+  if (!headers.authorization) {
+    return res.status(200).json({
+      code: 400,
+      message: "Token khong hop le hoac khong co",
+      success: false,
+    });
+  }
+  const decodeToken = JWT.decode(headers.authorization);
+  const userCurrent = await User.findById(decodeToken.sub);
+  if (!userCurrent) {
+    return res
+      .status(200)
+      .json({ success: false, code: 500, message: "Not found user current" });
+  }
   var iddelete = req.params.iddelete;
-  const userCurrent = await UserController.getUserCurrent();
   const id = userCurrent.iduser;
   const check = await docmodel.findOne({ idDoc: iddelete });
   if (!check) {
@@ -397,7 +396,7 @@ const deleteDocument = async (req, res, next) => {
   }
   const idDel = Number(doc.idDoc);
   const theme = await thememodel.findOne({ idtheme: doc.idsubject });
-
+  console.log(theme.listidDoc);
   if (theme) {
     if (theme.listidDoc[0] != null) {
       var index = theme.listidDoc.indexOf(idDel);
