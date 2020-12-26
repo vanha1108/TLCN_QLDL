@@ -80,7 +80,6 @@ class Login extends Component {
   
   render() {
       return (
-            
             <div className="container mt-5 mr-0" id="content">
                 <Row>
                     <Col md="5">

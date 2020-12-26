@@ -56,7 +56,12 @@ class Map extends React.Component {
     })
   }
   componentDidMount() {
-    axios.get('/api/theme/alltheme')
+    axios.get('/api/theme/alltheme',{
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: JSON.parse(localStorage.getItem("authorization")),
+          },
+        })
         .then(response => {
             console.log(response.data.listtheme);
             this.setState({datalist: response.data.listtheme});
