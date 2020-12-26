@@ -36,7 +36,8 @@ class Notifications extends React.Component {
       datatheme:[],
       trangthai:false,
       trangthaiserarch:false,
-      idsubjectView:"1"
+      idsubjectView:"1",
+      datadoc:[]
     }
   }
   // componentDidMount() {
@@ -57,6 +58,9 @@ class Notifications extends React.Component {
     axios.get('/api/doc/subject/'+idsubject)
     .then((res)=>{
       console.log(res.data);
+      this.setState({
+        datadoc:res.data.lstDoc
+      });
     })
   }
   onChangeValue(event){
@@ -86,7 +90,7 @@ class Notifications extends React.Component {
     })
   }
   tabRow() {
-    return this.state.data.map(function (object, i) {
+    return this.state.datadoc.map(function (object, i) {
         return <TableRow obj={object} key={i}/>;
     });
   }
@@ -153,7 +157,6 @@ class Notifications extends React.Component {
     <TableRowSearch obj={object} key={i}/>
   )
 )
-  
 
   render() {
     if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
@@ -177,8 +180,6 @@ class Notifications extends React.Component {
                   <Button onClick={this.onSubmit}>search</Button>
                  
                 </Col>
-                
-                
               </FormGroup>
               </CardBody>
             </Card> 
