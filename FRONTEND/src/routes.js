@@ -26,7 +26,7 @@ var routes = [
     rtlName: "إخطارات",
     icon: "tim-icons icon-bell-55",
     component: Maps,
-    layout: "/user"
+    layout: "/admin"
   },
   {
     path: "/user-profile",

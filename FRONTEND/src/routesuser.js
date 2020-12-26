@@ -25,7 +25,7 @@ var routesuser = [
     rtlName: "ملف تعريفي للمستخدم",
     icon: "tim-icons icon-single-02",
     component: UserProfile,
-    layout: "/admin"
+    layout: "/user"
   }
 ];
 export default routesuser;

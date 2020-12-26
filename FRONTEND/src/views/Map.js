@@ -36,7 +36,7 @@ class Map extends React.Component {
       filedoc:'',
       authorname:'',
       note:'',
-      subject:'',
+      idsubject:'',
       idDoc:'',
       disabled:true,
       iduser:''
@@ -80,8 +80,8 @@ class Map extends React.Component {
         formData.append('authorname',this.state.authorname)
         formData.append('note',this.state.note)
         formData.append('idDoc',this.state.idDoc)
-        formData.append('subject',this.state.subject)
-        formData.getAll('iduser','filedoc','authorname','subject','note','idDoc')
+        formData.append('idsubject',this.state.idsubject)
+        formData.getAll('iduser','filedoc','authorname','idsubject','note','idDoc')
         console.log(formData);
         axios.post("/api/doc/upload", formData,{
           headers: {
@@ -113,8 +113,8 @@ class Map extends React.Component {
     formData1.append('authorname',this.state.authorname)
     formData1.append('note',this.state.note)
     formData1.append('idDoc',this.state.idDoc)
-    formData1.append('subject',this.state.subject)
-    formData1.getAll('filedoc','authorname','subject','note','idDoc')
+    formData1.append('idsubject',this.state.idsubject)
+    formData1.getAll('filedoc','authorname','idsubject','note','idDoc')
     console.log(formData1);
     axios.post("/api/doc/save", formData1,{
       headers: {
@@ -145,6 +145,7 @@ class Map extends React.Component {
                 <tr>
                   <th>Filename</th>
                   <th>Message</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -191,9 +192,9 @@ class Map extends React.Component {
                   </FormGroup>
                   <FormGroup>
                     <Label tag="h5">Theme</Label>
-                    <Input value={this.state.subject} onChange={this.onchangValue} type="select" name="subject" id="">
+                    <Input value={this.state.idsubject} onChange={this.onchangValue} type="select" name="idsubject" id="">
                       {this.state.datalist.map((list,i) => (
-                          <option key={i} value={list.name}>{list.name}</option>
+                          <option key={i} value={list.idtheme}>{list.name}</option>
                       ))}
                     </Input>
                   </FormGroup>

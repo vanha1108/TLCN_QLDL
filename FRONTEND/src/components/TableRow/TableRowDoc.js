@@ -2,17 +2,20 @@ import React, { Component } from 'react';
 import {Button} from "reactstrap";
 import axios from 'axios';
 //import download from 'js-file-download';
+import { ToastContainer, toast } from "react-toastify";
 class TableRowDoc extends Component {
     constructor(props) {
         super(props);
         //this.delete = this.delete.bind(this);
         this.download1 = this.download1.bind(this);
+        this.delete = this.delete.bind(this);
     }
     
     download1() {
         //axios.get('/api/doc/dowload/'+this.props.obj.idDoc);
+        var iddowload = this.props.obj.idDoc;
         axios({
-            url:'/api/doc/dowload/'+this.props.obj.idDoc,
+            url:'/api/doc/dowload/'+iddowload,
             moethod:'GET',
             responseType:'blob',
         }).then((response) => {
@@ -22,8 +25,32 @@ class TableRowDoc extends Component {
             link.setAttribute('download','file.docx');
             document.body.appendChild(link);
             link.click();
-        }).catch(console.log('khong tai dc'));
+            toast.success('Download success');
+        })
     }
+    delete() {
+        var result = window.confirm("Are you sure you want to delete")
+        if(result){
+          var iddelete = this.props.obj.idDoc;
+          axios
+          .delete("/api/doc/delete/" + iddelete)
+          .then((res)=>{
+            console.log(res.data.message);
+            if(res.data.success===true){
+              toast.success('delete success');
+              window.location.reload();}
+            else
+            {
+              toast.error(`${res.data.message}`);
+            }
+          })
+          .catch((err) => console.log(err));
+        }
+        else
+        {
+          console.log('vao day')
+        }
+      }
     render() {
         return (
             <tr>
@@ -41,8 +68,9 @@ class TableRowDoc extends Component {
                 </td>
                 <td>
                     <Button size="sm" color="info">Edit</Button>
-                    <Button size="sm" color="danger">Delete</Button>
+                    <Button size="sm" onClick={this.delete} color="danger">Delete</Button>
                     <Button size="sm" onClick={this.download1} color="success">Download</Button>
+                    <ToastContainer />
                 </td>
                 
             </tr>
