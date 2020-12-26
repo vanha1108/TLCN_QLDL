@@ -36,7 +36,7 @@ class Notifications extends React.Component {
       datatheme:[],
       trangthai:false,
       trangthaiserarch:false,
-      idsubjectView:''
+      idsubjectView:1
     }
   }
   // componentDidMount() {
@@ -53,7 +53,7 @@ class Notifications extends React.Component {
   onSubmitTheme(event){
     event.preventDefault();
     const theme = {
-      idsubjectView:this.state.subjectView
+      idsubjectView:this.state.idsubjectView
     };
     console.log(theme);
     axios.get('/api/doc/subject',theme)
@@ -68,7 +68,7 @@ class Notifications extends React.Component {
   }
   onChangeValueTheme(event){
     this.setState({
-      subjectView:event.target.value
+      idsubjectView:event.target.value
     });
   }
   onSubmit(event){
@@ -194,7 +194,7 @@ class Notifications extends React.Component {
                   <FormGroup row>
                     <Label md="6"  sm={6} tag="h6">document list</Label>
                       <Col md="6" sm={6}>
-                        <Input md="2" value={this.state.subjectView} onChange={this.onChangeValueTheme} type="select" name="subjectView" id="">
+                        <Input md="2" value={this.state.idsubjectView} onChange={this.onChangeValueTheme} type="select" name="idsubjectView" id="">
                               {this.state.datatheme.map((list,i) => (
                                   <option key={i} value={list.idtheme}>{list.name}</option>
                               ))}
