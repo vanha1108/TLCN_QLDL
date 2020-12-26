@@ -1,15 +1,16 @@
-var filereader = require("./../document/filereader");
-var file = require("./../document/readfile");
-var vector = require("./../handling_data/vector");
-var sw = require("./../handling_data/stopword");
-var docmodel = require("./../model/document");
-var warehouse = require("./../model/warehouse");
-var thememodel = require("./../model/theme");
-var euclid = require("./../handling_data/euclid");
-var special = require("./../handling_data/special_chars");
-var fs = require("fs");
-var pdfParse = require("pdf-parse");
+const filereader = require("./../document/filereader");
+const file = require("./../document/readfile");
+const vector = require("./../handling_data/vector");
+const sw = require("./../handling_data/stopword");
+const docmodel = require("./../model/document");
+const warehouse = require("./../model/warehouse");
+const thememodel = require("./../model/theme");
+const euclid = require("./../handling_data/euclid");
+const special = require("./../handling_data/special_chars");
+const fs = require("fs");
+const pdfParse = require("pdf-parse");
 const JWT = require("jsonwebtoken");
+const User = require("./../model/user");
 
 const readDocument = async (filePath) => {
   var content = "";
@@ -34,7 +35,23 @@ const readDocument = async (filePath) => {
 
 const saveDuplicate = async (req, res, next) => {
   var id = parseInt(req.body.idDoc);
-  var iduser = Number(req.user.iduser);
+  // Giải mã token để lấy iduser
+  const headers = req.headers;
+  if (!headers.authorization) {
+    return res.status(200).json({
+      code: 400,
+      message: "Token khong hop le hoac khong co",
+      success: false,
+    });
+  }
+  const decodeToken = JWT.decode(headers.authorization);
+  const userCurrent = await User.findById(decodeToken.sub);
+  if (!userCurrent) {
+    return res
+      .status(200)
+      .json({ success: false, code: 500, message: "Not found user current" });
+  }
+  const iduser = userCurrent.iduser;
   var filename = req.file.originalname;
   var subject = req.body.subject;
   var path = req.file.path;
@@ -91,6 +108,7 @@ const saveDuplicate = async (req, res, next) => {
 
 const saveDocument = async (
   id,
+  iduser,
   filename,
   subject,
   path,
@@ -124,7 +142,7 @@ const saveDocument = async (
 
     var data = new docmodel();
     data.idDoc = idDoc;
-    //data.iduser = Number(req.user.iduser);
+    data.iduser = Number(iduser);
     data.subject = subject;
     data.filename = nameFile;
     data.path = path;
@@ -237,9 +255,8 @@ const checkDuplicate = async (content) => {
 };
 
 const uploadDocument = async (req, res, next) => {
-  // Mã hoá token để lấy iduser
+  // Giải mã token để lấy iduser
   const headers = req.headers;
-  console.log(headers);
   if (!headers.authorization) {
     return res.status(200).json({
       code: 400,
@@ -247,8 +264,14 @@ const uploadDocument = async (req, res, next) => {
       success: false,
     });
   }
-  const x = JWT.decode(headers.authorization);
-  console.log(x);
+  const decodeToken = JWT.decode(headers.authorization);
+  const userCurrent = await User.findById(decodeToken.sub);
+  if (!userCurrent) {
+    return res
+      .status(200)
+      .json({ success: false, code: 500, message: "Not found user current" });
+  }
+  const iduser = userCurrent.iduser;
   //
   var id = parseInt(req.body.idDoc);
   var filename = req.file.originalname;
@@ -263,12 +286,13 @@ const uploadDocument = async (req, res, next) => {
   var arrDuplicate = [];
   arrDuplicate = await checkDuplicate(content);
 
-  docmodel.find({}).exec(async function (err, result) {
+  await docmodel.find({}).exec(async function (err, result) {
     if (!result) {
       // Nếu trong db chưa có document nào được up load
       console.log("Không có tài liệu trong db");
       await saveDocument(
         id,
+        iduser,
         filename,
         subject,
         path,
@@ -283,6 +307,7 @@ const uploadDocument = async (req, res, next) => {
         console.log("No Duplicate");
         await saveDocument(
           id,
+          iduser,
           filename,
           subject,
           path,
