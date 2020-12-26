@@ -36,29 +36,29 @@ class Notifications extends React.Component {
       datatheme:[],
       trangthai:false,
       trangthaiserarch:false,
-      subjectView:'alo'
+      idsubjectView:''
     }
   }
-  componentDidMount() {
-    axios.get('/api/doc/all')
-        .then(response => {
-            console.log(response.data.listdoc);
-            this.setState({data: response.data.listdoc});
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-  }
+  // componentDidMount() {
+  //   axios.get('/api/doc/all')
+  //       .then(response => {
+  //           console.log(response.data.listdoc);
+  //           this.setState({data: response.data.listdoc});
+  //       })
+  //       .catch(function (error) {
+  //           console.log(error);
+  //       })
+  // }
 
   onSubmitTheme(event){
     event.preventDefault();
     const theme = {
-      subjectView:this.state.subjectView
+      idsubjectView:this.state.subjectView
     };
     console.log(theme);
-    axios.post('/api/doc/subject',theme)
+    axios.get('/api/doc/subject',theme)
     .then((res)=>{
-      console.log(res.data.lstDoc);
+      console.log(res.data);
     })
   }
   onChangeValue(event){
@@ -141,20 +141,20 @@ class Notifications extends React.Component {
     }
   }
 
-  // componentDidMount() {
-  //   axios.get('/api/theme/alltheme')
-  //       .then(response => {
-  //           console.log(response.data);
-  //           this.setState({datatheme: response.data});
-  //       })
-  //       .catch(function (error) {
-  //           console.log(error);
-  //       })
-  // }
-//   tabRowSearch=()=>this.state.dataserch.map((object,i)=>(
-//     <TableRowSearch obj={object} key={i}/>
-//   )
-// )
+  componentDidMount() {
+    axios.get('/api/theme/alltheme')
+        .then(response => {
+            console.log(response.data.listtheme);
+            this.setState({datatheme: response.data.listtheme});
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+  }
+  tabRowSearch=()=>this.state.dataserch.map((object,i)=>(
+    <TableRowSearch obj={object} key={i}/>
+  )
+)
   
 
   render() {
@@ -196,7 +196,7 @@ class Notifications extends React.Component {
                       <Col md="6" sm={6}>
                         <Input md="2" value={this.state.subjectView} onChange={this.onChangeValueTheme} type="select" name="subjectView" id="">
                               {this.state.datatheme.map((list,i) => (
-                                  <option key={i} value={list.name}>{list.name}</option>
+                                  <option key={i} value={list.idtheme}>{list.name}</option>
                               ))}
                         </Input>
                         <Button onClick={this.onSubmitTheme}>Sort</Button>

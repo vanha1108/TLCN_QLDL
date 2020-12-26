@@ -28,7 +28,8 @@ class AdminNavbar extends React.Component {
     this.state = {
       collapseOpen: false,
       modalSearch: false,
-      color: "navbar-transparent"
+      color: "navbar-transparent",
+      user:[]
     };
   }
   componentDidMount() {
@@ -37,6 +38,11 @@ class AdminNavbar extends React.Component {
         "Content-Type": "application/json",
         Authorization: JSON.parse(localStorage.getItem("authorization")),
       },
+    })
+    .then((res) => {
+        this.setState({
+          user:res.data.userCurrent
+        });
     })
     window.addEventListener("resize", this.updateColor);
     console.log(this.props.dataUser)
@@ -141,7 +147,7 @@ class AdminNavbar extends React.Component {
                     <div className="photo">
                       <img alt="..." src={require("assets/img/anime3.png")} />
                     </div>{' '}
-                           <p>&nbsp;{this.props.dataUser}</p>      
+                           <p>&nbsp;{this.state.user.username}</p>     
                     <b className="caret d-none d-lg-block d-xl-block" />
                     <p></p>
                     <p onClick={()=>this.signOut()} className="d-lg-none">Log out</p>
