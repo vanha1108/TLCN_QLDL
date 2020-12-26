@@ -3,7 +3,7 @@ import axios from 'axios';
 import { CardTitle,CardText,Row,CardHeader,CardBody,Col,Card,FormFeedback } from 'reactstrap';
 import Form from "views/form.js";
 import history from "history.js";
-
+import AdminNavbar from "components/Navbars/AdminNavbar.js";
 class Login extends Component {
    
   constructor(props) {
@@ -13,9 +13,10 @@ class Login extends Component {
       username:'',
       password:'',
       token: '',
+      datauserload:[],
       redirect: localStorage.getItem('authorization') ? true : false
     }
-
+    
     this.onSubmitHandler = this.onSubmitHandler.bind(this);
     this.emailInputChangeHandler = this.emailInputChangeHandler.bind(this);
     this.passwordInputChangeHandler = this.passwordInputChangeHandler.bind(this);
@@ -39,21 +40,9 @@ class Login extends Component {
             const data = this.state.token;
             localStorage.setItem('authorization', JSON.stringify(data));
             this.setState({
-              redirect: true
-            });
-
-            var hours = 1; // Reset when storage is more than 24hours
-            var now = new Date().getTime();
-            var setupTime = localStorage.getItem('setupTime');
-            if (setupTime == null) {
-                localStorage.setItem('setupTime', now)
-            } else {
-                if(now-setupTime > hours*60) {
-                    localStorage.clear()
-                    localStorage.setItem('setupTime', now);
-                }
-            }
-            
+              redirect: true,
+              datauserload:res.data.user
+            }); 
             if(res.data.user.role===1)
             {
               history.push("/admin/icons");
@@ -62,13 +51,10 @@ class Login extends Component {
             {
               history.push("/user/notifications");
             }
-            
         }
         else{
           alert('sai pass rồi hoac tài khoản rồi !!!');
         }
-        
-            
       }).catch(err => {
         console.log('lỗi')
       });
@@ -98,8 +84,6 @@ class Login extends Component {
                         <Card className="card-user">
                         <CardHeader>
                             <Col className="ml-auto mr-auto text-center" md="6">
-                              
-                                
                                 <CardTitle  tag="h3">Hello User</CardTitle>
                                   <img
                                       alt="..."
@@ -172,7 +156,8 @@ class Login extends Component {
                         </CardBody>                
                       </Card>
                     </Col>
-                </Row>     
+                </Row>
+                <AdminNavbar dataUser ={this.state.datauserload}/>    
             </div>       
         );
     }

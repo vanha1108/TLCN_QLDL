@@ -194,7 +194,7 @@ class Map extends React.Component {
     return "";
   }
   render() {
-    if (!localStorage.getItem('authorization')) return history.push("/login");
+    if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return (
         <div className="content">
           <Row>

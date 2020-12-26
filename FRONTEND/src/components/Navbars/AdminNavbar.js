@@ -4,6 +4,7 @@ import React from "react";
 import classNames from "classnames";
 //import { Redirect } from "react-router-dom";
 import history from "history.js";
+import axios from "axios";
 // reactstrap components
 import {
   Collapse,
@@ -17,7 +18,8 @@ import {
   NavLink,
   Nav,
   Container,
-  Modal
+  Modal,
+  Label
 } from "reactstrap";
 
 class AdminNavbar extends React.Component {
@@ -30,7 +32,14 @@ class AdminNavbar extends React.Component {
     };
   }
   componentDidMount() {
+    axios.get('/api/user/current',{
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: JSON.parse(localStorage.getItem("authorization")),
+      },
+    })
     window.addEventListener("resize", this.updateColor);
+    console.log(this.props.dataUser)
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateColor);
@@ -75,6 +84,7 @@ class AdminNavbar extends React.Component {
     }
     return history.push("/login");
   }
+  
   render() {
     return (
       <>
@@ -127,11 +137,15 @@ class AdminNavbar extends React.Component {
                     nav
                     onClick={e => e.preventDefault()}
                   >
+
                     <div className="photo">
                       <img alt="..." src={require("assets/img/anime3.png")} />
-                    </div>
+                    </div>{' '}
+                           <p>&nbsp;{this.props.dataUser}</p>      
                     <b className="caret d-none d-lg-block d-xl-block" />
+                    <p></p>
                     <p onClick={()=>this.signOut()} className="d-lg-none">Log out</p>
+                    
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-navbar" right tag="ul">
                     <NavLink tag="li">
@@ -139,6 +153,7 @@ class AdminNavbar extends React.Component {
                     </NavLink>
                   </DropdownMenu>
                 </UncontrolledDropdown>
+                
                 <li className="separator d-lg-none" />
               </Nav>
             </Collapse>
