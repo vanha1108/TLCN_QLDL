@@ -350,10 +350,10 @@ const dowloadDocument = async (req, res, next) => {
       res
         .status(200)
         .json({ success: false, code: 500, message: "Error dowload document" });
-    if (doc)
-      res
-        .status(200)
-        .json({ success: true, code: 200, messsage: "Success", doc });
+    if (doc) res.dowload(doc.path);
+    // res
+    //   .status(200)
+    //   .json({ success: true, code: 200, messsage: "Success", doc });
   });
 };
 
