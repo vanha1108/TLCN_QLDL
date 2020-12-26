@@ -83,7 +83,7 @@ class Map extends React.Component {
         formData.append('subject',this.state.subject)
         formData.getAll('iduser','filedoc','authorname','subject','note','idDoc')
         console.log(formData);
-        axios.post("/api/doc/upload", formData,{},{
+        axios.post("/api/doc/upload", formData,{
           headers: {
             "Content-Type": "application/json",
             Authorization: JSON.parse(localStorage.getItem("authorization")),
@@ -116,7 +116,12 @@ class Map extends React.Component {
     formData1.append('subject',this.state.subject)
     formData1.getAll('filedoc','authorname','subject','note','idDoc')
     console.log(formData1);
-    axios.post("/api/doc/save", formData1,{})
+    axios.post("/api/doc/save", formData1,{
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: JSON.parse(localStorage.getItem("authorization")),
+      },
+    })
     .then((res) => {
         this.setState({disabled:true})
         toast.success('Upload Successful')
