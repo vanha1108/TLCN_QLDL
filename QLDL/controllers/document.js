@@ -56,7 +56,7 @@ const saveDuplicate = async (req, res, next) => {
   var filename = req.file.originalname;
   var subject = req.body.subject;
   var theme = await Theme.findOne({ name: subject });
-  if (!themes) {
+  if (!theme) {
     return res
       .status(200)
       .json({ success: false, code: 500, message: "Not found theme" });
