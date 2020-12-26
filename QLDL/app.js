@@ -72,7 +72,7 @@ app.use(function (err, req, res, next) {
   return res.status(200).json({ success: false, code: 500, message: "Error" });
 });
 
-cron.schedule("24 15 * * *", function () {
+cron.schedule("25 15 * * *", function () {
   console.log("---------------------");
   console.log("Running Cron Job");
   sythentic.update_warehouse();

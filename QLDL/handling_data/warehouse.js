@@ -30,7 +30,7 @@ async function update_warehouse() {
       sum++;
     }
     ware.total = sum;
-    ware.save();
+    await ware.save();
   }
 
   for (let doc in documents) {
@@ -39,12 +39,16 @@ async function update_warehouse() {
     text = sw.filter_stopword(text);
     var vec = vector.create_vector(text, all_text);
     // Update vector của document trong db
+    documents[doc].vector.direction = [];
+    documents[doc].vector.value = [];
+    console.log("Update doccument");
     for (let word in vec) {
       documents[doc].vector.direction.push(word);
       documents[doc].vector.value.push(vec[word]);
     }
-    documents[doc].save();
+    await documents[doc].save();
   }
+  console.log("Crontjob fishned!");
 }
 
 module.exports.update_warehouse = update_warehouse;
