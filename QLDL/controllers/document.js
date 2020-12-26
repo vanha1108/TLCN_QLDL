@@ -357,7 +357,6 @@ const dowloadDocument = async (req, res, next) => {
 const deleteDocument = async (req, res, next) => {
   // Kiem tra co phai user upload document can xoa
   const headers = req.headers;
-  console.log(headers);
   if (!headers.authorization) {
     return res.status(200).json({
       code: 400,

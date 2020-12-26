@@ -183,6 +183,27 @@ const editUser = async (req, res, next) => {
   res.status(200).json({ success: true, code: 200, message: "Edit success" });
 };
 
+const getUserCurrent = async (req, res, next) => {
+  const headers = req.headers;
+  console.log(headers);
+  if (!headers.authorization) {
+    return res.status(200).json({
+      code: 400,
+      message: "Token khong hop le hoac khong co",
+      success: false,
+    });
+  }
+  const decodeToken = JWT.decode(headers.authorization);
+  const userCurrent = await User.findById(decodeToken.sub);
+  if (!userCurrent)
+    return res
+      .status(200)
+      .json({ success: false, code: 500, message: "Not found user current" });
+  return res
+    .status(200)
+    .json({ success: true, code: 200, message: "", userCurrent });
+};
+
 module.exports = {
   changePassword,
   logOut,
@@ -191,4 +212,5 @@ module.exports = {
   signIn,
   logOut,
   editUser,
+  getUserCurrent,
 };

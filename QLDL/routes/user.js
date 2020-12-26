@@ -19,4 +19,6 @@ router.route("/").get(userController.getAllUser);
 
 router.route("/edit/:idedit").put(userController.editUser);
 
+router.route("/current").get(userController.getUserCurrent);
+
 module.exports = router;
