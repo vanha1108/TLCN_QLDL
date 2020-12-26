@@ -375,11 +375,11 @@ const deleteDocument = async (req, res, next) => {
       message: "Not foud document to delete!",
     });
   }
-
+  const idDel = Number(doc.idDoc);
   const theme = thememodel.findOne({ name: doc.subject });
   if (theme) {
     if (theme.listidDoc) {
-      theme.listidDoc = theme.listidDoc.filter((item) => item !== doc.idDoc);
+      theme.listidDoc.splice(theme.listidDoc.indexOf(idDel), 1);
     }
   } else {
     return res.status(200).json({
