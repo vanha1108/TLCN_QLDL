@@ -84,11 +84,11 @@ class Map extends React.Component {
       this.state.idsubject=this.getFirstTheme();
     }
     if(!this.state.regexp.test(this.state.idDoc)){
-      return alert('sai number');
+      return alert('Please enter number for document code');
     }
     if(this.state.rex.test(this.state.authorname)||this.state.regexp1.test(this.state.authorname))
     {
-      return alert('sai ký tự');
+      return alert('Please enter characters for the posters name');
     }
     if(this.state.idDoc!==''&&this.state.filedoc!==''&&this.state.authorname!==''&&this.state.idsubject!==''  ){
       const formData = new FormData()
