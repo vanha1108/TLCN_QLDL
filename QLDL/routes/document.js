@@ -31,6 +31,8 @@ router.route("/dowload/:iddowload").get(doccumentController.dowloadDocument);
 
 router.route("/delete/:iddelete").delete(doccumentController.deleteDocument);
 
-router.route("/subject").post(doccumentController.getDocumentWithSubject);
+router
+  .route("/subject/:idsubject")
+  .get(doccumentController.getDocumentWithSubject);
 
 module.exports = router;

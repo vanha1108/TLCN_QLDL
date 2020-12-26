@@ -436,9 +436,8 @@ const searchDocument = async (req, res, next) => {
 };
 
 const getDocumentWithSubject = async (req, res, next) => {
-  const idsubjectView = req.body.idsubjectView;
+  const idsubjectView = req.params.idsubject;
   const lstDoc = [];
-  console.log(idsubjectView);
   const themeDoc = await thememodel.findOne({ idtheme: idsubjectView });
   if (!themeDoc) {
     return res
@@ -456,7 +455,6 @@ const getDocumentWithSubject = async (req, res, next) => {
         .json({ success: false, code: 500, message: "Not found document!" });
     }
   }
-  console.log(lstDoc);
   return res
     .status(200)
     .json({ success: true, code: 200, message: "Success!", lstDoc });
