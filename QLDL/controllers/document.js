@@ -376,11 +376,9 @@ const deleteDocument = async (req, res, next) => {
     });
   }
   const idDel = Number(doc.idDoc);
-  const theme = thememodel.findOne({ name: doc.subject });
+  const theme = thememodel.findOne({ idtheme: doc.idsubject });
   if (theme) {
-    if (theme.listidDoc) {
-      theme.listidDoc.splice(theme.listidDoc.indexOf(idDel), 1);
-    }
+    theme.listidDoc.splice(theme.listidDoc.indexOf(idDel), 1);
   } else {
     return res.status(200).json({
       success: false,
