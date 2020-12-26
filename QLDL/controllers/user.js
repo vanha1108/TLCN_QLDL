@@ -185,7 +185,6 @@ const editUser = async (req, res, next) => {
 
 const getUserCurrent = async (req, res, next) => {
   const headers = req.headers;
-  console.log(headers);
   if (!headers.authorization) {
     return res.status(200).json({
       code: 400,
