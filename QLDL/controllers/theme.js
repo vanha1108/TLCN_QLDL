@@ -6,7 +6,7 @@ const addTheme = async (req, res, next) => {
   var name = req.body.name;
   const theme = await thememodel.findOne({ name });
   if (theme) {
-    res.status(200).json({
+    return res.status(200).json({
       success: false,
       code: 500,
       message: "Theme name already exists!",
