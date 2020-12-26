@@ -11,7 +11,7 @@ const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const JWT = require("jsonwebtoken");
 const User = require("./../model/user");
-const Theme = require("./../model/theme");
+const UserController = require("./../controllers/user");
 
 const readDocument = async (filePath) => {
   var content = "";
@@ -220,6 +220,7 @@ const checkDuplicate = async (content) => {
       if (similar)
         if (result[r] <= 0) {
           d = {
+            idDoc: similar.idDoc,
             document: similar.filename,
             message: "Gần như hoàn toàn giống nhau",
           };
@@ -227,6 +228,7 @@ const checkDuplicate = async (content) => {
         } else {
           if (result[r] < 0.01) {
             d = {
+              idDoc: similar.idDoc,
               document: similar.filename,
               message: "Rất giống nhau",
             };
@@ -234,12 +236,14 @@ const checkDuplicate = async (content) => {
           } else {
             if (result[r] < 0.02) {
               d = {
+                idDoc: similar.idDoc,
                 document: similar.filename,
                 message: "Giống nhau",
               };
               arrDuplicate.push(d);
             } else {
               d = {
+                idDoc: similar.idDoc,
                 document: similar.filename,
                 message: "Gần Giống nhau",
               };
@@ -255,7 +259,6 @@ const checkDuplicate = async (content) => {
 };
 
 const uploadDocument = async (req, res, next) => {
-  console.log("hhhhh");
   // Giải mã token để lấy iduser
   const headers = req.headers;
   if (!headers.authorization) {
@@ -347,11 +350,45 @@ const dowloadDocument = async (req, res, next) => {
       res
         .status(200)
         .json({ success: false, code: 500, message: "Error dowload document" });
-    if (doc) res.download(doc.path);
+    if (doc)
+      res
+        .status(200)
+        .json({ success: true, code: 200, messsage: "Success", doc });
   });
 };
 
 const deleteDocument = async (req, res, next) => {
+  // Kiem tra co phai user upload document can xoa
+  const headers = req.headers;
+  console.log(headers);
+  if (!headers.authorization) {
+    return res.status(200).json({
+      code: 400,
+      message: "Token khong hop le hoac khong co",
+      success: false,
+    });
+  }
+  const decodeToken = JWT.decode(headers.authorization);
+  const userCurrent = await User.findById(decodeToken.sub);
+  if (!userCurrent) {
+    return res
+      .status(200)
+      .json({ success: false, code: 500, message: "Not found user current" });
+  }
+  const id = userCurrent.iduser;
+  const check = await docmodel.findOne({ iduser: id });
+  if (!check) {
+    return res.status(200).json({
+      success: false,
+      code: 500,
+      message: "Not found user upload document",
+    });
+  }
+  if (check.iduser != id) {
+    return res
+      .status(200)
+      .json({ success: false, code: 500, message: "You can not delete it" });
+  }
   var iddelete = req.params.iddelete;
   const doc = await docmodel.findOneAndRemove({ idDoc: iddelete });
   if (!doc) {
