@@ -436,15 +436,14 @@ const searchDocument = async (req, res, next) => {
 };
 
 const getDocumentWithSubject = async (req, res, next) => {
-  const subjectView = req.body.subjectView;
-
-  const themeDoc = await thememodel.findOne({ name: subjectView });
+  const idsubjectView = req.body.idsubjectView;
+  const lstDoc = [];
+  const themeDoc = await thememodel.findOne({ idtheme: idsubjectView });
   if (!themeDoc) {
     return res
       .status(200)
       .json({ success: false, code: 500, message: "Not found theme!" });
   }
-  const lstDoc = [];
   for (let i in themeDoc.listidDoc) {
     const doc = await docmodel.findOne({ idDoc: themeDoc.listidDoc[i] });
 
@@ -456,6 +455,7 @@ const getDocumentWithSubject = async (req, res, next) => {
         .json({ success: false, code: 500, message: "Not found document!" });
     }
   }
+  console.log(lstDoc);
   return res
     .status(200)
     .json({ success: true, code: 200, message: "Success!", lstDoc });
