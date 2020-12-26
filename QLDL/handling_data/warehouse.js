@@ -4,12 +4,12 @@ const special = require("./special_chars");
 const sw = require("./stopword");
 const vector = require("./vector");
 
-function update_warehouse() {
-  const documents = docmodel.find();
+async function update_warehouse() {
+  const documents = await docmodel.find();
   if (!documents) return;
   var sum = 0;
   var all_text = [];
-  const ware = warehouse.findOne();
+  const ware = await warehouse.findOne();
   if (!ware) {
     var dt = new warehouse();
 
