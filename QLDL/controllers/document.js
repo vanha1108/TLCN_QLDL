@@ -377,6 +377,7 @@ const deleteDocument = async (req, res, next) => {
   }
   const idDel = Number(doc.idDoc);
   const theme = thememodel.findOne({ idtheme: doc.idsubject });
+  console.log(typeof theme.listidDoc);
   if (theme) {
     theme.listidDoc.splice(theme.listidDoc.indexOf(idDel), 1);
   } else {
