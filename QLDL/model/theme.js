@@ -10,9 +10,7 @@ var themeSchema = new Schema(
       type: String,
       required: true,
     },
-    listidDoc: {
-      type: Array,
-    },
+    listidDoc: [{ type: Number }],
   },
   { collection: "themes", timestamps: true }
 );

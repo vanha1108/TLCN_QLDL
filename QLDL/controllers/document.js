@@ -35,7 +35,7 @@ const readDocument = async (filePath) => {
 };
 
 const saveDuplicate = async (req, res, next) => {
-  var id = parseInt(req.body.idDoc);
+  var id = Number(req.body.idDoc);
   // Giải mã token để lấy iduser
   const headers = req.headers;
   if (!headers.authorization) {
@@ -54,14 +54,7 @@ const saveDuplicate = async (req, res, next) => {
   }
   const iduser = userCurrent.iduser;
   var filename = req.file.originalname;
-  var subject = req.body.subject;
-  var theme = await Theme.findOne({ name: subject });
-  if (!theme) {
-    return res
-      .status(200)
-      .json({ success: false, code: 500, message: "Not found theme" });
-  }
-  var idsubject = theme.idtheme;
+  var idsubject = req.body.idsubject;
   var path = req.file.path;
   var author = req.body.authorname;
   var note = req.body.note;
@@ -90,9 +83,9 @@ const saveDuplicate = async (req, res, next) => {
   }
 
   var data = new docmodel();
-  data.idDoc = id;
-  data.iduser = iduser;
-  data.idsubject = idsubject;
+  data.idDoc = Number(id);
+  data.iduser = Number(iduser);
+  data.idsubject = Number(idsubject);
   data.filename = filename;
   data.path = path;
   data.authorname = author;
@@ -106,7 +99,7 @@ const saveDuplicate = async (req, res, next) => {
 
   data.save();
   // Thêm document vào chủ đề
-  var themes = await thememodel.findOne({ name: subject });
+  var themes = await thememodel.findOne({ idtheme: idsubject });
   if (themes) {
     themes.listidDoc.push(id);
     themes.save();
@@ -125,7 +118,7 @@ const saveDocument = async (
   content,
   vector
 ) => {
-  var idDoc = id;
+  var idDoc = Number(id);
   var nameFile = filename;
   var arrID = [];
   var arrFilename = [];
@@ -149,7 +142,7 @@ const saveDocument = async (
     }
 
     var data = new docmodel();
-    data.idDoc = idDoc;
+    data.idDoc = Number(idDoc);
     data.iduser = Number(iduser);
     data.idsubject = Number(idsubject);
     data.filename = nameFile;
@@ -162,7 +155,6 @@ const saveDocument = async (
       data.vector.direction.push(word);
       data.vector.value.push(vector[word]);
     }
-
     data.save();
     // Thêm document vào chủ đề
     thememodel.findOne({ idtheme: idsubject }).exec(function (err, theme) {
@@ -263,6 +255,7 @@ const checkDuplicate = async (content) => {
 };
 
 const uploadDocument = async (req, res, next) => {
+  console.log("hhhhh");
   // Giải mã token để lấy iduser
   const headers = req.headers;
   if (!headers.authorization) {
@@ -283,14 +276,7 @@ const uploadDocument = async (req, res, next) => {
   //
   var id = parseInt(req.body.idDoc);
   var filename = req.file.originalname;
-  var subject = req.body.subject;
-  var theme = await Theme.findOne({ name: subject });
-  if (!theme) {
-    return res
-      .status(200)
-      .json({ success: false, code: 500, message: "Not found theme" });
-  }
-  var idsubject = theme.idtheme;
+  var idsubject = req.body.idsubject;
   var path = req.file.path;
   var author = req.body.authorname;
   var note = req.body.note;
@@ -376,10 +362,14 @@ const deleteDocument = async (req, res, next) => {
     });
   }
   const idDel = Number(doc.idDoc);
-  const theme = thememodel.findOne({ idtheme: doc.idsubject });
+  const theme = await thememodel.findOne({ idtheme: doc.idsubject });
   console.log(typeof theme.listidDoc);
   if (theme) {
-    theme.listidDoc.splice(theme.listidDoc.indexOf(idDel), 1);
+    var index = theme.listidDoc.indexOf(idDel);
+    if (index != -1) {
+      await theme.listidDoc.splice(index, 1);
+      await theme.save();
+    }
   } else {
     return res.status(200).json({
       success: false,
