@@ -54,8 +54,10 @@ const deleteTheme = async (req, res, next) => {
       message: "Not found theme to delete!",
     });
 
+  console.log(theme.listidDoc);
+
   if (theme.listidDoc) {
-    if (theme.listidDoc.length > 0)
+    if (theme.listidDoc[0] != null)
       return res.status(200).json({
         success: false,
         code: 500,
