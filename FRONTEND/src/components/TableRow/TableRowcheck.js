@@ -28,7 +28,8 @@ class TableRowcheck extends Component {
     }
     render() {
         return (
-            <tr>  
+            <tr>
+                <td>{this.props.obj.idDoc}</td>
                 <td>
                     {this.props.obj.document}
                 </td>

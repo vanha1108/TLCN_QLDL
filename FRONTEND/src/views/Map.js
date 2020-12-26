@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TableRowCheck from "components/TableRow/TableRowcheck.js";
 import {Redirect } from "react-router-dom";
+import history from "history.js";
 // reactstrap components
 //import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 import {  
@@ -163,6 +164,7 @@ class Map extends React.Component {
             <Table striped>
               <thead>
                 <tr>
+                  <th>ID Document</th>
                   <th>Filename</th>
                   <th>Message</th>
                   <th>Action</th>
@@ -192,7 +194,7 @@ class Map extends React.Component {
     return "";
   }
   render() {
-    if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
+    if (!localStorage.getItem('authorization')) return history.push("/login");
     return (
         <div className="content">
           <Row>
