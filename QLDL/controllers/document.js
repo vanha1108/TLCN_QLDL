@@ -436,8 +436,9 @@ const searchDocument = async (req, res, next) => {
 };
 
 const getDocumentWithSubject = async (req, res, next) => {
-  const idsubjectView = req.body.idsubjectView;
+  const idsubjectView = Number(req.body.idsubjectView);
   const lstDoc = [];
+
   const themeDoc = await thememodel.findOne({ idtheme: idsubjectView });
   if (!themeDoc) {
     return res
