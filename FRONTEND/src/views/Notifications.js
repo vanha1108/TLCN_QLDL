@@ -52,9 +52,9 @@ class Notifications extends React.Component {
 
   onSubmitTheme(event){
     event.preventDefault();
+    var idsubject = this.state.idsubjectView
     
-    console.log(this.state.idsubjectView);
-    axios.get('/api/doc/subject',{idsubjectView:this.state.idsubjectView})
+    axios.get('/api/doc/subject/'+idsubject)
     .then((res)=>{
       console.log(res.data);
     })
