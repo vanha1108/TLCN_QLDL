@@ -18,7 +18,12 @@ class TableRowDoc extends Component {
             url:'/api/doc/dowload/'+iddowload,
             moethod:'GET',
             responseType:'blob',
-        }).then((response) => {
+        },{
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: JSON.parse(localStorage.getItem("authorization")),
+            },
+          }).then((response) => {
             const url =  window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -33,7 +38,12 @@ class TableRowDoc extends Component {
         if(result){
           var iddelete = this.props.obj.idDoc;
           axios
-          .delete("/api/doc/delete/" + iddelete)
+          .delete("/api/doc/delete/" + iddelete,{
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: JSON.parse(localStorage.getItem("authorization")),
+            },
+          })
           .then((res)=>{
             console.log(res.data.message);
             if(res.data.success===true){
