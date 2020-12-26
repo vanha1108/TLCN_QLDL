@@ -48,7 +48,9 @@ class TableRowDoc extends Component {
             console.log(res.data.message);
             if(res.data.success===true){
               toast.success('delete success');
-              window.location.reload();}
+              //window.location.reload();
+              
+            }
             else
             {
               toast.error(`${res.data.message}`);
@@ -70,6 +72,7 @@ class TableRowDoc extends Component {
                 <td>
                     {this.props.obj.filename}
                 </td>
+                <td>{this.props.obj.iduser}</td>
                 <td>
                     {this.props.obj.authorname}
                 </td>
@@ -77,7 +80,6 @@ class TableRowDoc extends Component {
                     {this.props.obj.note}
                 </td>
                 <td>
-                    <Button size="sm" color="info">Edit</Button>
                     <Button size="sm" onClick={this.delete} color="danger">Delete</Button>
                     <Button size="sm" onClick={this.download1} color="success">Download</Button>
                     <ToastContainer />

@@ -38,7 +38,7 @@ class TableRowcheck extends Component {
                     {this.props.obj.message}                   
                 </td>
                 <td>
-                    <Button onClick={this.download}>Download</Button>
+                    <Button color="success" size="sm" onClick={this.download}>Download</Button>
                     <ToastContainer />
                 </td>
             </tr>

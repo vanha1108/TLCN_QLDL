@@ -61,7 +61,7 @@ class TableRowUser extends Component {
                    
                         <Button onClick={()=>this.onClickChangePassword()} size="sm" color="info">change</Button>
                         <Button size="sm" color="danger">Delete</Button>
-                        <Button onClick={()=>this.onClickEdit()} size="sm" color="info">Edit</Button>
+                        <Button onClick={()=>this.onClickEdit()} size="sm" color="success">Edit</Button>
                     
                    
                 </td>

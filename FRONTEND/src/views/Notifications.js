@@ -89,11 +89,12 @@ class Notifications extends React.Component {
       });
     })
   }
-  tabRow() {
-    return this.state.datadoc.map(function (object, i) {
-        return <TableRow obj={object} key={i}/>;
-    });
-  }
+  tabRow=()=>this.state.datadoc.map((object,i)=>(
+    <TableRow 
+    obj={object} key={i}
+    />
+  ))
+  
   tabRowSearch=()=>this.state.dataserch.map((object,i)=>(
       <TableRowSearch obj={object} key={i}/>
     )
@@ -177,7 +178,7 @@ class Notifications extends React.Component {
 
                 </Col>
                 <Col sm={2}>
-                  <Button onClick={this.onSubmit}>search</Button>
+                  <Button color="success" onClick={this.onSubmit}>search</Button>
                  
                 </Col>
               </FormGroup>
@@ -191,15 +192,16 @@ class Notifications extends React.Component {
               <Card>               
                 <CardHeader>
                   <FormGroup row>
-                    <Label md="6"  sm={6} tag="h6">document list</Label>
+                    <Label md="4"  sm={6} tag="h6">document list</Label>
                       <Col md="6" sm={6}>
                         <Input md="2" value={this.state.idsubjectView} onChange={this.onChangeValueTheme} type="select" name="idsubjectView" id="">
                               {this.state.datatheme.map((list,i) => (
                                   <option key={i} value={list.idtheme}>{list.name}</option>
                               ))}
                         </Input>
-                        <Button onClick={this.onSubmitTheme}>Sort</Button>
+                        
                       </Col>
+                      <Button md="2" color="success" onClick={this.onSubmitTheme}>Sort</Button>
                   </FormGroup>
                 </CardHeader>   
                   <CardBody>
@@ -208,6 +210,7 @@ class Notifications extends React.Component {
                           <tr>
                             <th>ID</th>
                             <th>Filename</th>
+                            <th>iduser</th>
                             <th>Authorname</th>
                             <th>Note</th>
                             <th>Action</th>

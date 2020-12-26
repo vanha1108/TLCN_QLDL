@@ -233,7 +233,7 @@ class UserProfile extends React.Component {
           </Col>
           </FormGroup>
 
-          <Button onClick={this.onSubmit} color="primary" >Add </Button>
+          <Button onClick={this.onSubmit} color="primary" >Add theme </Button>
     
         </CardBody>
        

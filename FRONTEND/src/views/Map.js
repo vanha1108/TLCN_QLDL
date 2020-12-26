@@ -115,7 +115,9 @@ class Map extends React.Component {
           else{
             this.setState({idDoc:'',authorname:'',note:''})
             toast.success('Upload Successful')
-            window.location.reload();
+            setTimeout(function () {
+              window.location.reload(1);
+            },1000);
           } 
         })
         .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
@@ -147,7 +149,9 @@ class Map extends React.Component {
         this.setState({disabled:true})
         toast.success('Upload Successful')
         console.log('vao day roi ne')
-        window.location.reload()
+        setTimeout(function () {
+          window.location.reload(1);
+        },1000);
     })
     .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});     
   }
@@ -241,7 +245,7 @@ class Map extends React.Component {
                </CardBody>              
              </Card>
             </Col>
-            <Col md="4">
+            <Col md="6">
               {this.hienThiFormSave()}
             </Col>
           </Row>

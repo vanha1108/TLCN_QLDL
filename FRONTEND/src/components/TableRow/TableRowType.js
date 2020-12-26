@@ -21,7 +21,9 @@ class TableRowType extends Component {
         console.log(res.data.message);
         if(res.data.success===true){
           toast.success('delete success');
-          window.location.reload();}
+          setTimeout(function () {
+            window.location.reload(1);
+          },1000);}
         else
         {
           toast.error('delete failed');

@@ -182,7 +182,7 @@ class Icons extends React.Component {
                     type="text"
                     name="iduser"
                     id=""
-                    placeholder="Input email"
+                    placeholder="Input id user"
                   />
                 </Col>
               </FormGroup>
@@ -194,7 +194,7 @@ class Icons extends React.Component {
                     type="text"
                     name="firstname"
                     id=""
-                    placeholder="Input email"
+                    placeholder="Input firstname"
                   />
                 </Col>
               </FormGroup>
@@ -206,7 +206,7 @@ class Icons extends React.Component {
                     type="text"
                     name="lastname"
                     id=""
-                    placeholder="Input email"
+                    placeholder="Input lastname"
                   />
                 </Col>
               </FormGroup>
@@ -257,7 +257,7 @@ class Icons extends React.Component {
                     type="text"
                     name="phonenumber"
                     id=""
-                    placeholder="Input email"
+                    placeholder="Input phone number"
                   />
                 </Col>
               </FormGroup>
@@ -269,7 +269,7 @@ class Icons extends React.Component {
                     type="text"
                     name="address"
                     id=""
-                    placeholder="Input email"
+                    placeholder="Input address"
                   />
                 </Col>
               </FormGroup>
@@ -281,7 +281,7 @@ class Icons extends React.Component {
                     type="text"
                     name="username"
                     id=""
-                    placeholder="Input email"
+                    placeholder="Input username"
                   />
                 </Col>
               </FormGroup>
@@ -315,6 +315,7 @@ class Icons extends React.Component {
               <Button onClick={this.onSubmit} color="primary">
                 Add user
               </Button>
+              <Button onClick={() => this.thayTrangThai()}>Cancel</Button>
             </CardBody>
           </Card>
       );
@@ -513,7 +514,7 @@ class Icons extends React.Component {
     }
   }
   hienThiFormMain(){
-    if(this.state.trangthaiedit===false&&this.state.trangthaiedit1===false){
+    if(this.state.trangthaiedit===false&&this.state.trangthaiedit1===false&this.state.trangthai===false){
       return(
         <Col md="12">
             <Card>
@@ -604,16 +605,6 @@ class Icons extends React.Component {
   }
   onSubmitEditUser(event){
     event.preventDefault();
-    // if(this.state.newfirst!==''&&this.state.newlast!==''&&this.state.newSex!==''
-    // &&this.state.newdob!==''&&this.state.newphone!==''&&this.state.newaddress!==''){
-      // const formEdit={
-      //   newfirst:this.state.newfirst,
-      //   newlast:this.state.newlast,
-      //   newsex:this.state.newsex,
-      //   newdob:this.state.newdob,
-      //   newphone:this.state.newphone,
-      //   newaddress:this.state.newaddress
-      // };
     const formEdit={
       newfirst:'',
       newlast:'',
