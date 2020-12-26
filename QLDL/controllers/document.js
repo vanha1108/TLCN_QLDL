@@ -351,9 +351,6 @@ const dowloadDocument = async (req, res, next) => {
         .status(200)
         .json({ success: false, code: 500, message: "Error dowload document" });
     if (doc) res.download(doc.path);
-    // res
-    //   .status(200)
-    //   .json({ success: true, code: 200, messsage: "Success", doc });
   });
 };
 
@@ -469,6 +466,7 @@ module.exports = {
   saveDocument,
   saveDuplicate,
   uploadDocument,
+  createVec,
   getAllDocument,
   dowloadDocument,
   deleteDocument,

@@ -3,6 +3,7 @@ const warehouse = require("./../model/warehouse");
 const special = require("./special_chars");
 const sw = require("./stopword");
 const vector = require("./vector");
+const documentController = require("./../controllers/document");
 
 async function update_warehouse() {
   const documents = await docmodel.find();
@@ -34,21 +35,21 @@ async function update_warehouse() {
   }
 
   for (let doc in documents) {
-    var text = special.clear_special_chars(documents[doc].content);
-    text = ("" + text).split(" ");
-    text = sw.filter_stopword(text);
-    var vec = vector.create_vector(text, all_text);
     // Update vector của document trong db
     documents[doc].vector.direction = [];
     documents[doc].vector.value = [];
-    console.log("Update doccument");
+    const vec = await documentController.createVec(documents[doc].content);
+    console.log(vec);
     for (let word in vec) {
+      console.log(word);
       documents[doc].vector.direction.push(word);
+      console.log(documents[doc].vector.direction);
       documents[doc].vector.value.push(vec[word]);
     }
+    console.log(documents[doc].vector);
     await documents[doc].save();
   }
-  console.log("Crontjob fishned!");
+  console.log("Cronjob fishned!");
 }
 
 module.exports.update_warehouse = update_warehouse;
