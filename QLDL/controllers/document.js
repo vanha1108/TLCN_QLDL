@@ -363,7 +363,9 @@ const deleteDocument = async (req, res, next) => {
 
   const theme = thememodel.findOne({ name: doc.idDoc });
   if (theme) {
-    theme.listidDoc = theme.listidDoc.filter((item) => item !== doc.idDoc);
+    if (theme.listidDoc) {
+      theme.listidDoc = theme.listidDoc.filter((item) => item !== doc.idDoc);
+    }
   } else {
     return res.status(200).json({
       success: false,
