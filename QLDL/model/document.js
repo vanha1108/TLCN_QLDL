@@ -12,8 +12,8 @@ const doc = new mongoose.Schema(
     filename: {
       type: String,
     },
-    subject: {
-      type: String,
+    idsubject: {
+      type: Number,
     },
     path: {
       type: String,

@@ -11,6 +11,7 @@ const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const JWT = require("jsonwebtoken");
 const User = require("./../model/user");
+const Theme = require("./../model/theme");
 
 const readDocument = async (filePath) => {
   var content = "";
@@ -54,6 +55,13 @@ const saveDuplicate = async (req, res, next) => {
   const iduser = userCurrent.iduser;
   var filename = req.file.originalname;
   var subject = req.body.subject;
+  var theme = await Theme.findOne({ name: subject });
+  if (!themes) {
+    return res
+      .status(200)
+      .json({ success: false, code: 500, message: "Not found theme" });
+  }
+  var idsubject = theme.idtheme;
   var path = req.file.path;
   var author = req.body.authorname;
   var note = req.body.note;
@@ -84,7 +92,7 @@ const saveDuplicate = async (req, res, next) => {
   var data = new docmodel();
   data.idDoc = id;
   data.iduser = iduser;
-  data.subject = subject;
+  data.idsubject = idsubject;
   data.filename = filename;
   data.path = path;
   data.authorname = author;
@@ -110,7 +118,7 @@ const saveDocument = async (
   id,
   iduser,
   filename,
-  subject,
+  idsubject,
   path,
   author,
   note,
@@ -143,7 +151,7 @@ const saveDocument = async (
     var data = new docmodel();
     data.idDoc = idDoc;
     data.iduser = Number(iduser);
-    data.subject = subject;
+    data.idsubject = Number(idsubject);
     data.filename = nameFile;
     data.path = path;
     data.authorname = author;
@@ -157,7 +165,7 @@ const saveDocument = async (
 
     data.save();
     // Thêm document vào chủ đề
-    thememodel.findOne({ name: subject }).exec(function (err, theme) {
+    thememodel.findOne({ idtheme: idsubject }).exec(function (err, theme) {
       if (err) console.log(err);
       if (!theme) console.log("Not find theme");
       else {
@@ -276,6 +284,13 @@ const uploadDocument = async (req, res, next) => {
   var id = parseInt(req.body.idDoc);
   var filename = req.file.originalname;
   var subject = req.body.subject;
+  var theme = await Theme.findOne({ name: subject });
+  if (!theme) {
+    return res
+      .status(200)
+      .json({ success: false, code: 500, message: "Not found theme" });
+  }
+  var idsubject = theme.idtheme;
   var path = req.file.path;
   var author = req.body.authorname;
   var note = req.body.note;
@@ -294,7 +309,7 @@ const uploadDocument = async (req, res, next) => {
         id,
         iduser,
         filename,
-        subject,
+        idsubject,
         path,
         author,
         note,
@@ -309,7 +324,7 @@ const uploadDocument = async (req, res, next) => {
           id,
           iduser,
           filename,
-          subject,
+          idsubject,
           path,
           author,
           note,
@@ -361,7 +376,7 @@ const deleteDocument = async (req, res, next) => {
     });
   }
 
-  const theme = thememodel.findOne({ name: doc.idDoc });
+  const theme = thememodel.findOne({ name: doc.subject });
   if (theme) {
     if (theme.listidDoc) {
       theme.listidDoc = theme.listidDoc.filter((item) => item !== doc.idDoc);
