@@ -41,6 +41,18 @@ class Login extends Component {
             this.setState({
               redirect: true
             });
+
+            var hours = 1; // Reset when storage is more than 24hours
+            var now = new Date().getTime();
+            var setupTime = localStorage.getItem('setupTime');
+            if (setupTime == null) {
+                localStorage.setItem('setupTime', now)
+            } else {
+                if(now-setupTime > hours*60) {
+                    localStorage.clear()
+                    localStorage.setItem('setupTime', now);
+                }
+            }
             
             if(res.data.user.role===1)
             {

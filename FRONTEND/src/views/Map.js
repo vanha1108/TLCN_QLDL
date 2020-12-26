@@ -39,7 +39,10 @@ class Map extends React.Component {
       idsubject:'',
       idDoc:'',
       disabled:true,
-      iduser:''
+      iduser:'',
+      regexp : /^[0-9\b]+$/,
+      regexp1 :/[’“”%&!’#√.*+?,;^${}()_`'"|[\]\\//]/,
+      rex: /[0-9]/,
     }
   }
   
@@ -65,6 +68,8 @@ class Map extends React.Component {
         .then(response => {
             console.log(response.data.listtheme);
             this.setState({datalist: response.data.listtheme});
+            console.log('daaaaaaaaaaaaaaaaaaaaaa');
+            console.log(this.getFirstTheme());
             
         })
         .catch(function (error) {
@@ -74,14 +79,24 @@ class Map extends React.Component {
 
   onSubmit(event){
     event.preventDefault()
-        const formData = new FormData()
-        formData.append('iduser',this.state.iduser)
+    if(this.state.idsubject===''){
+      this.state.idsubject=this.getFirstTheme();
+    }
+    if(!this.state.regexp.test(this.state.idDoc)){
+      return alert('sai number');
+    }
+    if(this.state.rex.test(this.state.authorname)||this.state.regexp1.test(this.state.authorname))
+    {
+      return alert('sai ký tự');
+    }
+    if(this.state.idDoc!==''&&this.state.filedoc!==''&&this.state.authorname!==''&&this.state.idsubject!==''  ){
+      const formData = new FormData()
         formData.append('filedoc', this.state.filedoc)
         formData.append('authorname',this.state.authorname)
         formData.append('note',this.state.note)
         formData.append('idDoc',this.state.idDoc)
         formData.append('idsubject',this.state.idsubject)
-        formData.getAll('iduser','filedoc','authorname','idsubject','note','idDoc')
+        formData.getAll('filedoc','authorname','idsubject','note','idDoc')
         console.log(formData);
         axios.post("/api/doc/upload", formData,{
           headers: {
@@ -99,11 +114,16 @@ class Map extends React.Component {
           else{
             this.setState({idDoc:'',authorname:'',note:''})
             toast.success('Upload Successful')
-            //window.location.reload();
+            window.location.reload();
           } 
         })
         .catch(err => {toast.error(`Upload Fail with status: ${err.statusText}`);});
+    }
+    else{
+      alert('fill all');
+    }
         
+     
   }
   onSaveFile(event){
         
@@ -164,6 +184,13 @@ class Map extends React.Component {
   onCancelField(){
     this.setState({disabled:true});
   }
+  getFirstTheme=()=>{
+  
+    for(let i in this.state.datalist){
+      return this.state.datalist[i].idtheme;
+    }
+    return "";
+  }
   render() {
     if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return (
@@ -178,7 +205,7 @@ class Map extends React.Component {
                 <CardBody>
                   <FormGroup>
                     <Label tag="h5">ID Document</Label>
-                    <Input value={this.state.idDoc} onChange={this.onchangValue} type="text" name="idDoc" id="" placeholder="Input id document" />
+                    <Input pattern="[0-9]*" value={this.state.idDoc} onChange={this.onchangValue} type="text" name="idDoc" id="" placeholder="Input id document" />
                 
                   </FormGroup>
                   <FormGroup>
@@ -192,7 +219,7 @@ class Map extends React.Component {
                   </FormGroup>
                   <FormGroup>
                     <Label tag="h5">Theme</Label>
-                    <Input value={this.state.idsubject} onChange={this.onchangValue} type="select" name="idsubject" id="">
+                    <Input defaultValue={this.state.datalist.idtheme} onChange={this.onchangValue} type="select" name="idsubject" id="">
                       {this.state.datalist.map((list,i) => (
                           <option key={i} value={list.idtheme}>{list.name}</option>
                       ))}

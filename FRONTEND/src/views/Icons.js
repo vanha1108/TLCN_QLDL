@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import history from "history.js";
 import {
   Card,
   CardHeader,
@@ -594,32 +595,69 @@ class Icons extends React.Component {
     
     if(this.state.dataedituser.sex===true) {
       
-      var a = document.getElementById('rMale');
-      var b = document.getElementById('rFemale');
-      a.checked=true;
-      //a.setAttribute(checked)
-      b.checked=false;
-      return;
+      
+      return "Male";
     }  else if(this.state.dataedituser.sex===false) {
-      var a = document.getElementById('rFemale');
-      var b = document.getElementById('rMale');
-      a.checked=true;
-      b.checked=false;
-      return;
+      
+      return "Female";
     }
   }
   onSubmitEditUser(event){
     event.preventDefault();
-    if(this.state.newfirst!==''&&this.state.newlast!==''&&this.state.newSex!==''
-    &&this.state.newdob!==''&&this.state.newphone!==''&&this.state.newaddress!==''){
-      const formEdit={
-        newfirst:this.state.newfirst,
-        newlast:this.state.newlast,
-        newsex:this.state.newsex,
-        newdob:this.state.newdob,
-        newphone:this.state.newphone,
-        newaddress:this.state.newaddress
-      };
+    // if(this.state.newfirst!==''&&this.state.newlast!==''&&this.state.newSex!==''
+    // &&this.state.newdob!==''&&this.state.newphone!==''&&this.state.newaddress!==''){
+      // const formEdit={
+      //   newfirst:this.state.newfirst,
+      //   newlast:this.state.newlast,
+      //   newsex:this.state.newsex,
+      //   newdob:this.state.newdob,
+      //   newphone:this.state.newphone,
+      //   newaddress:this.state.newaddress
+      // };
+    const formEdit={
+      newfirst:'',
+      newlast:'',
+      newsex:'',
+      newdob:'',
+      newphone:'',
+      newaddress:''
+    };
+      if(this.state.newfirst!==''){
+        formEdit.newfirst= this.state.newfirst;
+      }
+      else{
+        formEdit.newfirst=this.state.dataedituser.firstname;
+      }
+      if(this.state.newlast!==''){
+        formEdit.newlast= this.state.newlast;
+      }
+      else{
+        formEdit.newlast=this.state.dataedituser.lastname;
+      }
+      if(this.state.newsex!==''){
+        formEdit.newsex= this.state.newsex;
+      }
+      else{
+        formEdit.newsex=this.hienThiSex1();
+      }
+      if(this.state.dob!==''){
+        formEdit.newdob= this.state.newdob;
+      }
+      else{
+        formEdit.newdob=this.hienThiDate();
+      }
+      if(this.state.newphone!==''){
+        formEdit.newphone= this.state.newphone;
+      }
+      else{
+        formEdit.newphone=this.state.dataedituser.phonenumber;
+      }
+      if(this.state.newaddress!==''){
+        formEdit.newaddress= this.state.newaddress;
+      }
+      else{
+        formEdit.newaddress=this.state.dataedituser.address;
+      }
       console.log(formEdit)
       axios.put('/api/user/edit/'+this.state.dataedituser.iduser,formEdit)
       .then((res)=>{
@@ -633,12 +671,7 @@ class Icons extends React.Component {
           toast.error(`${res.data.message}`);
         }
       })
-    }
-    else {
-      alert('fill all');
-    }
-
-  }
+    } 
   onChangeNewName(event){
     this.setState({
       newfirst:event.target.value
@@ -672,7 +705,7 @@ class Icons extends React.Component {
     
   }
   render() {
-    if (!localStorage.getItem("authorization")) return <Redirect to="/login" />; 
+    if (!localStorage.getItem("authorization")) return history.push("/login"); 
     return (
       <div className="content">
         <Row>
