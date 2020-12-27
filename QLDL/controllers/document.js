@@ -41,7 +41,7 @@ const saveDuplicate = async (req, res, next) => {
   if (!headers.authorization) {
     return res.status(200).json({
       code: 400,
-      message: "Token khong hop le hoac khong co",
+      message: "Token is not valid or not",
       success: false,
     });
   }
@@ -104,7 +104,11 @@ const saveDuplicate = async (req, res, next) => {
     themes.listidDoc.push(id);
     themes.save();
   }
-  res.status(200).json({ success: true, code: 200, message: "Save success!" });
+  return res.status(200).json({
+    success: true,
+    code: 200,
+    message: "Save similar document success!",
+  });
 };
 
 const saveDocument = async (
@@ -156,10 +160,16 @@ const saveDocument = async (
       data.vector.value.push(vector[word]);
     }
     data.save();
-    // Thêm document vào chủ đề
+    // Add document to the subject
     thememodel.findOne({ idtheme: idsubject }).exec(function (err, theme) {
-      if (err) console.log(err);
-      if (!theme) console.log("Not find theme");
+      if (err)
+        return res
+          .status(200)
+          .json({ success: false, code: 500, message: "Error add document !" });
+      if (!theme)
+        return res
+          .status(200)
+          .json({ success: false, code: 500, message: "Not found theme!" });
       else {
         theme.listidDoc.push(idDoc);
         theme.save();
@@ -220,32 +230,28 @@ const checkDuplicate = async (content) => {
       if (similar)
         if (result[r] <= 0) {
           d = {
-            idDoc: similar.idDoc,
-            document: similar.filename,
-            message: "Gần như hoàn toàn giống nhau",
+            document: similar,
+            message: "Almost exactly the same",
           };
           arrDuplicate.push(d);
         } else {
           if (result[r] < 0.01) {
             d = {
-              idDoc: similar.idDoc,
-              document: similar.filename,
-              message: "Rất giống nhau",
+              document: similar,
+              message: "The very same",
             };
             arrDuplicate.push(d);
           } else {
             if (result[r] < 0.02) {
               d = {
-                idDoc: similar.idDoc,
-                document: similar.filename,
-                message: "Giống nhau",
+                document: similar,
+                message: "Almost the same",
               };
               arrDuplicate.push(d);
             } else {
               d = {
-                idDoc: similar.idDoc,
-                document: similar.filename,
-                message: "Gần Giống nhau",
+                document: similar,
+                message: "Looks the same",
               };
               arrDuplicate.push(d);
             }
@@ -264,7 +270,7 @@ const uploadDocument = async (req, res, next) => {
   if (!headers.authorization) {
     return res.status(200).json({
       code: 400,
-      message: "Token khong hop le hoac khong co",
+      message: "Token is not valid or not",
       success: false,
     });
   }
@@ -293,7 +299,6 @@ const uploadDocument = async (req, res, next) => {
   await docmodel.find({}).exec(async function (err, result) {
     if (!result) {
       // Nếu trong db chưa có document nào được up load
-      console.log("Không có tài liệu trong db");
       await saveDocument(
         id,
         iduser,
@@ -305,10 +310,12 @@ const uploadDocument = async (req, res, next) => {
         content,
         vecA
       );
+      return res
+        .status(200)
+        .json({ success: true, code: 200, message: "Upload success" });
     } else {
       if (arrDuplicate.length <= 0) {
         // Không có tài liệu tương tự
-        console.log("No Duplicate");
         await saveDocument(
           id,
           iduser,
@@ -320,12 +327,14 @@ const uploadDocument = async (req, res, next) => {
           content,
           vecA
         );
-        res.status(200).json({ success: true, code: 200, message: "success" });
+        return res
+          .status(200)
+          .json({ success: true, code: 200, message: "Upload success" });
       } else {
         res.status(200).json({
           success: false,
           code: 500,
-          message: "Document duplicate!",
+          message: "Similar document",
           arrDuplicate,
         });
       }
@@ -396,7 +405,6 @@ const deleteDocument = async (req, res, next) => {
   }
   const idDel = Number(doc.idDoc);
   const theme = await thememodel.findOne({ idtheme: doc.idsubject });
-  console.log(theme.listidDoc);
   if (theme) {
     if (theme.listidDoc[0] != null) {
       var index = theme.listidDoc.indexOf(idDel);
