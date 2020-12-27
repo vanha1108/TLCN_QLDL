@@ -227,10 +227,18 @@ const checkDuplicate = async (content) => {
     var d;
     for (let r in result) {
       var similar = await docmodel.findOne({ _id: r });
+      var subject = await thememodel.findOne({ idtheme: similar.idsubject });
+      if (!subject)
+        return res.status(200).json({
+          success: false,
+          code: 500,
+          message: "Not found category of document!",
+        });
       if (similar)
         if (result[r] <= 0) {
           d = {
             document: similar,
+            category: subject.name,
             message: "Almost exactly the same",
           };
           arrDuplicate.push(d);
@@ -238,6 +246,7 @@ const checkDuplicate = async (content) => {
           if (result[r] < 0.01) {
             d = {
               document: similar,
+              category: subject.name,
               message: "The very same",
             };
             arrDuplicate.push(d);
@@ -245,12 +254,14 @@ const checkDuplicate = async (content) => {
             if (result[r] < 0.02) {
               d = {
                 document: similar,
+                category: subject.name,
                 message: "Almost the same",
               };
               arrDuplicate.push(d);
             } else {
               d = {
                 document: similar,
+                category: subject.name,
                 message: "Looks the same",
               };
               arrDuplicate.push(d);
