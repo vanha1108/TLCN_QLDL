@@ -9,21 +9,18 @@ import { Container,Nav, NavItem, NavLink } from "reactstrap";
 class Footer extends React.Component {
   render() {
     return (
-      <footer className="footer">
+      <footer style={{background: 'Gainsboro'}} className="footer">
         <Container fluid>
-          <Nav>
+          <Nav style={{color: 'Black'}}>
             <NavItem>
-              <NavLink href="https://www.creative-tim.com/?ref=bdr-user-archive-footer">Creative Tim</NavLink>
+              <NavLink style={{color: 'Black'}} href="#">17110230 - Nguyen Van Thang</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="https://www.creative-tim.com/presentation?ref=bdr-user-archive-footer">About Us</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="https://www.creative-tim.com/blog?ref=bdr-user-archive-footer">Blog</NavLink>
+              <NavLink style={{color: 'Black'}} href="#">17110130 - Nguyen Van Ha</NavLink>
             </NavItem>
           </Nav>
-          <div className="copyright">
-           lol
+          <div  style={{color: 'Black'}} className="copyright">
+           MD COMPANY
           </div>
         </Container>
       </footer>

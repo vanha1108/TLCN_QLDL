@@ -114,7 +114,7 @@ class AdminNavbar extends React.Component {
                   <span className="navbar-toggler-bar bar3" />
                 </button>
               </div>
-              <NavbarBrand href="#pablo" onClick={e => e.preventDefault()}>
+              <NavbarBrand style={{color: 'Black'}} href="#pablo" onClick={e => e.preventDefault()}>
                 {this.props.brandText}
               </NavbarBrand>
             </div>
@@ -146,7 +146,7 @@ class AdminNavbar extends React.Component {
                     <div className="photo">
                       <img alt="..." src={require("assets/img/anime3.png")} />
                     </div>{' '}
-                           <p>&nbsp;{this.state.user.username}</p>     
+                           <p style={{color: 'Black'}}>&nbsp;{this.state.user.username}</p>     
                     <b className="caret d-none d-lg-block d-xl-block" />
                     <p></p>
                     <p onClick={()=>this.signOut()} className="d-lg-none">Log out</p>

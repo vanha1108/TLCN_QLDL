@@ -698,7 +698,7 @@ class Icons extends React.Component {
   render() {
     if (!localStorage.getItem("authorization"))  return <Redirect to="/login"/>
     return (
-      <div className="content">
+      <div style={{background: 'LightCyan'}} className="content">
         <Row>
           {this.hienThiFormMain()}
           <Col md="4">

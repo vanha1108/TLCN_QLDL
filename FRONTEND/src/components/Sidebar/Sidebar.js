@@ -45,6 +45,7 @@ class Sidebar extends React.Component {
       if (logo.outterLink !== undefined) {
         logoImg = (
           <a
+            style={{color: 'Black'}}
             href={logo.outterLink}
             className="simple-text logo-mini"
             target="_blank"
@@ -57,6 +58,7 @@ class Sidebar extends React.Component {
         );
         logoText = (
           <a
+            style={{color: 'Black'}}
             href={logo.outterLink}
             className="simple-text logo-normal"
             target="_blank"

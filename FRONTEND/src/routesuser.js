@@ -21,7 +21,7 @@ var routesuser = [
   },
   {
     path: "/user-profile",
-    name: "Manage theme",
+    name: "Manage Category",
     rtlName: "ملف تعريفي للمستخدم",
     icon: "tim-icons icon-single-02",
     component: UserProfile,

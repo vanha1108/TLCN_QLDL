@@ -157,7 +157,7 @@ class Login extends Component {
                       </Card>
                     </Col>
                 </Row>
-                <AdminNavbar dataUser = {this.state.datauserload}/>  
+                
             </div>       
         );
     }

@@ -29,11 +29,11 @@ class TableRowcheck extends Component {
     render() {
         return (
             <tr>
-                <td>{this.props.obj.idDoc}</td>
+                <td>{this.props.obj.document.idDoc}</td>
                 <td>
-                    {this.props.obj.document}
+                    {this.props.obj.document.filename}
                 </td>
-                
+                <td>{this.props.obj.category}</td>
                 <td>
                     {this.props.obj.message}                   
                 </td>

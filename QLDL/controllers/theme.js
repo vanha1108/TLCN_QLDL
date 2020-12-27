@@ -46,15 +46,15 @@ const getAllTheme = async (req, res, next) => {
 
 const deleteTheme = async (req, res, next) => {
   var iddelete = Number(req.params.iddelete);
-  const theme = thememodel.findOne({ idtheme: iddelete });
+  const theme = await thememodel.findOne({ idtheme: iddelete });
+  
   if (!theme)
     return res.status(200).json({
       success: false,
       code: 500,
       message: "Not found theme to delete!",
     });
-
-  console.log(theme.listidDoc);
+  
 
   if (theme.listidDoc) {
     if (theme.listidDoc[0] != null)

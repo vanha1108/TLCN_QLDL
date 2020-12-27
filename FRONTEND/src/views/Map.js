@@ -164,12 +164,16 @@ class Map extends React.Component {
     if(this.state.disabled===false){
       return(
         <Card>
+          <CardHeader>
+            <CardTitle tag="h3">LIST DOCUMENT DUPLICATE</CardTitle>
+          </CardHeader>
           <CardBody>
             <Table striped>
               <thead>
                 <tr>
                   <th>ID Document</th>
                   <th>Filename</th>
+                  <th>CATEGORY</th>
                   <th>Message</th>
                   <th>Action</th>
                 </tr>
@@ -200,13 +204,13 @@ class Map extends React.Component {
   render() {
     if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return (
-        <div className="content">
+        <div style={{background: 'LightCyan'}} className="content">
           <Row>
             <ToastContainer />
             <Col md="4">
               <Card>
                 <CardHeader>
-                  <CardTitle tag="h3">UPLOAD FILE</CardTitle>
+                  <CardTitle tag="h3">UPLOAD DOCUMENT</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <FormGroup>
@@ -224,7 +228,7 @@ class Map extends React.Component {
                     <Input value={this.state.note} onChange={this.onchangValue} type="text" name="note" id="" placeholder="Input note" />
                   </FormGroup>
                   <FormGroup>
-                    <Label tag="h5">Theme</Label>
+                    <Label tag="h5">Category</Label>
                     <Input defaultValue={this.state.datalist.idtheme} onChange={this.onchangValue} type="select" name="idsubject" id="">
                       {this.state.datalist.map((list,i) => (
                           <option key={i} value={list.idtheme}>{list.name}</option>

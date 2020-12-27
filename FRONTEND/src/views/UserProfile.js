@@ -184,20 +184,20 @@ class UserProfile extends React.Component {
         <Card>
                   <CardHeader>
                     <CardTitle>
-                      <Label tag="h4">Edit Theme</Label>
+                      <Label tag="h4">Edit Category</Label>
                     </CardTitle>
                   </CardHeader>
                   <CardBody>
                   <FormGroup row>
-                    <Label for="exampleEmail" sm={4}>Name</Label>
+                    <Label for="exampleEmail" sm={4}>ID</Label>
                     <Col sm={8}>
-                      <Input disabled defaultValue={this.state.dataedit.idtheme} onChange={this.onChangeValueEdit} type="text" id="" placeholder="nhập tên theme" />
+                      <Input disabled defaultValue={this.state.dataedit.idtheme} onChange={this.onChangeValueEdit} type="text" id="" placeholder="" />
                     </Col>
                     </FormGroup>            
                     <FormGroup row>
                     <Label for="exampleEmail" sm={4}>Name</Label>
                     <Col sm={8}>
-                      <Input defaultValue={this.state.dataedit.name} onChange={this.onChangeValueEdit} type="text" name="newName" id="" placeholder="nhập tên theme" />
+                      <Input defaultValue={this.state.dataedit.name} onChange={this.onChangeValueEdit} type="text" name="newName" id="" placeholder="input new category" />
                     </Col>
                     </FormGroup>
 
@@ -216,24 +216,24 @@ class UserProfile extends React.Component {
         <Card>
         <CardHeader>
           <CardTitle>
-            <Label tag="h4">Create theme</Label>
+            <Label tag="h4">Create Categoty</Label>
           </CardTitle>
         </CardHeader>
         <CardBody>
         <FormGroup row>
-          <Label for="exampleEmail" sm={4}>ID theme</Label>
+          <Label for="exampleEmail" sm={4}>ID</Label>
           <Col sm={8}>
-            <Input value={this.state.idtheme} onChange={this.onChangeValue} type="text" name="idtheme" id="" placeholder="ID theme" />
+            <Input value={this.state.idtheme} onChange={this.onChangeValue} type="text" name="idtheme" id="" placeholder="ID category" />
           </Col>
           </FormGroup>             
           <FormGroup row>
           <Label for="exampleEmail" sm={4}>Name</Label>
           <Col sm={8}>
-            <Input value={this.state.name} onChange={this.onChangeValue} type="text" name="name" id="" placeholder="Name theme" />
+            <Input value={this.state.name} onChange={this.onChangeValue} type="text" name="name" id="" placeholder="Name category" />
           </Col>
           </FormGroup>
 
-          <Button onClick={this.onSubmit} color="primary" >Add theme </Button>
+          <Button onClick={this.onSubmit} color="primary" >Add Category</Button>
     
         </CardBody>
        
@@ -248,7 +248,7 @@ class UserProfile extends React.Component {
         <Card>
                 <CardHeader>
                   <FormGroup row>
-                    <Label  md="10" tag="h6">List theme</Label>
+                    <Label  md="10" tag="h6">Category</Label>
                     {this.checkNut()}
                   </FormGroup>
                  
@@ -257,7 +257,7 @@ class UserProfile extends React.Component {
                   <Table className="tablesorter" responsive>
                     <thead className="text-primary">
                       <tr>
-                        <th>ID Theme</th>                                      
+                        <th>ID</th>                                      
                         <th>Name</th>
                         <th>action</th>
                       </tr>
@@ -275,7 +275,7 @@ class UserProfile extends React.Component {
   render() {
     if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return ( 
-        <div className="content">
+        <div style={{background: 'LightCyan'}} className="content">
           <Row>
             <ToastContainer/>
             <Col md="4">

@@ -162,7 +162,7 @@ class Notifications extends React.Component {
   render() {
     if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return (
-        <div className="content">
+        <div style={{background: 'LightCyan'}} className="content">
           <div className="react-notification-alert-container">
             <NotificationAlert ref="notificationAlert" />
           </div>

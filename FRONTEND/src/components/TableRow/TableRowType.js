@@ -20,13 +20,13 @@ class TableRowType extends Component {
       .then((res)=>{
         console.log(res.data.message);
         if(res.data.success===true){
-          toast.success('delete success');
+          toast.success(`${res.data.message}`);
           setTimeout(function () {
             window.location.reload(1);
           },1000);}
         else
         {
-          toast.error('delete failed');
+          toast.error(`${res.data.message}`);
         }
       })
       .catch((err) => console.log(err));
