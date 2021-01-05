@@ -74,7 +74,6 @@ function compute_appear(text) {
 
 /*
     Trả ra số lần xuất hiện của các từ trong tập văn bản lớn D
-    dict_contain = { 'tôi': 1, 'yêu': 0, em: 1, 'ấy': 1 }
 */
 function contain_word(text, arr_doc) {
   text = special_chars.clear_special_chars(text);
@@ -102,13 +101,6 @@ function word_count(text) {
   return bow.length;
 }
 
-/* 
-    Trả ra một mảng chứa các list từ được phân tách từ text_list là tất cả dữ liệu text trong db
-      arr_doc = [
-        { 'tôi': 1, 'yêu': 1, em: 1, 'ấy': 1 },
-        { 'tôi': 1, 'thương': 1, em: 1, 'ấy': 1 }
-      ]
-*/
 function arr_doc(text_list) {
   var arr_doc = [];
   var doc_list = {};

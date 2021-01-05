@@ -212,7 +212,7 @@ const checkDuplicate = async (content) => {
 
       var distance = euclid.compute_distance(vecA, vecB);
 
-      if (distance < 0.03) {
+      if (distance < process.env.DISTANCE_FILTER) {
         result[allDoc[doc]._id] = distance;
       }
     }
@@ -243,7 +243,7 @@ const checkDuplicate = async (content) => {
           };
           arrDuplicate.push(d);
         } else {
-          if (result[r] < 0.01) {
+          if (result[r] < process.env.VERY_SAME) {
             d = {
               document: similar,
               category: subject.name,
@@ -251,7 +251,7 @@ const checkDuplicate = async (content) => {
             };
             arrDuplicate.push(d);
           } else {
-            if (result[r] < 0.02) {
+            if (result[r] < process.env.ALMOST_SAME) {
               d = {
                 document: similar,
                 category: subject.name,
