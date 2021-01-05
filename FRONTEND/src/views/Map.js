@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TableRowCheck from "components/TableRow/TableRowcheck.js";
 import {Redirect } from "react-router-dom";
-import history from "history.js";
+//import history from "history.js";
 // reactstrap components
 //import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 import {  

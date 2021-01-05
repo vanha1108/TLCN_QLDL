@@ -16,7 +16,6 @@ import {
   Input,
   FormGroup,
   Table,
-  CardTitle,
   Col
 } from "reactstrap";
 import CardHeader from "reactstrap/lib/CardHeader";
@@ -36,7 +35,7 @@ class Notifications extends React.Component {
       datatheme:[],
       trangthai:false,
       trangthaiserarch:false,
-      idsubjectView:"1",
+      idsubjectView:"",
       datadoc:[]
     }
   }
@@ -52,6 +51,14 @@ class Notifications extends React.Component {
   // }
 
   onSubmitTheme(event){
+    event.preventDefault();
+    
+    if(this.state.idsubjectView==='')
+    {
+      
+      this.state.idsubjectView=this.getFirstTheme();
+    }
+   
     event.preventDefault();
     var idsubject = this.state.idsubjectView
     
@@ -158,7 +165,13 @@ class Notifications extends React.Component {
     <TableRowSearch obj={object} key={i}/>
   )
 )
-
+  getFirstTheme=()=>{
+    
+    for(let i in this.state.datatheme){
+      return this.state.datatheme[i].idtheme;
+    }
+    return "";
+  }
   render() {
     if (!localStorage.getItem('authorization')) return <Redirect to="/login" />
     return (

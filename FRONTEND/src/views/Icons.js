@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-import history from "history.js";
 import {
   Card,
   CardHeader,

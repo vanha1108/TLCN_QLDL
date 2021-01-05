@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { CardTitle,CardText,Row,CardHeader,CardBody,Col,Card,FormFeedback } from 'reactstrap';
+import { CardTitle,CardText,Row,CardHeader,CardBody,Col,Card } from 'reactstrap';
 import Form from "views/form.js";
 import history from "history.js";
-import AdminNavbar from "components/Navbars/AdminNavbar.js";
 class Login extends Component {
    
   constructor(props) {

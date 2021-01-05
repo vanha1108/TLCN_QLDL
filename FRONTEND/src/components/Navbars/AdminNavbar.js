@@ -18,8 +18,7 @@ import {
   NavLink,
   Nav,
   Container,
-  Modal,
-  Label
+  Modal
 } from "reactstrap";
 
 class AdminNavbar extends React.Component {
